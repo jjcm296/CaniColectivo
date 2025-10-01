@@ -101,6 +101,14 @@
     background: var(--green);
 }
 
+.nbLink:nth-child(5):hover {
+    color: var(--blue);
+}
+.nbLink:nth-child(5):hover::after {
+    background: var(--blue);
+}
+
+
 .nbActive {
     color: var(--space);
 }
