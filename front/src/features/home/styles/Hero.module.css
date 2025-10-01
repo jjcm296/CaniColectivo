@@ -1,0 +1,138 @@
+:root {
+    --green: #1CA155;
+    --blue: #25A0E2;
+    --space: #1A2B54;
+    --bg: #ffffff;
+    --muted: #415173;
+}
+
+.hero {
+    background: var(--bg);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.copy {
+    max-width: 950px;
+}
+
+.eyebrow {
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.title {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--space);
+    margin: 0 auto 16px;
+}
+
+.hlGreen { color: var(--green); }
+.hlBlue { color: var(--blue); }
+
+.lead {
+    font-size: clamp(16px, 1.6vw, 20px);
+    line-height: 1.6;
+    color: #475569;
+    margin: 0 auto 28px;
+    max-width: 1000px;
+}
+
+/* Botones */
+.actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.btnPrimary {
+    background: var(--green);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: background 0.2s ease;
+}
+.btnPrimary:hover { background: #178c4a; }
+
+.btnSecondary {
+    border: 2px solid var(--space);
+    color: var(--space);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+.btnSecondary:hover {
+    background: var(--space);
+    color: #fff;
+}
+
+.media {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 45vh;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.media {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 1200px;
+    height: 40vh;
+    max-height: 500px;
+    min-height: 350px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder {
+    background: #f1f5f9;
+    border-radius: 24px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .media {
+        height: 35vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .media {
+        height: 30vh;
+        min-height: 180px;
+    }
+    .placeholder {
+        border-radius: 16px;
+        font-size: 16px;
+    }
+}
+
