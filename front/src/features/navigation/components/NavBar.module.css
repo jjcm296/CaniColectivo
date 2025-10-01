@@ -1,0 +1,244 @@
+:root {
+    --red: #FF2222;
+    --persimmon: #E95A0D;
+    --xanthous: #FBB631;
+    --green: #1CA155;
+    --blue: #25A0E2;
+    --space: #1A2B54;
+
+    --bg: #ffffff;
+    --text: #1A2B54;
+    --muted: #415173;
+    --line: #eceff3;
+}
+
+.nbWrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+}
+
+.nbInner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nbBrand {
+    display: flex;
+    align-items: center;
+}
+
+.nbBrandLink {
+    display: inline-flex;
+    align-items: center;
+}
+
+.nbLogo {
+    width: 80px;
+    height: auto;
+    display: block;
+}
+
+.nbNav {
+    margin-left: 12px;
+    margin-right: auto;
+    display: flex;
+    gap: 24px;
+}
+
+.nbLink {
+    position: relative;
+    padding: 8px 0;
+    font-weight: 600;
+    color: var(--text);
+    border-radius: 8px;
+    transition: color 0.15s ease;
+}
+
+.nbLink::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    height: 3px;
+    border-radius: 3px;
+    background: transparent;
+    transition: background 0.15s ease;
+}
+
+.nbLink:nth-child(1):hover {
+    color: var(--red);
+}
+.nbLink:nth-child(1):hover::after {
+    background: var(--red);
+}
+
+.nbLink:nth-child(2):hover {
+    color: var(--persimmon);
+}
+.nbLink:nth-child(2):hover::after {
+    background: var(--persimmon);
+}
+
+.nbLink:nth-child(3):hover {
+    color: var(--xanthous);
+}
+.nbLink:nth-child(3):hover::after {
+    background: var(--xanthous);
+}
+
+.nbLink:nth-child(4):hover {
+    color: var(--green);
+}
+.nbLink:nth-child(4):hover::after {
+    background: var(--green);
+}
+
+.nbActive {
+    color: var(--space);
+}
+.nbActive::after {
+    background: var(--blue);
+}
+
+.nbActions {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+}
+
+.nbAction {
+    padding: 10px 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    border: 1px solid var(--space);
+    color: var(--space);
+    background: #fff;
+    box-shadow: 0 10px 60px rgba(26, 43, 84, 0.06);
+    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nbActions a[href="/login"] {
+    background: var(--space);
+    color: #fff;
+    border-color: var(--space);
+    box-shadow: 0 8px 30px rgba(26, 43, 84, 0.25);
+}
+.nbActions a[href="/login"]:hover {
+    box-shadow: 0 10px 40px rgba(26, 43, 84, 0.35);
+}
+
+.nbActions a[href="/register"] {
+    background: #fff;
+    color: var(--space);
+    border-color: var(--space);
+}
+.nbActions a[href="/register"]:hover {
+    background: #f5f8ff;
+}
+
+.nbToggle {
+    margin-left: auto;
+    display: none;
+    width: 40px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #fff;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+}
+.nbToggleBar {
+    width: 20px;
+    height: 2px;
+    background: var(--space);
+    border-radius: 2px;
+}
+
+.nbPanel {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+    background: #fff;
+    transition: max-height 0.25s ease;
+}
+.nbPanelOpen {
+    max-height: 420px;
+}
+
+.nbPanelSection {
+    padding: 12px 16px;
+    display: grid;
+    gap: 8px;
+    border-bottom: 1px solid #f3f5f9;
+}
+.nbPanelSection:last-child {
+    border-bottom: 0;
+}
+
+.nbPanelLink,
+.nbPanelAction {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 10px;
+    color: var(--space);
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.nbPanelLink:hover {
+    background: #f7faff;
+    color: var(--blue);
+}
+.nbPanelAction:hover {
+    background: #f7f9ff;
+}
+
+.nbPanelLink.nbActive {
+    color: var(--blue);
+}
+.nbPanelAction.nbActive {
+    color: var(--space);
+}
+
+.nbLink:focus-visible,
+.nbAction:focus-visible,
+.nbPanelLink:focus-visible,
+.nbPanelAction:focus-visible,
+.nbToggle:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+    .nbInner {
+        padding: 6px 12px;
+    }
+    .nbNav,
+    .nbActions {
+        display: none;
+    }
+    .nbToggle {
+        display: inline-flex;
+    }
+    .nbLogo {
+        width: 44px;
+    }
+}
+
+@media (min-width: 901px) {
+    .nbPanel {
+        display: none !important;
+    }
+}
