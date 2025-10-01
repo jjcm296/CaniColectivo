@@ -1,0 +1,133 @@
+.carouselSection {
+    width: 100%;
+    padding: 90px 40px;
+    text-align: center;
+    background: #fff;
+}
+
+.header { margin-bottom: 40px; }
+
+.title {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 900;
+    color: #1A2B54;
+    margin-bottom: 12px;
+}
+
+/* Carrusel */
+.carouselWrap {
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+}
+
+.swiper {
+    width: 100%;
+    max-width: 1300px;
+    height: calc(var(--slide-h) + 50px);
+    overflow: visible;
+    padding: 10px 10px;
+}
+
+/* IMPORTANTE con slidesPerView:"auto" */
+.slide {
+    width: var(--slide-w) !important; /* ancho fijo del slide */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;             /* para z-index en hover */
+    z-index: 0;
+    overflow: visible;              /* ⬅️ no recortar el contenido del slide */
+}
+
+/* el slide hovered debe estar “encima” de sus vecinos */
+.slide:hover { z-index: 3; }
+
+/* Contenedor de la imagen */
+.imageWrap {
+    position: relative;
+    width: var(--slide-w);
+    height: var(--slide-h);
+    border-radius: 20px;
+    overflow: hidden;               /* mantiene bordes redondeados */
+    box-shadow: 0 8px 30px rgba(0,0,0,.2);
+}
+
+/* Escala SOLO la imagen interna (Next <Image /> genera un <img> dentro) */
+.imageWrap :global(img) {
+    transition: transform .3s ease;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.imageWrap:hover :global(img) {
+    transform: scale(1.05);
+}
+
+/* Mensaje vacío */
+.empty {
+    width: var(--slide-w);
+    height: var(--slide-h);
+    border-radius: 20px;
+    border: 2px dashed #d7d7d7;
+    color: #6b7280;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    background: #fafafa;
+}
+
+/* Evitar que Swiper recorte internamente */
+:global(.swiper-slide) {
+    overflow: visible;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* ✅ Contador propio debajo del carrusel */
+.counter {
+    margin-top: 16px;
+    font-weight: 700;
+    color: #1A2B54;
+    letter-spacing: .5px;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    line-height: 1;
+}
+
+:global(.swiper-pagination) {
+    margin-top: 16px;
+    position: static;
+    width: auto;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    font-weight: 700;
+    color: #1A2B54;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .slide { width: var(--slide-w-md) !important; }
+    .imageWrap, .empty {
+        width: var(--slide-w-md);
+        height: var(--slide-h-md);
+    }
+    .swiper { height: calc(var(--slide-h-md) + 50px); }
+}
+
+@media (max-width: 768px) {
+    .title { font-size: 24px; }
+    .slide { width: var(--slide-w-sm) !important; }
+    .imageWrap, .empty {
+        width: var(--slide-w-sm);
+        height: var(--slide-h-sm);
+    }
+    .swiper { height: calc(var(--slide-h-sm) + 50px); }
+}

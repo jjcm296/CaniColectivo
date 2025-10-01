@@ -7,8 +7,7 @@
 }
 
 .hero {
-    background: var(--bg);
-    height: 100vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -27,7 +26,6 @@
     letter-spacing: 0.1em;
     color: var(--muted);
     font-weight: 700;
-    margin-bottom: 8px;
 }
 
 .title {
@@ -81,17 +79,7 @@
     color: #fff;
 }
 
-.media {
-    flex: 0 0 auto;
-    width: 100%;
-    max-width: 1100px;
-    max-height: 45vh;
-    margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* Contenedor GIF/video */
 .media {
     flex: 0 0 auto;
     width: 100%;
@@ -99,7 +87,7 @@
     height: 40vh;
     max-height: 500px;
     min-height: 350px;
-    margin: 0 auto 20px;
+    margin: 0 auto 0; /* 👈 eliminamos separación extra */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -135,4 +123,3 @@
         font-size: 16px;
     }
 }
-
