@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, Autoplay /*, Pagination*/ } from 'swiper/modules';
+import { EffectCoverflow, Autoplay } from 'swiper/modules';
 import Image from 'next/image';
 import clsx from 'clsx';
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
-// import 'swiper/css/pagination';
 
 import styles from '../styles/CircleCarousel.module.css';
 
@@ -22,22 +21,18 @@ export default function CircleCarousel({
                                            stretch = -40,
                                            speed = 800,
                                            loop = true,
-                                           sizes = '(max-width: 768px) 180px, (max-width: 1024px) 220px, 260px',
+                                           sizes = '(max-width: 480px) 72vw, (max-width: 768px) 48vw, (max-width: 1024px) 36vw, 260px',
                                            slideSize = {
                                                desktop: { w: 260, h: 400 },
                                                tablet:  { w: 220, h: 320 },
                                                mobile:  { w: 180, h: 260 },
                                            },
                                        }) {
-    // Array base con _uid estable para keys
     const [list, setList] = useState(() =>
         images.map((img, i) => ({ ...img, _uid: img.id ?? `${img.src}__init_${i}` }))
     );
-
-    // Índice actual para el contador propio (usa realIndex para loop)
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Si cambian las imágenes desde afuera, resincroniza y reinicia índice
     useEffect(() => {
         const next = images.map((img, i) => ({ ...img, _uid: img.id ?? `${img.src}__init_${i}` }));
         setList(next);
@@ -46,17 +41,31 @@ export default function CircleCarousel({
 
     const hasImages = list.length > 0;
 
-    // Variables CSS responsivas
-    const cssVars = useMemo(() => ({
-        '--slide-w': `${slideSize.desktop.w}px`,
-        '--slide-h': `${slideSize.desktop.h}px`,
-        '--slide-w-md': `${slideSize.tablet.w}px`,
-        '--slide-h-md': `${slideSize.tablet.h}px`,
-        '--slide-w-sm': `${slideSize.mobile.w}px`,
-        '--slide-h-sm': `${slideSize.mobile.h}px`,
-    }), [slideSize]);
+    const cssVars = useMemo(
+        () => ({
+            ['--slide-w']: `${slideSize.desktop.w}px`,
+            ['--slide-h']: `${slideSize.desktop.h}px`,
+            ['--slide-w-md']: `${slideSize.tablet.w}px`,
+            ['--slide-h-md']: `${slideSize.tablet.h}px`,
+            ['--slide-w-sm']: `${slideSize.mobile.w}px`,
+            ['--slide-h-sm']: `${slideSize.mobile.h}px`,
+        }),
+        [slideSize]
+    );
 
     const swiperRef = useRef(null);
+
+    const autoplayConfig =
+        typeof window !== 'undefined' &&
+        window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? false
+            : {
+                delay: autoplayDelay,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+                stopOnLastSlide: false,
+            };
 
     return (
         <section className={clsx(styles.carouselSection, className)} style={cssVars}>
@@ -67,21 +76,17 @@ export default function CircleCarousel({
             <div className={styles.carouselWrap}>
                 <Swiper
                     onSwiper={(s) => { swiperRef.current = s; }}
-                    onSlideChange={(s) => setCurrentIndex(s.realIndex ?? 0)} // ✅ contador propio
+                    onSlideChange={(s) => setCurrentIndex(s.realIndex ?? 0)}
                     effect="coverflow"
                     grabCursor
                     centeredSlides
+                    centeredSlidesBounds     /* evita hueco en los bordes */
                     slidesPerView="auto"
                     spaceBetween={spaceBetween}
                     speed={speed}
                     loop={loop}
-                    watchOverflow={false}
-                    autoplay={{
-                        delay: autoplayDelay,
-                        disableOnInteraction: false,
-                        pauseOnMouseEnter: false,
-                        stopOnLastSlide: false,
-                    }}
+                    watchOverflow={true}     /* si hay pocas slides, no desborda */
+                    autoplay={autoplayConfig}
                     coverflowEffect={{
                         rotate: 0,
                         stretch,
@@ -89,18 +94,14 @@ export default function CircleCarousel({
                         modifier: 1,
                         slideShadows: false,
                     }}
-                    modules={[
-                        EffectCoverflow,
-                        Autoplay,
-                        // Pagination,
-                    ]}
+                    breakpoints={{
+                        0:    { spaceBetween: 16, coverflowEffect: { rotate: 0, stretch: -30, depth: 140, modifier: 1, slideShadows: false } },
+                        480:  { spaceBetween: 18, coverflowEffect: { rotate: 0, stretch: -36, depth: 160, modifier: 1, slideShadows: false } },
+                        768:  { spaceBetween: 22, coverflowEffect: { rotate: 0, stretch: -40, depth: 190, modifier: 1, slideShadows: false } },
+                        1024: { spaceBetween,    coverflowEffect: { rotate: 0, stretch,    depth,    modifier: 1, slideShadows: false } },
+                    }}
+                    modules={[EffectCoverflow, Autoplay]}
                     className={styles.swiper}
-
-                    // 🔹 Opción 2: Paginación nativa de Swiper (fracción)
-                    // pagination={{
-                    //   el: '.swiper-pagination',
-                    //   type: 'fraction',
-                    // }}
                 >
                     {hasImages ? (
                         list.map((img, idx) => (
@@ -113,6 +114,7 @@ export default function CircleCarousel({
                                         sizes={sizes}
                                         style={{ objectFit: 'cover' }}
                                         priority={idx === 0}
+                                        draggable={false}
                                     />
                                 </div>
                             </SwiperSlide>
@@ -125,13 +127,11 @@ export default function CircleCarousel({
                 </Swiper>
             </div>
 
-            {/* 🔹 Contador propio (actual / total). Ocúltalo si no hay imágenes */}
             {hasImages && (
                 <div className={styles.counter} aria-live="polite">
                     {currentIndex + 1} / {list.length}
                 </div>
             )}
-
         </section>
     );
 }

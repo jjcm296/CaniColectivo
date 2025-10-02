@@ -1,133 +1,142 @@
-.carouselSection {
-    width: 100%;
-    padding: 90px 40px;
-    text-align: center;
-    background: #fff;
+/* Sección */
+.carouselSection{
+    width:100%;
+    padding:90px 40px;
+    text-align:center;
+    background:#fff;
+    overflow-x:clip; /* corta cualquier desborde horizontal */
+}
+.header{margin-bottom:40px;}
+.title{
+    font-size:clamp(22px,4vw,40px);
+    font-weight:900;
+    color:#1A2B54;
+    margin-bottom:12px;
 }
 
-.header { margin-bottom: 40px; }
-
-.title {
-    font-size: clamp(26px, 4vw, 40px);
-    font-weight: 900;
-    color: #1A2B54;
-    margin-bottom: 12px;
+/* Contenedor carrusel */
+.carouselWrap{
+    display:flex;
+    justify-content:center;
+    padding:0 10px;     /* padding aquí, no en .swiper */
+    overflow-x:hidden;  /* sin scroll lateral */
+    overflow-y:visible;
 }
 
-/* Carrusel */
-.carouselWrap {
-    display: flex;
-    justify-content: center;
-    overflow: visible;
+/* Swiper */
+.swiper{
+    width:100%;
+    max-width:1300px;
+    box-sizing:border-box; /* padding no aumenta ancho */
+    padding:10px 0;
+    overflow:visible;
+    height:calc(var(--slide-h) + 50px); /* desktop */
+    max-width:100vw; /* nunca más que viewport */
 }
 
-.swiper {
-    width: 100%;
-    max-width: 1300px;
-    height: calc(var(--slide-h) + 50px);
-    overflow: visible;
-    padding: 10px 10px;
+/* Slide */
+.slide{
+    width:var(--slide-w) !important;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    z-index:0;
+    overflow:visible;
+}
+.slide:hover{z-index:3;}
+
+/* Imagen */
+.imageWrap{
+    position:relative;
+    width:var(--slide-w);
+    height:var(--slide-h);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 8px 30px rgba(0,0,0,.2);
+    isolation:isolate;
+}
+.imageWrap :global(img){
+    display:block;
+    transition:transform .3s ease;
+    will-change:transform;
+    backface-visibility:hidden;
+    transform:translateZ(0);
+    user-select:none;
+    -webkit-user-drag:none;
+}
+.imageWrap:hover :global(img){transform:scale(1.05);}
+
+/* Placeholder */
+.empty{
+    width:var(--slide-w);
+    height:var(--slide-h);
+    border-radius:20px;
+    border:2px dashed #d7d7d7;
+    color:#6b7280;
+    display:grid;
+    place-items:center;
+    font-weight:600;
+    background:#fafafa;
 }
 
-/* IMPORTANTE con slidesPerView:"auto" */
-.slide {
-    width: var(--slide-w) !important; /* ancho fijo del slide */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;             /* para z-index en hover */
-    z-index: 0;
-    overflow: visible;              /* ⬅️ no recortar el contenido del slide */
+/* Ajustes Swiper internos */
+:global(.swiper-slide){
+    overflow:visible;
+    backface-visibility:hidden;
+    transform-style:preserve-3d;
+}
+:global(.swiper-wrapper){overflow:visible;}
+
+/* Contador */
+.counter{
+    margin-top:16px;
+    font-weight:700;
+    color:#1A2B54;
+    letter-spacing:.5px;
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:999px;
+    background:#f3f4f6;
+    line-height:1;
 }
 
-/* el slide hovered debe estar “encima” de sus vecinos */
-.slide:hover { z-index: 3; }
-
-/* Contenedor de la imagen */
-.imageWrap {
-    position: relative;
-    width: var(--slide-w);
-    height: var(--slide-h);
-    border-radius: 20px;
-    overflow: hidden;               /* mantiene bordes redondeados */
-    box-shadow: 0 8px 30px rgba(0,0,0,.2);
-}
-
-/* Escala SOLO la imagen interna (Next <Image /> genera un <img> dentro) */
-.imageWrap :global(img) {
-    transition: transform .3s ease;
-    will-change: transform;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-.imageWrap:hover :global(img) {
-    transform: scale(1.05);
-}
-
-/* Mensaje vacío */
-.empty {
-    width: var(--slide-w);
-    height: var(--slide-h);
-    border-radius: 20px;
-    border: 2px dashed #d7d7d7;
-    color: #6b7280;
-    display: grid;
-    place-items: center;
-    font-weight: 600;
-    background: #fafafa;
-}
-
-/* Evitar que Swiper recorte internamente */
-:global(.swiper-slide) {
-    overflow: visible;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-}
-
-/* ✅ Contador propio debajo del carrusel */
-.counter {
-    margin-top: 16px;
-    font-weight: 700;
-    color: #1A2B54;
-    letter-spacing: .5px;
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #f3f4f6;
-    line-height: 1;
-}
-
-:global(.swiper-pagination) {
-    margin-top: 16px;
-    position: static;
-    width: auto;
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #f3f4f6;
-    font-weight: 700;
-    color: #1A2B54;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .slide { width: var(--slide-w-md) !important; }
-    .imageWrap, .empty {
-        width: var(--slide-w-md);
-        height: var(--slide-h-md);
+/* Tablet: ancho fluido + aspect-ratio */
+@media (max-width:1024px){
+    .slide{width:clamp(180px,46vw,var(--slide-w-md)) !important;}
+    .imageWrap,.empty{
+        width:clamp(180px,46vw,var(--slide-w-md));
+        height:auto;
+        aspect-ratio:2/3;
     }
-    .swiper { height: calc(var(--slide-h-md) + 50px); }
+    .swiper{height:auto; padding-bottom:44px;}
 }
 
-@media (max-width: 768px) {
-    .title { font-size: 24px; }
-    .slide { width: var(--slide-w-sm) !important; }
-    .imageWrap, .empty {
-        width: var(--slide-w-sm);
-        height: var(--slide-h-sm);
+/* Móvil */
+@media (max-width:768px){
+    .title{font-size:24px;}
+    .slide{width:clamp(160px,70vw,var(--slide-w-sm)) !important;}
+    .imageWrap,.empty{
+        width:clamp(160px,70vw,var(--slide-w-sm));
+        height:auto;
+        aspect-ratio:13/20;
     }
-    .swiper { height: calc(var(--slide-h-sm) + 50px); }
+    .swiper{height:auto; padding-bottom:42px;}
+    .carouselSection{padding:64px 20px;}
+}
+
+/* XS */
+@media (max-width:480px){
+    .carouselSection{padding:56px 16px;}
+}
+
+/* Accesibilidad */
+.imageWrap:focus-within,.slide:focus-within{
+    outline:2px solid #25A0E2;
+    outline-offset:4px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion:reduce){
+    .imageWrap :global(img){transition:none;}
 }
