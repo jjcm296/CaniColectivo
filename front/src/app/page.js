@@ -7,7 +7,7 @@ import EventSpotlight from "@/features/home/components/events/EventSpotlight";
 export default function HomePage() {
     const eventos = [
         {
-            id: 'baladas-baleros',
+            id: 'baladas-baleros1',
             title: 'Baladas y baleros',
             dateISO: '2026-01-03T15:00:00-06:00',
             venue: 'Av Universidad Veracruzana 2919, Fovissste (UNID)',
@@ -17,7 +17,7 @@ export default function HomePage() {
             isCause: true,
         },
         {
-            id: 'residencia-otono',
+            id: 'residencia-otono1',
             title: 'Residencia Creativa',
             dateISO: '2025-11-15T10:00:00-06:00',
             venue: 'Parque Miguel Hidalgo \n  Coatzacoalcos, Ver.',
@@ -27,7 +27,7 @@ export default function HomePage() {
             isCause: false,
         },
         {
-            id: 'baladas-baleros',
+            id: 'baladas-baleros2',
             title: 'Baladas y baleros',
             dateISO: '2026-01-03T15:00:00-06:00',
             venue: 'Av Universidad Veracruzana 2919, Fovissste (UNID)',
@@ -37,7 +37,7 @@ export default function HomePage() {
             isCause: true,
         },
         {
-            id: 'residencia-otono',
+            id: 'residencia-otono2',
             title: 'Residencia Creativa',
             dateISO: '2025-11-15T10:00:00-06:00',
             venue: 'Parque Miguel Hidalgo \n  Coatzacoalcos, Ver.',
@@ -47,7 +47,7 @@ export default function HomePage() {
             isCause: false,
         },
         {
-            id: 'baladas-baleros',
+            id: 'baladas-baleros3',
             title: 'Baladas y baleros',
             dateISO: '2026-01-03T15:00:00-06:00',
             venue: 'Av Universidad Veracruzana 2919, Fovissste (UNID)',
@@ -57,7 +57,7 @@ export default function HomePage() {
             isCause: true,
         },
         {
-            id: 'residencia-otono',
+            id: 'residencia-otono3',
             title: 'Residencia Creativa',
             dateISO: '2025-11-15T10:00:00-06:00',
             venue: 'Parque Miguel Hidalgo \n  Coatzacoalcos, Ver.',
