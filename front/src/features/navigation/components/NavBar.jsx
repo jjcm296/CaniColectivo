@@ -11,16 +11,16 @@ export default function NavBar() {
     const pathname = usePathname();
 
     const left = [
-        { href: '/', label: 'Inicio' },
-        { href: '/artistas', label: 'Artistas' },
-        { href: '/eventos', label: 'Eventos' },
-        { href: '/nosotros', label: 'Nosotros' },
-        { href: '/contacto', label: 'Contacto' },
+        { href: '/home',     label: 'Inicio' },
+        { href: '/artists',  label: 'Directorio' },
+        { href: '/events',   label: 'Eventos' },
+        { href: '/about',    label: 'Nosotros' },
+        { href: '/contact',  label: 'Contacto' },
     ];
 
     const right = [
-        { href: '/login', label: 'Login' },
-        { href: '/register', label: 'Register' },
+        { href: '/login', label: 'Iniciar sesión' },
+        { href: '/register', label: 'Registrarse' },
     ];
 
     const isActive = (href) => (href === '/' ? pathname === '/' : pathname?.startsWith(href));

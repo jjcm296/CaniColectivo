@@ -229,6 +229,55 @@
     outline-offset: 2px;
 }
 
+/* ===== Destacar el link "Artistas" ===== */
+/* Desktop nav */
+.nbNav a[href="/artists"] {
+    padding: 8px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--persimmon) 0%, var(--xanthous) 100%);
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 10px 30px rgba(233, 90, 13, 0.35);
+    border: 1px solid rgba(26, 43, 84, 0.08);
+    transform: translateY(0);
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease, color .15s ease;
+}
+
+/* anula el subrayado animado del :after para este botón */
+.nbNav a[href="/artists"]::after {
+    background: transparent !important;
+}
+
+/* Hover/Active/Focus */
+.nbNav a[href="/artists"]:hover,
+.nbNav a[href="/artists"].nbActive,
+.nbNav a[href="/artists"]:focus-visible {
+    color: #fff;
+    filter: brightness(1.03);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 40px rgba(233, 90, 13, 0.45);
+    outline: none;
+}
+
+/* Asegura que las reglas nth-child de color no sobreescriban */
+.nbNav .nbLink[href="/artists"]:hover { color: #fff !important; }
+
+/* Móvil (panel desplegable) */
+.nbPanelLink[href="/artists"] {
+    background: linear-gradient(135deg, var(--persimmon) 0%, var(--xanthous) 100%);
+    color: #fff;
+    font-weight: 800;
+    border-color: transparent;
+    box-shadow: 0 8px 26px rgba(233, 90, 13, 0.35);
+}
+.nbPanelLink[href="/artists"]:hover,
+.nbPanelLink[href="/artists"].nbActive {
+    color: #fff;
+    filter: brightness(1.03);
+    box-shadow: 0 12px 34px rgba(233, 90, 13, 0.45);
+}
+
+
 @media (max-width: 900px) {
     .nbInner {
         padding: 6px 12px;
