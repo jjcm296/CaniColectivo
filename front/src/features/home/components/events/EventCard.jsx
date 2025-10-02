@@ -46,12 +46,17 @@ export default function EventCard({ event }) {
 
                 <div className={styles.ctaRow}>
                     {registerUrl ? (
-                        <a className={styles.btnPrimary} href={registerUrl} target="_blank" rel="noopener noreferrer">
-                            Registrame
+                        <a
+                            className={styles.btnPrimary}
+                            href={registerUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Registrarme
                         </a>
                     ) : (
                         <Link className={styles.btnPrimary} href={`/eventos/${slug}`}>
-                            Inscribirme
+                            Registrarme
                         </Link>
                     )}
                     <Link className={styles.btnGhost} href={`/eventos/${slug}`}>

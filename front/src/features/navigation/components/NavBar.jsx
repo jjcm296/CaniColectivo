@@ -11,7 +11,7 @@ export default function NavBar() {
     const pathname = usePathname();
 
     const left = [
-        { href: '/home',     label: 'Inicio' },
+        { href: '/',     label: 'Inicio' },
         { href: '/artists',  label: 'Directorio' },
         { href: '/events',   label: 'Eventos' },
         { href: '/about',    label: 'Nosotros' },
