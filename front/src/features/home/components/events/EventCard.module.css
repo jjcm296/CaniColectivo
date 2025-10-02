@@ -1,0 +1,177 @@
+:root {
+    --red:#FF2222;
+    --or:#E95A0D;
+    --yl:#FBB631;
+    --gr:#1CA155;
+    --bl:#25A0E2;
+    --nv:#1A2B54;
+
+    --card-min-w: 235px;
+    --card-max-w: 300px;
+    --card-h: 550px;
+
+    --bp-sm: 480px;
+    --bp-md: 768px;
+    --bp-lg: 1024px;
+}
+
+/* Tarjeta */
+.card{
+    display:grid;
+    grid-template-rows:auto 1fr;
+    background:#fff;
+    border:1px solid rgba(26,43,84,.08);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,.06);
+    min-width:var(--card-min-w);
+    max-width:var(--card-max-w);
+    width:100%;
+    height:var(--card-h);
+}
+
+/* Póster */
+.posterWrap{
+    position:relative;
+    width:100%;
+    background:#f6f8fc;
+    padding:10px;
+    padding-top:44px;
+    border-bottom:1px solid rgba(26,43,84,.06);
+}
+.badgeRail{
+    position:absolute; top:0; left:0; right:0;
+    height:44px;
+    padding:8px 10px;
+    display:flex; align-items:center;
+}
+.posterFrame{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/4;
+    border-radius:14px;
+    overflow:hidden;
+    background:#eaeff8;
+    border:2px solid rgba(26,43,84,.10);
+    box-shadow:inset 0 0 0 6px #fff, 0 8px 22px rgba(0,0,0,.08);
+}
+.poster{ object-fit:cover; }
+.badge{
+    display:inline-block;
+    background:linear-gradient(135deg, var(--red), var(--yl));
+    color:#fff;
+    font-weight:800;
+    font-size:12px;
+    padding:6px 10px;
+    border-radius:999px;
+    box-shadow:0 6px 16px rgba(0,0,0,.18);
+    pointer-events:none; user-select:none;
+}
+
+/* Cuerpo */
+.body{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:12px 12px 14px;
+    min-height:0;
+}
+.title{
+    font-size:clamp(15px, 2vw, 17px);
+    line-height:1.25;
+    color:var(--nv);
+    margin:0;
+}
+.meta{
+    font-size:12px;
+    margin:0;
+    color:#3b4964;
+    display:flex; align-items:center; flex-wrap:wrap;
+    gap:6px;
+}
+.dot{ width:4px; height:4px; border-radius:999px; background:#c2cce0; }
+.venue{ color:#33415e; }
+.divider{
+    height:1px;
+    background:linear-gradient(90deg, rgba(26,43,84,.14), rgba(26,43,84,.06) 60%, transparent);
+    border-radius:999px;
+    margin:2px 0 4px;
+}
+
+/* Botones */
+.ctaRow{
+    display:flex;
+    gap:10px;
+    margin-top:auto;
+}
+.btnPrimary{
+    flex:1;
+    text-align:center;
+    font-weight:700;
+    padding:10px 16px;
+    border-radius:12px;
+    text-decoration:none;
+    color:#fff;
+    background:var(--gr);
+    border:2px solid var(--gr);
+    transition:background .2s ease, border .2s ease, transform .15s ease;
+}
+.btnPrimary:hover{ background:#159347; border-color:#159347; transform:translateY(-1px); }
+.btnPrimary:active{ transform:none; opacity:.98; }
+.btnGhost{
+    flex:1;
+    text-align:center;
+    font-weight:700;
+    padding:10px 16px;
+    border-radius:12px;
+    text-decoration:none;
+    background:#fff;
+    color:var(--nv);
+    border:2px solid var(--nv);
+    transition:background .2s ease, color .2s ease;
+}
+.btnGhost:hover{ background:rgba(26,43,84,.06); }
+
+/* Responsive */
+@media (max-width: 1024px){
+    .card{ max-width:100%; }
+}
+@media (max-width: 768px){
+    .card{
+        height:auto;
+        border-radius:16px;
+    }
+    .posterWrap{
+        padding:10px;
+        padding-top:38px;
+    }
+    .badgeRail{ height:38px; padding:6px 10px; }
+    .posterFrame{
+        aspect-ratio:4/5;
+        border-radius:12px;
+        box-shadow:inset 0 0 0 5px #fff, 0 6px 18px rgba(0,0,0,.08);
+    }
+    .badge{ font-size:11px; padding:5px 9px; }
+    .body{
+        padding:12px;
+        gap:8px;
+        min-height:180px;
+    }
+    .title{ font-size:clamp(16px, 4vw, 18px); }
+    .meta{ font-size:12px; gap:6px; }
+    .ctaRow{
+        flex-direction:column;
+        gap:8px;
+    }
+    .btnPrimary, .btnGhost{ width:100%; }
+}
+@media (max-width: 480px){
+    .posterWrap{ padding:8px; padding-top:34px; }
+    .badgeRail{ height:34px; padding:6px 8px; }
+    .body{ padding:10px; gap:6px; min-height:160px; }
+    .title{ font-size:clamp(15px, 5vw, 17px); }
+    .meta{ font-size:11.5px; }
+}
+@media (prefers-reduced-motion: reduce){
+    .btnPrimary, .btnGhost{ transition:none; }
+}

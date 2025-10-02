@@ -1,0 +1,167 @@
+:root{
+    /* Paleta */
+    --red:#FF2222;
+    --or:#E95A0D;
+    --yl:#FBB631;
+    --gr:#1CA155;
+    --bl:#25A0E2;
+    --nv:#1A2B54;
+
+    /* Espaciados */
+    --ev-gap: 8px;            /* gap general */
+    --ev-gap-compact: 6px;    /* gap cuando hay 2–3 tarjetas */
+
+    /* Dimensiones */
+    --wrap-max: 1300px;       /* ancho máx del bloque en desktop */
+
+    /* Breakpoints */
+    --bp-sm: 480px;
+    --bp-md: 768px;
+    --bp-lg: 1024px;
+}
+
+/* ===== Sección ===== */
+.section{
+    padding:44px 20px 18px;
+    background:#ffffff;
+}
+
+.header{
+    max-width:var(--wrap-max);
+    margin:0 auto 12px;
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.title{
+    font-size:clamp(20px, 3vw, 30px);
+    color:var(--nv);
+    font-weight:900;
+    letter-spacing:.2px;
+    margin:0;
+}
+
+/* Botón 'Ver todos' */
+.linkAll{
+    color:var(--nv);
+    text-decoration:none;
+    font-weight:800;
+    border:1px solid rgba(26,43,84,.20);
+    padding:8px 12px;
+    border-radius:12px;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+}
+.linkAll:hover{
+    border-color:rgba(26,43,84,.36);
+    color:#0f1e3e;
+    background:rgba(37,160,226,.06);
+}
+
+/* ===== 1 tarjeta ===== */
+.single{
+    max-width:var(--wrap-max);
+    margin:6px auto 0;
+    display:flex;
+    justify-content:flex-start;   /* alineado a la izquierda */
+}
+.single :global(.card){ max-width:560px; }
+
+/* ===== GRID (2–3 tarjetas) ===== */
+.grid{
+    max-width:var(--wrap-max);
+    margin:6px auto 0;
+    display:grid;
+    gap:var(--ev-gap);
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    align-items:start;
+    justify-items:stretch;        /* que la tarjeta llene la celda */
+}
+
+/* Variante compacta para 2–3: menos gap y más pegadas, alineadas a la izquierda */
+.compacto{
+    gap:var(--ev-gap-compact);
+    justify-content:flex-start;
+    grid-template-columns:repeat(auto-fit, minmax(280px, max-content));
+}
+
+/* La tarjeta debe ocupar toda su celda */
+.grid :global(.card){
+    width:100%;
+    max-width:none;
+    margin:0;
+}
+
+/* ===== CARRUSEL (≥4 tarjetas) ===== */
+.scroller{
+    position:relative;
+    max-width:var(--wrap-max);
+    margin:8px auto 0;
+    padding:4px 0;
+}
+.track{
+    display:flex;
+    gap:var(--ev-gap);
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    padding:2px 0 8px;            /* sin padding lateral para que quepan más */
+}
+.slide{ scroll-snap-align:start; }
+.track :global(.card){ width:100%; margin:0; }
+
+/* Scrollbar */
+.track::-webkit-scrollbar{ height:8px; }
+.track::-webkit-scrollbar-thumb{
+    background:linear-gradient(90deg, var(--nv), var(--bl));
+    border-radius:999px;
+}
+
+/* ===== Estados vacíos ===== */
+.empty{
+    max-width:var(--wrap-max);
+    margin:0 auto;
+    color:#33415e;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px){
+    :root{
+        --ev-gap: 6px;
+        --wrap-max: 1200px;
+    }
+}
+
+@media (max-width: 768px){
+    :root{
+        --ev-gap: 6px;
+        --ev-gap-compact: 4px;
+    }
+    .section{ padding:36px 16px 16px; }
+    .header{ margin-bottom:10px; }
+    .grid{
+        gap:var(--ev-gap);
+        grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .compacto{
+        gap:var(--ev-gap-compact);
+        grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .scroller{ padding:2px 0; }
+}
+
+@media (max-width: 480px){
+    :root{
+        --ev-gap: 4px;
+        --ev-gap-compact: 2px;
+    }
+    .section{ padding:28px 12px 14px; }
+    .title{ font-size:clamp(20px, 6vw, 26px); }
+    .grid{ grid-template-columns:1fr; }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce){
+    .track{ scroll-behavior:auto; }
+}
