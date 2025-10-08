@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from './EventCard.module.css';
+import styles from '../styles/EventCard.module.css';
 
 export default function EventCard({ event }) {
     const { title, dateISO, venue, poster, slug, registerUrl, isCause } = event;

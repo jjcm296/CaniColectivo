@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import EventCard from './EventCard';
+import EventCard from '../../../events/components/EventCard';
 import styles from './EventSpotlight.module.css';
 
 export default function EventSpotlight({ events = [] }) {
