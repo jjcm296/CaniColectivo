@@ -8,16 +8,16 @@
     --nv:#1A2B54;
 
     /* Espaciados */
-    --ev-gap: 8px;            /* gap general */
-    --ev-gap-compact: 6px;    /* gap cuando hay 2–3 tarjetas */
+    --ev-gap: 8px;
+    --ev-gap-compact: 6px;
 
     /* Dimensiones */
-    --wrap-max: 1300px;       /* ancho máx del bloque en desktop */
+    --wrap-max: 1385px;
 
     /* Breakpoints */
     --bp-sm: 480px;
     --bp-md: 768px;
-    --bp-lg: 1024px;
+    --bp-lg: 1025px;
 }
 
 /* ===== Sección ===== */
@@ -33,6 +33,7 @@
     align-items:end;
     justify-content:space-between;
     gap:10px;
+    padding: 0 40px;
 }
 
 .title{
@@ -64,7 +65,7 @@
     max-width:var(--wrap-max);
     margin:6px auto 0;
     display:flex;
-    justify-content:flex-start;   /* alineado a la izquierda */
+    justify-content:flex-start;
 }
 .single :global(.card){ max-width:560px; }
 
@@ -76,17 +77,13 @@
     gap:var(--ev-gap);
     grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
     align-items:start;
-    justify-items:stretch;        /* que la tarjeta llene la celda */
+    justify-items:stretch;
 }
-
-/* Variante compacta para 2–3: menos gap y más pegadas, alineadas a la izquierda */
 .compacto{
     gap:var(--ev-gap-compact);
     justify-content:flex-start;
     grid-template-columns:repeat(auto-fit, minmax(280px, max-content));
 }
-
-/* La tarjeta debe ocupar toda su celda */
 .grid :global(.card){
     width:100%;
     max-width:none;
@@ -98,27 +95,70 @@
     position:relative;
     max-width:var(--wrap-max);
     margin:8px auto 0;
-    padding:4px 0;
+    /* “Respiro” visual sin reducir tarjetas */
+    padding:0 32px;
 }
+
+.viewport{
+    overflow:hidden;              /* oculta barra */
+    border-radius:16px;
+}
+
 .track{
     display:flex;
     gap:var(--ev-gap);
-    overflow-x:auto;
+    overflow-x:auto;              /* sigue siendo desplazable */
     overscroll-behavior-x:contain;
     scroll-snap-type:x mandatory;
-    padding:2px 0 8px;            /* sin padding lateral para que quepan más */
+    scroll-padding-left:32px;     /* padding para el snap al inicio */
+    scroll-padding-right:32px;
+    padding:2px 0 8px;
 }
+
+/* Cada ítem ocupa su ancho original (no comprimimos) */
 .slide{ scroll-snap-align:start; }
 .track :global(.card){ width:100%; margin:0; }
 
-/* Scrollbar */
-.track::-webkit-scrollbar{ height:8px; }
-.track::-webkit-scrollbar-thumb{
-    background:linear-gradient(90deg, var(--nv), var(--bl));
-    border-radius:999px;
+/* Ocultar scrollbar en todos los navegadores */
+.track::-webkit-scrollbar{ display:none; }
+.track{ -ms-overflow-style:none; scrollbar-width:none; }
+
+/* Flechas */
+.navBtn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    border:1px solid rgba(26,43,84,.20);
+    background:#fff;
+    font-size:28px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 16px rgba(0,0,0,.08);
+    transition:transform .12s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;
+    z-index:2;
+}
+.navBtn:hover{
+    transform:translateY(-50%) translateY(-1px);
+    border-color:rgba(26,43,84,.36);
+    box-shadow:0 8px 18px rgba(0,0,0,.10);
+}
+.navBtn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+    transform:translateY(-50%);
+    box-shadow:none;
 }
 
-/* ===== Estados vacíos ===== */
+.navLeft{ left:6px; }
+.navRight{ right:6px; }
+
+/* Estados vacíos */
 .empty{
     max-width:var(--wrap-max);
     margin:0 auto;
@@ -131,6 +171,7 @@
         --ev-gap: 6px;
         --wrap-max: 1200px;
     }
+    .scroller{ padding:0 24px; }
 }
 
 @media (max-width: 768px){
@@ -148,7 +189,7 @@
         gap:var(--ev-gap-compact);
         grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
     }
-    .scroller{ padding:2px 0; }
+    .scroller{ padding:0 20px; }
 }
 
 @media (max-width: 480px){
@@ -159,6 +200,7 @@
     .section{ padding:28px 12px 14px; }
     .title{ font-size:clamp(20px, 6vw, 26px); }
     .grid{ grid-template-columns:1fr; }
+    .scroller{ padding:0 12px; }
 }
 
 /* Accesibilidad */

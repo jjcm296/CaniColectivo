@@ -19,7 +19,7 @@
 .card {
     display: grid;
     grid-template-rows: auto 1fr;
-    background: #fff;
+    background: #F7F7F7;
     border: 1px solid rgba(26,43,84,.08);
     border-radius: 18px;
     overflow: hidden;
@@ -39,7 +39,6 @@
 .posterWrap {
     position: relative;
     width: 100%;
-    background: #f6f8fc;
     padding: 10px;
     padding-top: 44px;
     border-bottom: 1px solid rgba(26,43,84,.06);
