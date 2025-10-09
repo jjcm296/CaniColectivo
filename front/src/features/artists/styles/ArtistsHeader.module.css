@@ -1,0 +1,43 @@
+.header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.titleWrap {
+    display: grid;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--nv);
+}
+
+.subtitle {
+    color: #6b7280;
+    font-size: 15px;
+}
+
+/* Buscador */
+.searchRow {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+}
+
+/* Responsivo */
+@media (max-width: 640px) {
+    .header {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .searchRow {
+        margin-top: 12px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+}

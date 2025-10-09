@@ -4,3 +4,25 @@ html, body { margin: 0; padding: 0; }
 body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #fff; color: #111; }
 main { padding: 24px; }
 a { text-decoration: none; color: inherit; }
+
+:root {
+    --red: #FF2222;
+    --or: #E95A0D;
+    --yl: #FBB631;
+    --gr: #1CA155;
+    --bl: #25A0E2;
+    --nv: #1A2B54;
+
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+body {
+    background-color: #fafafa;
+    color: var(--nv);
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+button {
+    border-radius: 10px;
+}

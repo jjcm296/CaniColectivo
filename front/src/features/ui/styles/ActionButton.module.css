@@ -1,0 +1,53 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+    border: 0;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.08s ease;
+    box-shadow: var(--shadow);
+}
+
+.btn svg {
+    stroke: currentColor;
+}
+
+/* Variantes */
+.primary {
+    background: var(--bl);
+    color: #fff;
+}
+.primary:hover {
+    background: #1c8ad0;
+}
+.primary:active {
+    transform: translateY(1px);
+}
+
+.success {
+    background: var(--gr);
+    color: #fff;
+}
+.success:hover {
+    background: #169047;
+}
+
+.danger {
+    background: var(--red);
+    color: #fff;
+}
+.danger:hover {
+    background: #d71c1c;
+}
+
+.secondary {
+    background: #fff;
+    border: 1px solid var(--bl);
+    color: var(--bl);
+}
+.secondary:hover {
+    background: rgba(37, 160, 226, 0.08);
+}
