@@ -1,3 +1,5 @@
+'use client';
+
 import ArtistsHeader from "@/features/artists/components/ArtistsHeader";
 import ArtistsFilters from "@/features/artists/components/ArtistsFilters";
 
