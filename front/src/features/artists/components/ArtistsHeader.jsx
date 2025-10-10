@@ -2,6 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import ActionButton from "@/features/ui/components/ActionButton";
 import SearchBar from "@/features/ui/components/SearchBar";
+import FilterPillDropdown from "@/features/artists/components/FilterPillDropdown";
 import styles from "../styles/ArtistsHeader.module.css";
 
 export default function ArtistsHeader() {
@@ -19,23 +20,22 @@ export default function ArtistsHeader() {
 
     return (
         <header className={styles.header}>
-            {/* Título + descripción */}
             <div className={styles.titleWrap}>
                 <h1 className={styles.title}>Artistas</h1>
-                <p className={styles.subtitle}>
-                    Descubre y conecta con talento local
-                </p>
+                <p className={styles.subtitle}>Descubre y conecta con talento local</p>
             </div>
 
-            {/* Botón de acción */}
-            <ActionButton
-                onClick={() => router.push("/artists/new")}
-                variant="primary"
-            >
-                + Agregar Artista
-            </ActionButton>
+            {/* Botones de acción a la derecha */}
+            <div className={styles.actions}>
+                <ActionButton
+                    onClick={() => router.push("/artists/new")}
+                    variant="primary"
+                >
+                    + Agregar Artista
+                </ActionButton>
+                <FilterPillDropdown />
+            </div>
 
-            {/* Buscador */}
             <div className={styles.searchRow}>
                 <SearchBar
                     defaultValue={q}

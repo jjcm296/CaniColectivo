@@ -5,10 +5,12 @@
     gap: 8px;
     font-weight: 500;
     border: 0;
-    padding: 10px 16px;
+    padding: 14px 20px;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.08s ease;
     box-shadow: var(--shadow);
+    font-size: 15px;
+    border-radius: 8px;
 }
 
 .btn svg {

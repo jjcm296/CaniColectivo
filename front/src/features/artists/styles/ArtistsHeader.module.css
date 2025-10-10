@@ -5,10 +5,6 @@
     border-bottom: 1px solid #e5e7eb;
 }
 
-.titleWrap {
-    display: grid;
-}
-
 .title {
     font-size: 28px;
     font-weight: 700;
@@ -24,6 +20,12 @@
 .searchRow {
     grid-column: 1 / -1;
     margin-top: 8px;
+}
+
+.actions {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
 }
 
 /* Responsivo */
