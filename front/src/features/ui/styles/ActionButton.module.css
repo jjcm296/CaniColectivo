@@ -5,11 +5,11 @@
     gap: 8px;
     font-weight: 500;
     border: 0;
-    padding: 14px 20px;
+    padding: 13px 18px;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.08s ease;
     box-shadow: var(--shadow);
-    font-size: 15px;
+    font-size: 14px;
     border-radius: 8px;
 }
 
