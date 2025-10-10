@@ -30,9 +30,10 @@ export default function ArtistsHeader() {
                 <ActionButton
                     onClick={() => router.push("/artists/new")}
                     variant="primary"
+                    bg="var(--gr)"
                 >
                     + Agregar Artista
-                </ActionButton>
+                </ActionButton >
                 <FilterPillDropdown />
             </div>
 
