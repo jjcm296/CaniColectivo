@@ -3,6 +3,7 @@ import CircleCarousel from '../features/home/components/CicleCarousel';
 import HomeCarouselSection from "@/features/home/HomeCarouselSection";
 import Footer from "@/features/home/components/footer/Footer";
 import EventSpotlight from "@/features/home/components/events-spotlight/EventSpotlight";
+import VideoSpotlight from "@/features/home/components/videos-spotlight/VideoSpotlight";
 
 export default function HomePage() {
     const eventos = [
@@ -73,6 +74,7 @@ export default function HomePage() {
             <Hero />
             <EventSpotlight events={eventos} />
             <HomeCarouselSection />
+            <VideoSpotlight />
             <Footer />
         </>
     );
