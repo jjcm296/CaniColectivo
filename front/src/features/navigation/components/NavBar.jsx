@@ -12,7 +12,7 @@ export default function NavBar() {
 
     const left = [
         { href: '/',     label: 'Inicio' },
-        { href: '/artists',  label: 'Directorio' },
+        { href: '/artists',  label: 'Artistas' },
         { href: '/events',   label: 'Eventos' },
         { href: '/about',    label: 'Nosotros' },
         { href: '/contact',  label: 'Contacto' },
