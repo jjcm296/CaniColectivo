@@ -1,18 +1,69 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Heart, Palette, Trophy, Music, BookOpen, Theater, ChevronDown } from "lucide-react";
+import {
+    Sparkles,
+    Heart,
+    Palette,
+    Trophy,
+    Music,
+    BookOpen,
+    Theater,
+    ChevronDown,
+} from "lucide-react";
 import styles from "../styles/FilterPillDropdown.module.css";
 
 // Reutiliza tus categorías
 const CATEGORIES = [
-    { key:"all", label:"Todos", icon:Sparkles,  gradient:"linear-gradient(135deg, var(--bl) 0%, #1c8ad0 100%)" },
-    { key:"cause", label:"Evento con causa", icon:Heart, gradient:"linear-gradient(135deg, var(--red) 0%, #e11a1a 100%)" },
-    { key:"cultural", label:"Cultural", icon:Palette, gradient:"linear-gradient(135deg, var(--or) 0%, #c24a0b 100%)" },
-    { key:"sport", label:"Deportivo", icon:Trophy, gradient:"linear-gradient(135deg, var(--yl) 0%, #FBB631 100%)" },
-    { key:"music", label:"Musical", icon:Music, gradient:"linear-gradient(135deg, var(--gr) 0%, #15834a 100%)" },
-    { key:"educative", label:"Educativo", icon:BookOpen, gradient:"linear-gradient(135deg, var(--bl) 0%, #1b83cc 100%)" },
-    { key:"theatre", label:"Escénicas", icon:Theater, gradient:"linear-gradient(135deg, var(--nv) 0%, #0f1833 100%)" },
+    {
+        key: "all",
+        label: "Todos",
+        icon: Sparkles,
+        gradient: "linear-gradient(135deg, var(--bl) 0%, #1c8ad0 100%)",
+        color: "var(--bl)",
+    },
+    {
+        key: "cause",
+        label: "Evento con causa",
+        icon: Heart,
+        gradient: "linear-gradient(135deg, var(--red) 0%, #e11a1a 100%)",
+        color: "var(--red)",
+    },
+    {
+        key: "cultural",
+        label: "Cultural",
+        icon: Palette,
+        gradient: "linear-gradient(135deg, var(--or) 0%, #c24a0b 100%)",
+        color: "var(--or)",
+    },
+    {
+        key: "sport",
+        label: "Deportivo",
+        icon: Trophy,
+        gradient: "linear-gradient(135deg, var(--yl) 0%, #FBB631 100%)",
+        color: "var(--yl)",
+    },
+    {
+        key: "music",
+        label: "Musical",
+        icon: Music,
+        gradient: "linear-gradient(135deg, var(--gr) 0%, #15834a 100%)",
+        color: "var(--gr)",
+    },
+    {
+        key: "educative",
+        label: "Educativo",
+        icon: BookOpen,
+        gradient: "linear-gradient(135deg, var(--bl) 0%, #1b83cc 100%)",
+        color: "var(--bl)",
+    },
+    {
+        key: "theatre",
+        label: "Escénicas",
+        icon: Theater,
+        gradient: "linear-gradient(135deg, var(--nv) 0%, #0f1833 100%)",
+        color: "var(--nv)",
+    },
 ];
 
 export default function FilterPillDropdown() {
@@ -24,12 +75,14 @@ export default function FilterPillDropdown() {
     const ref = useRef(null);
 
     useEffect(() => {
-        function onDoc(e){ if(ref.current && !ref.current.contains(e.target)) setOpen(false); }
+        function onDoc(e) {
+            if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+        }
         document.addEventListener("click", onDoc);
         return () => document.removeEventListener("click", onDoc);
     }, []);
 
-    const active = CATEGORIES.find(c => c.key === cat) || CATEGORIES[0];
+    const active = CATEGORIES.find((c) => c.key === cat) || CATEGORIES[0];
     const ActiveIcon = active.icon;
 
     const setCat = (key) => {
@@ -48,16 +101,28 @@ export default function FilterPillDropdown() {
                 className={styles.pill}
                 aria-haspopup="listbox"
                 aria-expanded={open}
-                onClick={() => setOpen(v => !v)}
+                onClick={() => setOpen((v) => !v)}
+                style={{ borderColor: active.color }}
             >
-                <span className={styles.swatch} style={{ background: active.gradient }} />
+                <span
+                    className={styles.swatch}
+                    style={{ background: active.gradient }}
+                />
                 <ActiveIcon size={16} className={styles.icon} />
                 <span className={styles.label}>{active.label}</span>
-                <ChevronDown size={16} className={`${styles.chevron} ${open ? styles.open : ""}`} />
+                <ChevronDown
+                    size={16}
+                    className={`${styles.chevron} ${
+                        open ? styles.open : ""
+                    }`}
+                />
             </button>
 
-            <div className={`${styles.dropdown} ${open ? styles.show : ""}`} role="listbox">
-                {CATEGORIES.map(c => {
+            <div
+                className={`${styles.dropdown} ${open ? styles.show : ""}`}
+                role="listbox"
+            >
+                {CATEGORIES.map((c) => {
                     const Ico = c.icon;
                     const isActive = c.key === active.key;
                     return (
@@ -65,12 +130,19 @@ export default function FilterPillDropdown() {
                             key={c.key}
                             role="option"
                             aria-selected={isActive}
-                            className={`${styles.option} ${isActive ? styles.optionActive : ""}`}
+                            className={`${styles.option} ${
+                                isActive ? styles.optionActive : ""
+                            }`}
                             onClick={() => setCat(c.key)}
                         >
-                            <span className={styles.optionSwatch} style={{ background: c.gradient }} />
+                            <span
+                                className={styles.optionSwatch}
+                                style={{ background: c.gradient }}
+                            />
                             <Ico size={16} className={styles.optionIcon} />
-                            <span className={styles.optionLabel}>{c.label}</span>
+                            <span className={styles.optionLabel}>
+                                {c.label}
+                            </span>
                         </button>
                     );
                 })}
