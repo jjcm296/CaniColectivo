@@ -1,42 +1,51 @@
 .header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 14px;
 }
 
+/* Nivel 1 */
 .title {
     font-size: 28px;
     font-weight: 700;
     color: var(--nv);
+    margin: 0;
 }
 
+/* Nivel 2 */
 .subtitle {
     color: #6b7280;
     font-size: 15px;
+    margin: 0;
 }
 
-/* Buscador */
-.searchRow {
-    grid-column: 1 / -1;
-    margin-top: 8px;
+/* Nivel 3: botones + buscador */
+.actionRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
 }
 
-.actions {
-    display: inline-flex;
-    gap: 10px;
+/* Asegura que el buscador se expanda */
+.searchWrap {
+    flex: 1; /* <-- hace que el buscador se estire */
+    display: flex;
     align-items: center;
 }
 
-/* Responsivo */
+/* Responsive móvil */
 @media (max-width: 640px) {
-    .header {
-        grid-template-columns: 1fr;
-        align-items: start;
+    .actionRow {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .searchRow {
-        margin-top: 12px;
+    .searchWrap {
+        width: 100%;
     }
 
     .title {

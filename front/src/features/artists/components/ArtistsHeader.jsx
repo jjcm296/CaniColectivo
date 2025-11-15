@@ -20,30 +20,29 @@ export default function ArtistsHeader() {
 
     return (
         <header className={styles.header}>
-            <div className={styles.titleWrap}>
-                <h1 className={styles.title}>Artistas</h1>
-                <p className={styles.subtitle}>Descubre y conecta con talento local</p>
-            </div>
+            <h1 className={styles.title}>Artistas</h1>
+            <p className={styles.subtitle}>Descubre y conecta con talento local</p>
 
-            {/* Botones de acción a la derecha */}
-            <div className={styles.actions}>
+            <div className={styles.actionRow}>
+                <div className={styles.searchWrap}>
+                    <SearchBar
+                        defaultValue={q}
+                        placeholder="Buscar artistas..."
+                        onChange={onSearch}
+                    />
+                </div>
                 <ActionButton
                     onClick={() => router.push("/artists/new")}
                     variant="primary"
                     bg="var(--gr)"
                 >
                     + Agregar Artista
-                </ActionButton >
-                <FilterPillDropdown />
-            </div>
+                </ActionButton>
 
-            <div className={styles.searchRow}>
-                <SearchBar
-                    defaultValue={q}
-                    placeholder="Buscar artistas..."
-                    onChange={onSearch}
-                />
+                <FilterPillDropdown />
+
             </div>
         </header>
+
     );
 }
