@@ -20,6 +20,30 @@
     border-bottom: 1px solid var(--line);
 }
 
+.nbScrolled {
+    /*backdrop-filter: blur(12px);*/
+    /*background: rgba(255, 255, 255, 0.80);*/
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.65);
+    transition: backdrop-filter 0.2s ease, background 0.2s ease;
+}
+
+/* Difuminado en la parte inferior */
+.nbWrapper.nbScrolled::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -12px; /* sobresale un poquito */
+    width: 100%;
+    height: 18px;
+    pointer-events: none;
+    background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0.0) 100%
+    );
+}
+
 .nbInner {
     max-width: 1300px;
     margin: 0 auto;

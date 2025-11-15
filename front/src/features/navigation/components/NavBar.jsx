@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -8,6 +8,7 @@ import styles from './NavBar.module.css';
 
 export default function NavBar() {
     const [open, setOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
 
     const left = [
@@ -23,11 +24,17 @@ export default function NavBar() {
         { href: '/register', label: 'Registrarse' },
     ];
 
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 10);
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
     const isActive = (href) => (href === '/' ? pathname === '/' : pathname?.startsWith(href));
     const closeMenu = () => setOpen(false);
 
     return (
-        <header className={styles.nbWrapper}>
+        <header className={`${styles.nbWrapper} ${scrolled ? styles.nbScrolled : ''}`}>
             <div className={styles.nbInner}>
                 <div className={styles.nbBrand}>
                     <Link href="/" className={styles.nbBrandLink} onClick={closeMenu}>
