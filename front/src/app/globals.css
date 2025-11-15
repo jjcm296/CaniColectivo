@@ -23,6 +23,29 @@ body {
     font-family: 'Inter', system-ui, sans-serif;
 }
 
+/* Efecto hover para TODOS los botones */
 button {
     border-radius: 10px;
+    transition:
+            background 0.16s ease,
+            box-shadow 0.16s ease,
+            transform 0.08s ease;
 }
+
+/* Hover con efecto levantar */
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+/* Quitar el borde azul feo en navegadores */
+button:focus {
+    outline: none;
+}
+
+/* Estado activo (cuando lo presionas) */
+button:active {
+    transform: translateY(0px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
