@@ -150,7 +150,7 @@ public class Artist {
     public void addSpeciality(Speciality speciality) {
         if (speciality == null) return;
         if (specialities.add(speciality)) {
-            speciality.getArtistsInternal().add(this); // update inverse side
+            speciality.getArtistsInternal().add(this);
         }
     }
 
