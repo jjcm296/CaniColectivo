@@ -15,10 +15,10 @@ export default function Hero() {
                 </h1>
 
                 <div className={styles.actions}>
-                    <Link href="/artistas" className={styles.btnPrimary}>
+                    <Link href="/artists" className={styles.btnPrimary}>
                         Explorar artistas
                     </Link>
-                    <Link href="/eventos" className={styles.btnSecondary}>
+                    <Link href="/events" className={styles.btnSecondary}>
                         Ver eventos
                     </Link>
                 </div>
