@@ -56,7 +56,7 @@ export default function NavBar() {
         <header className={`${styles.nbWrapper} ${scrolled ? styles.nbScrolled : ''}`}>
             <div className={styles.nbInner}>
                 <div className={styles.nbBrand}>
-                    <Link href="/public" className={styles.nbBrandLink} onClick={closeMenu}>
+                    <Link href="/" className={styles.nbBrandLink} onClick={closeMenu}>
                         <Image
                             src="/home/Logo_cani.svg"
                             alt="Logo"
