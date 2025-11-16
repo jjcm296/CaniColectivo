@@ -31,14 +31,6 @@ export default function ArtistsHeader() {
                         onChange={onSearch}
                     />
                 </div>
-                <ActionButton
-                    onClick={() => router.push("/artists/new")}
-                    variant="primary"
-                    bg="var(--gr)"
-                >
-                    + Agregar Artista
-                </ActionButton>
-
                 <FilterPillDropdown />
 
             </div>
