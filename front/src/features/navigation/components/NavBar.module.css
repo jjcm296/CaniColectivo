@@ -142,23 +142,38 @@
     transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
+
 .nbActions a[href="/login"] {
     background: var(--nv);
     color: #fff;
     border-color: var(--nv);
     box-shadow: 0 8px 30px rgba(26, 43, 84, 0.25);
-}
-.nbActions a[href="/login"]:hover {
-    box-shadow: 0 10px 40px rgba(26, 43, 84, 0.35);
+    transition: all .2s ease;
 }
 
+.nbActions a[href="/login"]:hover {
+    background: #fff;
+    color: var(--nv);
+    border-color: var(--nv);
+    box-shadow: 0 6px 20px rgba(26, 43, 84, 0.20);
+
+
+}
+
+/* Botón blanco base */
 .nbActions a[href="/register"] {
     background: #fff;
     color: var(--nv);
     border-color: var(--nv);
+    transition: all .2s ease;
 }
+
+/* Hover → se vuelve azul */
 .nbActions a[href="/register"]:hover {
-    background: #f5f8ff;
+    background: var(--nv);
+    color: #fff;
+    border-color: var(--nv);
+    box-shadow: 0 8px 28px rgba(26, 43, 84, 0.25);
 }
 
 .nbToggle {
