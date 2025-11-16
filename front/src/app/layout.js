@@ -1,5 +1,5 @@
 import './globals.css';
-import NavBar from '../features/navigation/components/NavBar';
+import NavBar from '../features/navigation/NavBar';
 
 export const metadata = {
     title: 'Artistas',

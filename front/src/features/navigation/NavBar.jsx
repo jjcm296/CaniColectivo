@@ -6,7 +6,18 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import styles from './NavBar.module.css';
 
+import UserAvatar from './user-avatar/UserAvatar';
+
+
 export default function NavBar() {
+
+    const user = {
+        name: "JordaIn",
+        imageUrl: null
+    };
+
+
+
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
@@ -45,7 +56,7 @@ export default function NavBar() {
         <header className={`${styles.nbWrapper} ${scrolled ? styles.nbScrolled : ''}`}>
             <div className={styles.nbInner}>
                 <div className={styles.nbBrand}>
-                    <Link href="/" className={styles.nbBrandLink} onClick={closeMenu}>
+                    <Link href="/public" className={styles.nbBrandLink} onClick={closeMenu}>
                         <Image
                             src="/home/Logo_cani.svg"
                             alt="Logo"
@@ -79,7 +90,6 @@ export default function NavBar() {
                             );
                         }
 
-                        // Resto de links igual que antes
                         return (
                             <Link
                                 key={l.href}
@@ -92,8 +102,12 @@ export default function NavBar() {
                     })}
                 </nav>
 
-
                 <div className={styles.nbActions}>
+                    <UserAvatar
+                        name={user.name}
+                        imageUrl={user.imageUrl}
+                    />
+
                     {right.map((l) => (
                         <Link
                             key={l.href}
@@ -104,6 +118,8 @@ export default function NavBar() {
                         </Link>
                     ))}
                 </div>
+
+
 
                 <button
                     className={styles.nbToggle}

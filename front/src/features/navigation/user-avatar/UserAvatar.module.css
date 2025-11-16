@@ -1,0 +1,99 @@
+.avatarLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(26, 43, 84, 0.16); /* usa var(--nv) si quieres */
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 6px 18px rgba(26, 43, 84, 0.18);
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+            background 0.16s ease,
+            border-color 0.16s ease,
+            box-shadow 0.16s ease,
+            transform 0.08s ease,
+            color 0.16s ease;
+}
+
+.avatarLink:hover {
+    background: rgba(26, 43, 84, 0.94); /* var(--nv) oscuro */
+    border-color: rgba(26, 43, 84, 0.9);
+    box-shadow: 0 10px 28px rgba(26, 43, 84, 0.35);
+    transform: translateY(-1px);
+}
+
+.avatarLink:hover .avatarLabel {
+    color: #ffffff;
+}
+
+/* Círculo del avatar */
+.avatarCircle {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    background: linear-gradient(135deg, #1a2b54, #4b6cb7);
+    box-shadow:
+            0 0 0 1px #ffffff,
+            0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.avatarImage {
+    object-fit: cover;
+}
+
+.avatarInitial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+}
+
+.avatarLabel {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--nv, #1a2b54);
+    white-space: nowrap;
+    max-width: 120px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* Modo hover cuando el fondo se oscurece */
+.avatarLink:hover .avatarCircle {
+    box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.85),
+            0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
+/* Responsive: en pantallas muy pequeñas solo mostrar el círculo */
+@media (max-width: 480px) {
+    .avatarLink {
+        padding: 2px;
+        gap: 0;
+        background: transparent;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    .avatarLink:hover {
+        background: transparent;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .avatarLabel {
+        display: none;
+    }
+}
