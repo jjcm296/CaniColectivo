@@ -11,8 +11,8 @@
 	<groupId>com.canicolectivo</groupId>
 	<artifactId>back</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>back</name>
-	<description>back</description>
+	<name>Cani</name>
+	<description>CaniBackend </description>
 	<url/>
 	<licenses>
 		<license/>
@@ -55,6 +55,11 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vladmihalcea</groupId>
+			<artifactId>hibernate-types-60</artifactId>
+			<version>2.21.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
