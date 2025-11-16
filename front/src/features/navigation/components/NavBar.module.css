@@ -1,28 +1,14 @@
-:root {
-    --red: #FF2222;
-    --persimmon: #E95A0D;
-    --xanthous: #FBB631;
-    --green: #1CA155;
-    --blue: #25A0E2;
-    --space: #1A2B54;
-
-    --bg: #ffffff;
-    --text: #1A2B54;
-    --muted: #415173;
-    --line: #eceff3;
-}
 
 .nbWrapper {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: var(--bg);
-    border-bottom: 1px solid var(--line);
+    background: #ffffff;
+    border-bottom: 1px solid #eceff3;
 }
 
+/* Navbar translúcido al hacer scroll */
 .nbScrolled {
-    /*backdrop-filter: blur(12px);*/
-    /*background: rgba(255, 255, 255, 0.80);*/
     backdrop-filter: blur(16px);
     background: rgba(255, 255, 255, 0.65);
     transition: backdrop-filter 0.2s ease, background 0.2s ease;
@@ -33,7 +19,7 @@
     content: "";
     position: absolute;
     left: 0;
-    bottom: -12px; /* sobresale un poquito */
+    bottom: -12px;
     width: 100%;
     height: 18px;
     pointer-events: none;
@@ -80,7 +66,7 @@
     position: relative;
     padding: 8px 0;
     font-weight: 600;
-    color: var(--text);
+    color: var(--nv);
     border-radius: 8px;
     transition: color 0.15s ease;
 }
@@ -105,39 +91,38 @@
 }
 
 .nbLink:nth-child(2):hover {
-    color: var(--persimmon);
+    color: var(--or);
 }
 .nbLink:nth-child(2):hover::after {
-    background: var(--persimmon);
+    background: var(--or);
 }
 
 .nbLink:nth-child(3):hover {
-    color: var(--xanthous);
+    color: var(--yl);
 }
 .nbLink:nth-child(3):hover::after {
-    background: var(--xanthous);
+    background: var(--yl);
 }
 
 .nbLink:nth-child(4):hover {
-    color: var(--green);
+    color: var(--gr);
 }
 .nbLink:nth-child(4):hover::after {
-    background: var(--green);
+    background: var(--gr);
 }
 
 .nbLink:nth-child(5):hover {
-    color: var(--blue);
+    color: var(--bl);
 }
 .nbLink:nth-child(5):hover::after {
-    background: var(--blue);
+    background: var(--bl);
 }
-
 
 .nbActive {
-    color: var(--space);
+    color: var(--nv);
 }
 .nbActive::after {
-    background: var(--blue);
+    background: var(--bl);
 }
 
 .nbActions {
@@ -150,17 +135,17 @@
     padding: 10px 16px;
     border-radius: 14px;
     font-weight: 700;
-    border: 1px solid var(--space);
-    color: var(--space);
+    border: 1px solid var(--nv);
+    color: var(--nv);
     background: #fff;
     box-shadow: 0 10px 60px rgba(26, 43, 84, 0.06);
     transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .nbActions a[href="/login"] {
-    background: var(--space);
+    background: var(--nv);
     color: #fff;
-    border-color: var(--space);
+    border-color: var(--nv);
     box-shadow: 0 8px 30px rgba(26, 43, 84, 0.25);
 }
 .nbActions a[href="/login"]:hover {
@@ -169,8 +154,8 @@
 
 .nbActions a[href="/register"] {
     background: #fff;
-    color: var(--space);
-    border-color: var(--space);
+    color: var(--nv);
+    border-color: var(--nv);
 }
 .nbActions a[href="/register"]:hover {
     background: #f5f8ff;
@@ -182,7 +167,7 @@
     width: 40px;
     height: 32px;
     border-radius: 10px;
-    border: 1px solid var(--line);
+    border: 1px solid #eceff3;
     background: #fff;
     cursor: pointer;
     align-items: center;
@@ -193,7 +178,7 @@
 .nbToggleBar {
     width: 20px;
     height: 2px;
-    background: var(--space);
+    background: var(--nv);
     border-radius: 2px;
 }
 
@@ -201,7 +186,7 @@
     display: block;
     max-height: 0;
     overflow: hidden;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid #eceff3;
     background: #fff;
     transition: max-height 0.25s ease;
 }
@@ -224,24 +209,24 @@
     display: block;
     padding: 12px 14px;
     border-radius: 10px;
-    color: var(--space);
+    color: var(--nv);
     font-weight: 600;
     border: 1px solid transparent;
     transition: background 0.15s ease, color 0.15s ease;
 }
 .nbPanelLink:hover {
     background: #f7faff;
-    color: var(--blue);
+    color: var(--bl);
 }
 .nbPanelAction:hover {
     background: #f7f9ff;
 }
 
 .nbPanelLink.nbActive {
-    color: var(--blue);
+    color: var(--bl);
 }
 .nbPanelAction.nbActive {
-    color: var(--space);
+    color: var(--nv);
 }
 
 .nbLink:focus-visible,
@@ -249,7 +234,7 @@
 .nbPanelLink:focus-visible,
 .nbPanelAction:focus-visible,
 .nbToggle:focus-visible {
-    outline: 3px solid var(--blue);
+    outline: 3px solid var(--bl);
     outline-offset: 2px;
 }
 
@@ -258,7 +243,7 @@
 .nbNav a[href="/artists"] {
     padding: 8px 14px;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--persimmon) 0%, var(--xanthous) 100%);
+    background: linear-gradient(135deg, var(--or) 0%, var(--yl) 100%);
     color: #fff;
     font-weight: 800;
     box-shadow: 0 10px 30px rgba(233, 90, 13, 0.35);
@@ -288,7 +273,7 @@
 
 /* Móvil (panel desplegable) */
 .nbPanelLink[href="/artists"] {
-    background: linear-gradient(135deg, var(--persimmon) 0%, var(--xanthous) 100%);
+    background: linear-gradient(135deg, var(--or) 0%, var(--yl) 100%);
     color: #fff;
     font-weight: 800;
     border-color: transparent;
@@ -300,7 +285,6 @@
     filter: brightness(1.03);
     box-shadow: 0 12px 34px rgba(233, 90, 13, 0.45);
 }
-
 
 @media (max-width: 900px) {
     .nbInner {
