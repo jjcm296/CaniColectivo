@@ -16,7 +16,7 @@ export default function NavBar() {
         { href: '/artists',  label: 'Artistas' },
         { href: '/events',   label: 'Eventos' },
         { href: '/about',    label: 'Nosotros' },
-        { href: '/contact',  label: 'Contacto' },
+        { href: '/#footer', label: 'Contacto' }
     ];
 
     const right = [
@@ -32,6 +32,14 @@ export default function NavBar() {
 
     const isActive = (href) => (href === '/' ? pathname === '/' : pathname?.startsWith(href));
     const closeMenu = () => setOpen(false);
+
+    const scrollToFooter = () => {
+        const el = document.getElementById('footer');
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
 
     return (
         <header className={`${styles.nbWrapper} ${scrolled ? styles.nbScrolled : ''}`}>
@@ -50,16 +58,40 @@ export default function NavBar() {
                 </div>
 
                 <nav className={styles.nbNav} aria-label="Principal">
-                    {left.map((l) => (
-                        <Link
-                            key={l.href}
-                            href={l.href}
-                            className={`${styles.nbLink} ${isActive(l.href) ? styles.nbActive : ''}`}
-                        >
-                            {l.label}
-                        </Link>
-                    ))}
+                    {left.map((l) => {
+                        // Contacto: comportamiento especial
+                        if (l.href === '/#footer') {
+                            return (
+                                <Link
+                                    key={l.href}
+                                    href={l.href}
+                                    className={styles.nbLink}
+                                    onClick={(e) => {
+                                        if (pathname === '/') {
+                                            e.preventDefault();
+                                            scrollToFooter();
+                                            closeMenu();
+                                        }
+                                    }}
+                                >
+                                    {l.label}
+                                </Link>
+                            );
+                        }
+
+                        // Resto de links igual que antes
+                        return (
+                            <Link
+                                key={l.href}
+                                href={l.href}
+                                className={`${styles.nbLink} ${isActive(l.href) ? styles.nbActive : ''}`}
+                            >
+                                {l.label}
+                            </Link>
+                        );
+                    })}
                 </nav>
+
 
                 <div className={styles.nbActions}>
                     {right.map((l) => (

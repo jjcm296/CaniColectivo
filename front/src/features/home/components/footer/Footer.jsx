@@ -8,7 +8,7 @@ export default function Footer() {
     const year = new Date().getFullYear();
 
     return (
-        <footer className={styles.ccFooter} role="contentinfo" aria-label="Pie de página Cani Colectivo">
+        <footer id="footer" className={styles.ccFooter} role="contentinfo" aria-label="Pie de página Cani Colectivo">
             <div className={styles.ccRibbon} aria-hidden="true">
                 <span className={`${styles.r} ${styles.rRed}`} />
                 <span className={`${styles.r} ${styles.rOr}`} />
@@ -85,7 +85,6 @@ export default function Footer() {
                         <li><Link href="/artistas">Artistas</Link></li>
                         <li><Link href="/eventos">Eventos</Link></li>
                         <li><Link href="/nosotros">Nosotros</Link></li>
-                        <li><Link href="/contacto">Contacto</Link></li>
                     </ul>
                 </nav>
 
