@@ -2,13 +2,49 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import SocialIcon from '@/features/ui/social-icon/SocialIcon';
 import styles from './Footer.module.css';
 
+const invert = false;
+const SOCIAL_LINKS = [
+    {
+        type: 'instagram',
+        href: 'https://www.instagram.com/canicolectivo?igsh=a3dvNDBxcGh2MDdy',
+        aria: 'Instagram Cani Colectivo',
+        invert: invert,
+    },
+    {
+        type: 'facebook',
+        href: 'https://www.facebook.com/share/19rxkVm2Vj/',
+        aria: 'Facebook Cani Colectivo',
+        invert: invert,
+    },
+    {
+        type: 'tiktok',
+        href: 'https://www.tiktok.com/@cani.colectivo',
+        aria: 'TikTok Cani Colectivo',
+        invert: invert,
+    },
+    {
+        type: 'x',
+        href: 'https://x.com',
+        aria: 'Perfil en X (Twitter)',
+        invert: invert,
+    },
+];
+
 export default function Footer() {
+
     const year = new Date().getFullYear();
 
     return (
-        <footer id="footer" className={styles.ccFooter} role="contentinfo" aria-label="Pie de página Cani Colectivo">
+        <footer
+            id="footer"
+            className={styles.ccFooter}
+            role="contentinfo"
+            aria-label="Pie de página Cani Colectivo"
+        >
+            {/* Cinta superior */}
             <div className={styles.ccRibbon} aria-hidden="true">
                 <span className={`${styles.r} ${styles.rRed}`} />
                 <span className={`${styles.r} ${styles.rOr}`} />
@@ -18,7 +54,9 @@ export default function Footer() {
                 <span className={`${styles.r} ${styles.rNv}`} />
             </div>
 
+            {/* Contenido interno */}
             <div className={styles.ccInner}>
+
                 {/* Marca */}
                 <section className={`${styles.col} ${styles.brand}`}>
                     <Link className={styles.logo} href="/" aria-label="Ir al inicio">
@@ -37,43 +75,17 @@ export default function Footer() {
                         Comunidad creativa que impulsa artistas, eventos y colaboraciones con impacto.
                     </p>
 
+                    {/* Redes sociales desde arreglo */}
                     <div className={styles.social} aria-label="Redes sociales">
-                        <a
-                            className={styles.s}
-                            href="https://www.instagram.com/canicolectivo?igsh=a3dvNDBxcGh2MDdy"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Instagram"
-                        >
-                            <IconInstagram className={styles.ico} />
-                        </a>
-                        <a
-                            className={styles.s}
-                            href="https://www.facebook.com/share/19rxkVm2Vj/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Facebook"
-                        >
-                            <IconFacebook className={styles.ico} />
-                        </a>
-                        <a
-                            className={styles.s}
-                            href="https://www.tiktok.com/@cani.colectivo"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="TikTok"
-                        >
-                            <IconTiktok className={styles.ico} />
-                        </a>
-                        <a
-                            className={styles.s}
-                            href="https://x.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="X (Twitter)"
-                        >
-                            <IconX className={styles.ico} />
-                        </a>
+                        {SOCIAL_LINKS.map((s) => (
+                            <SocialIcon
+                                key={s.type}
+                                type={s.type}
+                                href={s.href}
+                                ariaLabel={s.aria}
+                                invert={s.invert}
+                            />
+                        ))}
                     </div>
                 </section>
 
@@ -104,8 +116,11 @@ export default function Footer() {
                 </section>
             </div>
 
+            {/* Legal */}
             <div className={styles.ccLegal}>
-                <p className={styles.copy}>© {year} Cani Colectivo · Todos los derechos reservados</p>
+                <p className={styles.copy}>
+                    © {year} Cani Colectivo · Todos los derechos reservados
+                </p>
                 <ul className={styles.legalLinks}>
                     <li><Link href="/terminos">Términos de uso</Link></li>
                     <li><Link href="/privacidad">Política de privacidad</Link></li>
@@ -114,35 +129,5 @@ export default function Footer() {
                 </ul>
             </div>
         </footer>
-    );
-}
-
-/* ===== ICONOS (SVG inline) ===== */
-function IconInstagram({ className }) {
-    return (
-        <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zM18 6.2a1.2 1.2 0 1 1-1.2 1.2A1.2 1.2 0 0 1 18 6.2z"/>
-        </svg>
-    );
-}
-function IconFacebook({ className }) {
-    return (
-        <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-            <path d="M13 22V12h3.5l.5-4H13V6.5c0-1.1.3-1.9 2-1.9h2V1.1C16.5 1 15.2 1 14 1c-3 0-5 1.9-5 5.4V8H6v4h3v10z"/>
-        </svg>
-    );
-}
-function IconTiktok({ className }) {
-    return (
-        <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-            <path d="M21 9.5a7.5 7.5 0 0 1-5.1-2.1v7.1a5.5 5.5 0 1 1-4-5.3v2.2a3.1 3.1 0 1 0 2.2 3V2h2.2a5.4 5.4 0 0 0 4.7 4.6z"/>
-        </svg>
-    );
-}
-function IconX({ className }) {
-    return (
-        <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-            <path d="M3 3h3.6l4.5 6.3L16.9 3H21l-7.3 9.8L21.3 21H17.7l-4.8-6.8L7 21H3l7.8-10.4z"/>
-        </svg>
     );
 }
