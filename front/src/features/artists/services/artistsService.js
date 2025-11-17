@@ -1,13 +1,12 @@
-// src/features/artists/services/artistsService.js
 import {
     dbGetAllArtists,
-    dbGetArtistById,
+    dbGetArtistBySlug,
 } from "@/features/fakeDb/fakeDb";
 
 export async function getArtists() {
     return dbGetAllArtists();
 }
 
-export async function getArtistById(id) {
-    return dbGetArtistById(id);
+export async function getArtistBySlug(slug) {
+    return dbGetArtistBySlug(slug);
 }

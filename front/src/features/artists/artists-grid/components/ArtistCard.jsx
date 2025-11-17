@@ -1,6 +1,10 @@
+'use client';
+
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import styles from './ArtistCard.module.css';
 import SocialIcon from '@/features/ui/social-icon/SocialIcon';
+import {slugify} from "@/features/utils/slugify";
 
 export default function ArtistCard({
                                        id,
@@ -9,33 +13,31 @@ export default function ArtistCard({
                                        tags = [],
                                        imageUrl = null,
                                        social = {},
-                                       onSelect, // callback opcional para futuro modal
+                                       onSelect,
                                    }) {
+    const router = useRouter();
     const { whatsapp, instagram, tiktok, facebook, x } = social || {};
     const initial = name?.charAt(0).toUpperCase() || '?';
 
     const waLink = whatsapp
         ? `https://wa.me/${whatsapp.replace(/\D/g, '')}`
         : null;
+    const slug = slugify(name);
 
-    const handleClick = () => {
-        // Por ahora, si no hay onSelect, no hace nada
+    const handleCardClick = (event) => {
+        if (event.target.closest('a')) return;
+
         if (onSelect) {
-            onSelect({
-                id,
-                name,
-                city,
-                tags,
-                imageUrl,
-                social,
-            });
+            onSelect({ id, name, city, tags, imageUrl, social });
         }
+
+        router.push(`/profile/${slug}`);
     };
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
-            handleClick();
+            handleCardClick(event);
         }
     };
 
@@ -44,7 +46,7 @@ export default function ArtistCard({
             className={styles.card}
             role="button"
             tabIndex={0}
-            onClick={handleClick}
+            onClick={handleCardClick}
             onKeyDown={handleKeyDown}
         >
             <div className={styles.imageWrapper}>

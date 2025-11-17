@@ -1,4 +1,4 @@
-// src/features/fakeDb/fakeDb.js
+import { slugify } from "@/features/utils/slugify";
 
 const db = {
     artists: [
@@ -15,6 +15,8 @@ const db = {
                 x: "https://x.com/aurora_colectivo",
             },
             imageUrl: null,
+            headline: "Colectivo de experimentación visual y sonora",
+            bio: "Colectivo Aurora reúne a artistas de distintas disciplinas para crear experiencias inmersivas que mezclan luz, sonido y performance. Sus proyectos se enfocan en la colaboración y la apropiación de espacios urbanos."
         },
         {
             id: 2,
@@ -29,6 +31,8 @@ const db = {
                 x: "https://x.com/aurora_colectivo",
             },
             imageUrl: "/artists/Jordan.jpeg",
+            headline: "Cantautor acústico de la región sur de Veracruz",
+            bio: "JordaIn combina letras íntimas con arreglos acústicos para crear una propuesta cercana y honesta. Ha participado en eventos locales y espacios independientes, conectando con el público a través de historias cotidianas."
         },
         {
             id: 3,
@@ -43,6 +47,8 @@ const db = {
                 x: "https://x.com/marea_norte",
             },
             imageUrl: null,
+            headline: "Rock alternativo con influencias del desierto norteño",
+            bio: "Marea del Norte explora sonidos densos y atmosféricos inspirados en el paisaje del norte de México. Sus letras hablan de memoria, territorio y resiliencia, con un show en vivo energético."
         },
         {
             id: 4,
@@ -57,6 +63,8 @@ const db = {
                 x: null,
             },
             imageUrl: null,
+            headline: "Selecciones electrónicas para espacios nocturnos y raves",
+            bio: "DJ Nébula construye sesiones que viajan del techno al house melódico, priorizando la narrativa musical y los cambios de energía en la pista. Ha participado en fiestas underground y eventos independientes."
         },
         {
             id: 5,
@@ -71,6 +79,8 @@ const db = {
                 x: "https://x.com/trama_sonora",
             },
             imageUrl: null,
+            headline: "Paisajes sonoros y síntesis análoga",
+            bio: "Trama Sonora investiga texturas electrónicas y loops minimalistas para construir piezas contemplativas. Su trabajo se ha presentado en galerías, festivales de arte sonoro y sesiones de escucha."
         },
         {
             id: 6,
@@ -85,6 +95,8 @@ const db = {
                 x: null,
             },
             imageUrl: null,
+            headline: "Laboratorio de improvisación y encuentro",
+            bio: "Círculo Abierto funciona como plataforma para la improvisación libre, convocando músicos y creadorxs de distintas escenas. Cada sesión es distinta y se adapta al espacio y a las personas presentes."
         },
         {
             id: 7,
@@ -99,6 +111,8 @@ const db = {
                 x: null,
             },
             imageUrl: null,
+            headline: "Canciones pop con esencia acústica",
+            bio: "Dante Cruz escribe canciones sobre relaciones, ciudad y cambio personal, mezclando melodías pop con una base acústica. Ha participado en foros independientes y sesiones íntimas en formato acústico."
         },
         {
             id: 8,
@@ -113,12 +127,10 @@ const db = {
                 x: null,
             },
             imageUrl: null,
+            headline: "Dream pop y atmósferas suaves",
+            bio: "Violeta Mar construye canciones etéreas con capas de guitarras, sintetizadores y voces reverberadas. Su propuesta se mueve entre el indie y el dream pop, ideal para espacios de escucha y festivales alternativos."
         },
     ],
-
-    // Ejemplos para futuro:
-    // events: [],
-    // users: [],
 };
 
 // ==== Helpers específicos de artistas ====
@@ -130,5 +142,8 @@ export function dbGetArtistById(id) {
     return db.artists.find((artist) => artist.id === Number(id)) || null;
 }
 
-// Export por defecto por si quieres acceder a toda la "db" en algún punto
+export function dbGetArtistBySlug(slug) {
+    return db.artists.find((artist) => slugify(artist.name) === slug) || null;
+}
+
 export default db;
