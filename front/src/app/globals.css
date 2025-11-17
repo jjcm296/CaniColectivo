@@ -61,3 +61,31 @@ a[href]:active {
     box-shadow: 0 3px 8px rgba(0,0,0,0.05);
 }
 
+/* Contenedor general para el contenido de las páginas */
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 24px 40px;
+}
+
+/* Laptops / tablets */
+@media (max-width: 1024px) {
+    .page-container {
+        padding: 20px 18px 32px;
+    }
+}
+
+/* Móviles normales */
+@media (max-width: 768px) {
+    .page-container {
+        padding: 16px 12px 28px;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+    .page-container {
+        padding: 12px 8px 24px;
+    }
+}
+
