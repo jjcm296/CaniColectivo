@@ -1,0 +1,114 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    max-width: 360px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14);
+}
+
+.card:active {
+    transform: scale(0.98);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.1);
+    opacity: 0.9;
+}
+
+.name,
+.city,
+.tag{
+    cursor: text; /* 🔥 cambia cursor al pasar por texto */
+}
+
+.imageWrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    overflow: hidden;
+}
+
+.image {
+    object-fit: cover;
+}
+
+.fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a2b54, #4b6cb7);
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: text;
+}
+
+.body {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* contenedor superior (nombre, ciudad, tags) */
+.top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding-left: 6px;
+}
+
+/* fila de redes sociales */
+.socialRow {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+/* Name */
+.name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--nv);
+    text-decoration: none;
+}
+
+/* City */
+.city {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Tags */
+.tags {
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tag {
+    padding: 3px 8px;
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.18);
+    border-radius: 999px;
+    color: #1d4ed8;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
