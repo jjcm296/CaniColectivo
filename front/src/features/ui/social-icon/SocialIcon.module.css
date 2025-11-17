@@ -1,0 +1,321 @@
+.icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d4dbe8;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+    transition:
+            background 0.15s ease,
+            color 0.15s ease,
+            border-color 0.15s ease,
+            box-shadow 0.15s ease,
+            transform 0.08s ease;
+    color: #1a2b54;
+    text-decoration: none;
+}
+
+.icon:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 38px rgba(15, 23, 42, 0.18);
+}
+
+.svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ======== WHATSAPP ======== */
+.whatsappSvg {
+    width: 22px;
+    height: 20px;
+}
+
+.whatsapp {
+    border-color: #25D366;
+    color: #25D366;
+    background: #ffffff;
+}
+
+.whatsapp:hover {
+    background: #25D366;
+    color: #ffffff;
+    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.35);
+}
+
+/* MODO INVERTIDO */
+.whatsapp.invert {
+    background: linear-gradient(
+            145deg,
+            #2fe06c,
+            #25d366,
+            #1ebe59
+    );
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 0 18px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp.invert:hover {
+    background: #ffffff;
+    color: #25D366;
+    border-color: #25D366;
+}
+
+/* ===============================
+   INSTAGRAM — ESTILOS FINALES
+=================================*/
+
+:root {
+    --ig-gradient: linear-gradient(
+            135deg,
+            #4f5bd5,
+            #962fbf,
+            #d62976,
+            #fa7e1e,
+            #feda75
+    );
+}
+
+/* Icon container */
+.instagram {
+    position: relative;
+    background: #ffffff;
+    border: none;
+    color: transparent;
+    overflow: hidden;
+    clip-path: circle(50%); /* Fuerza forma circular perfecta */
+    transition: background 0.2s ease;
+}
+
+/* ===== Borde degradado ===== */
+.instagram::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 1.8px; /* <-- Grosor del borde */
+    background: var(--ig-gradient);
+    clip-path: circle(50%);
+    -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    transition: opacity 0.20s ease;
+    opacity: 1;
+}
+
+/* ===============================
+   SVG PATH transitions
+=================================*/
+
+.igGlyphSolid,
+.igGlyphGradient {
+    transition: opacity 0.20s ease;
+}
+
+/* Por defecto (invert=false normal) → icono degradado */
+.igGlyphSolid {
+    opacity: 0;
+}
+.igGlyphGradient {
+    opacity: 1;
+}
+
+/* ===============================
+   ESTADOS
+=================================*/
+
+/* --- Modo normal (invert = false) --- */
+
+/* Hover normal → fondo degradado + icono blanco */
+.icon.instagram:not(.invert):hover {
+    background: var(--ig-gradient);
+    color: #ffffff; /* icono blanco */
+}
+
+/* Ocultar borde en hover normal */
+.icon.instagram:not(.invert):hover::before {
+    opacity: 0;
+}
+
+/* Lógica de icono hover normal */
+.icon.instagram:not(.invert):hover .igGlyphSolid {
+    opacity: 1;
+}
+.icon.instagram:not(.invert):hover .igGlyphGradient {
+    opacity: 0;
+}
+
+
+/* --- Modo invertido (invert = true) --- */
+
+/* invert base → fondo degradado + icono blanco */
+.icon.instagram.invert {
+    background: var(--ig-gradient);
+    color: #ffffff; /* icono blanco */
+}
+
+/* Sin borde en invert base */
+.icon.instagram.invert::before {
+    opacity: 0;
+}
+
+/* Icono en invert base */
+.icon.instagram.invert .igGlyphSolid {
+    opacity: 1;
+}
+.icon.instagram.invert .igGlyphGradient {
+    opacity: 0;
+}
+
+/* invert:hover → fondo blanco + borde degradado + icono degradado */
+.icon.instagram.invert:hover {
+    background: #ffffff;
+    color: transparent;
+}
+
+/* Mostrar borde degradado en invert:hover */
+.icon.instagram.invert:hover::before {
+    opacity: 1;
+}
+
+/* Icono degradado en invert:hover */
+.icon.instagram.invert:hover .igGlyphSolid {
+    opacity: 0;
+}
+.icon.instagram.invert:hover .igGlyphGradient {
+    opacity: 1;
+}
+
+/* ======== TIKTOK ======== */
+.tiktok {
+    border-color: #000000;
+    color: #000000;
+}
+
+.tiktok:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.tiktok.invert {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+.tiktok.invert:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* ====== FACEBOOK – SISTEMA DE DOS SVG ====== */
+
+.iconWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.fullIcon {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    transition: opacity 0.2s ease;
+}
+
+/* Ambos ocultos por defecto */
+.fbColor,
+.fbWhite {
+    opacity: 0;
+}
+
+/* ========= MODO INVERT = TRUE =========
+   Base: círculo azul, hover: blanco con borde azul
+   ===================================== */
+
+.icon.facebook.invert {
+    border-color: transparent; /* deja que el círculo azul "haga" el borde */
+    background: transparent;
+}
+
+.icon.facebook.invert .fbColor {
+    opacity: 1; /* azul visible */
+}
+
+.icon.facebook.invert .fbWhite {
+    opacity: 0;
+}
+
+.icon.facebook.invert:hover {
+    background: #ffffff;
+    border-color: #1877F2; /* anillo azul, como pediste */
+}
+
+.icon.facebook.invert:hover .fbColor {
+    opacity: 0;
+}
+
+.icon.facebook.invert:hover .fbWhite {
+    opacity: 1;
+}
+
+/* ========= MODO NORMAL (invert = FALSE) =========
+   Base: blanco con borde azul, hover: sólido azul
+   =============================================== */
+
+.icon.facebook:not(.invert) {
+    background: #ffffff;
+    border-color: #1877F2;
+}
+
+.icon.facebook:not(.invert) .fbWhite {
+    opacity: 1; /* círculo blanco + f */
+}
+
+.icon.facebook:not(.invert) .fbColor {
+    opacity: 0;
+}
+
+.icon.facebook:not(.invert):hover {
+    background: transparent;
+    border-color: transparent;
+}
+
+.icon.facebook:not(.invert):hover .fbWhite {
+    opacity: 0;
+}
+
+.icon.facebook:not(.invert):hover .fbColor {
+    opacity: 1; /* círculo azul */
+}
+
+/* ======== X (TWITTER) ======== */
+.x {
+    border-color: #000000;
+    color: #000000;
+}
+
+.x:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.x.invert {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+.x.invert:hover {
+    background: #ffffff;
+    color: #000000;
+}
