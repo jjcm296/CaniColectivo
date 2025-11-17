@@ -1,10 +1,15 @@
+/* ======== BASE ======== */
 .icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
+    /* tamaño responsivo */
+    inline-size: clamp(32px, 3.4vw, 40px);
+    aspect-ratio: 1 / 1;              /* ✅ siempre cuadrado */
+    border-radius: 999px;             /* ✅ siempre circular */
+
     display: inline-flex;
+    flex: 0 0 auto;                   /* evita que flex los deforme */
     align-items: center;
     justify-content: center;
+
     border: 1px solid #d4dbe8;
     background: #ffffff;
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
@@ -14,6 +19,7 @@
             border-color 0.15s ease,
             box-shadow 0.15s ease,
             transform 0.08s ease;
+
     color: #1a2b54;
     text-decoration: none;
 }
@@ -23,15 +29,16 @@
     box-shadow: 0 14px 38px rgba(15, 23, 42, 0.18);
 }
 
+/* Los SVG se escalan dentro del círculo */
 .svg {
-    width: 18px;
-    height: 18px;
+    width: 60%;
+    height: 60%;
 }
 
 /* ======== WHATSAPP ======== */
 .whatsappSvg {
-    width: 22px;
-    height: 20px;
+    width: 64%;  /* un poco más grande pero relativo */
+    height: 64%;
 }
 
 .whatsapp {
@@ -80,7 +87,6 @@
     );
 }
 
-
 /* Icon container */
 .instagram {
     position: relative;
@@ -88,13 +94,13 @@
     border: none;
     color: transparent;
     overflow: hidden;
-    clip-path: circle(50%); /* Fuerza forma circular perfecta */
+    clip-path: circle(50%); /* ✅ fuerza círculo perfecto */
     transition: background 0.2s ease;
 }
 
 .instagramSvg {
-    width: 22px;
-    height: 22px;
+    width: 70%;
+    height: 70%;
 }
 
 /* ===== Borde degradado ===== */
@@ -103,7 +109,7 @@
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    padding: 1.8px; /* <-- Grosor del borde */
+    padding: 1.8px;
     background: var(--ig-gradient);
     clip-path: circle(50%);
     -webkit-mask:
@@ -139,18 +145,15 @@
 
 /* --- Modo normal (invert = false) --- */
 
-/* Hover normal → fondo degradado + icono blanco */
 .icon.instagram:not(.invert):hover {
     background: var(--ig-gradient);
-    color: #ffffff; /* icono blanco */
+    color: #ffffff;
 }
 
-/* Ocultar borde en hover normal */
 .icon.instagram:not(.invert):hover::before {
     opacity: 0;
 }
 
-/* Lógica de icono hover normal */
 .icon.instagram:not(.invert):hover .igGlyphSolid {
     opacity: 1;
 }
@@ -158,21 +161,17 @@
     opacity: 0;
 }
 
-
 /* --- Modo invertido (invert = true) --- */
 
-/* invert base → fondo degradado + icono blanco */
 .icon.instagram.invert {
     background: var(--ig-gradient);
-    color: #ffffff; /* icono blanco */
+    color: #ffffff;
 }
 
-/* Sin borde en invert base */
 .icon.instagram.invert::before {
     opacity: 0;
 }
 
-/* Icono en invert base */
 .icon.instagram.invert .igGlyphSolid {
     opacity: 1;
 }
@@ -180,18 +179,15 @@
     opacity: 0;
 }
 
-/* invert:hover → fondo blanco + borde degradado + icono degradado */
 .icon.instagram.invert:hover {
     background: #ffffff;
     color: transparent;
 }
 
-/* Mostrar borde degradado en invert:hover */
 .icon.instagram.invert:hover::before {
     opacity: 1;
 }
 
-/* Icono degradado en invert:hover */
 .icon.instagram.invert:hover .igGlyphSolid {
     opacity: 0;
 }
@@ -227,6 +223,8 @@
     position: relative;
     width: 100%;
     height: 100%;
+    border-radius: 50%;      /* ✅ también es círculo */
+    overflow: hidden;
 }
 
 .fullIcon {
@@ -234,7 +232,7 @@
     height: 100%;
     position: absolute;
     inset: 0;
-    border-radius: 999px;
+    border-radius: 50%;
     transition: opacity 0.2s ease;
 }
 
@@ -244,17 +242,15 @@
     opacity: 0;
 }
 
-/* ========= MODO INVERT = TRUE =========
-   Base: círculo azul, hover: blanco con borde azul
-   ===================================== */
+/* ========= MODO INVERT = TRUE ========= */
 
 .icon.facebook.invert {
-    border-color: transparent; /* deja que el círculo azul "haga" el borde */
+    border-color: transparent;
     background: transparent;
 }
 
 .icon.facebook.invert .fbColor {
-    opacity: 1; /* azul visible */
+    opacity: 1;
 }
 
 .icon.facebook.invert .fbWhite {
@@ -263,7 +259,7 @@
 
 .icon.facebook.invert:hover {
     background: #ffffff;
-    border-color: #1877F2; /* anillo azul, como pediste */
+    border-color: #1877F2;
 }
 
 .icon.facebook.invert:hover .fbColor {
@@ -274,9 +270,7 @@
     opacity: 1;
 }
 
-/* ========= MODO NORMAL (invert = FALSE) =========
-   Base: blanco con borde azul, hover: sólido azul
-   =============================================== */
+/* ========= MODO NORMAL (invert = FALSE) ========= */
 
 .icon.facebook:not(.invert) {
     background: #ffffff;
@@ -284,7 +278,7 @@
 }
 
 .icon.facebook:not(.invert) .fbWhite {
-    opacity: 1; /* círculo blanco + f */
+    opacity: 1;
 }
 
 .icon.facebook:not(.invert) .fbColor {
@@ -301,7 +295,7 @@
 }
 
 .icon.facebook:not(.invert):hover .fbColor {
-    opacity: 1; /* círculo azul */
+    opacity: 1;
 }
 
 /* ======== X (TWITTER) ======== */
