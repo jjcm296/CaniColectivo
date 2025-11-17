@@ -40,7 +40,7 @@ const icons = {
     ),
 
     instagram: (
-        <svg viewBox="0 0 100 100" className={styles.svg} aria-hidden="true">
+        <svg viewBox="0 0 100 100"  className={`${styles.svg} ${styles.instagramSvg}`} aria-hidden="true">
             <defs>
                 <linearGradient id="igRealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#4f5bd5"/>
