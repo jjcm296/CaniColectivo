@@ -11,7 +11,7 @@ import {
     Theater,
     ChevronDown,
 } from "lucide-react";
-import styles from "../styles/FilterPillDropdown.module.css";
+import styles from "./FilterPillDropdown.module.css";
 
 // Reutiliza tus categorías
 const CATEGORIES = [
