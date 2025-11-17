@@ -24,13 +24,17 @@
 }
 
 @media (max-width: 768px) {
+    .gridSection {
+        padding: 10px 4px 40px;
+    }
     .grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 320px) {
     .grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* solo teléfonos super angostos */
     }
 }
+
