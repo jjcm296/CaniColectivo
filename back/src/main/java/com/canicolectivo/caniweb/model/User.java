@@ -21,7 +21,7 @@ public class User {
     @Column(name = "password", nullable = false, length = 80)
     private String password;
 
-    @OneToOne(mappedBy = "artist")
+    @OneToOne(mappedBy = "user")
     private Artist artist;
 
     @ManyToMany(fetch = FetchType.LAZY)
