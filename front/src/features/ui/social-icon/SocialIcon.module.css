@@ -50,7 +50,6 @@
 .whatsapp:hover {
     background: #25D366;
     color: #ffffff;
-    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.35);
 }
 
 /* MODO INVERTIDO */
@@ -63,7 +62,6 @@
     );
     color: #ffffff;
     border-color: transparent;
-    box-shadow: 0 0 18px rgba(37, 211, 102, 0.4);
 }
 
 .whatsapp.invert:hover {
@@ -318,4 +316,27 @@
 .x.invert:hover {
     background: #ffffff;
     color: #000000;
+}
+
+/* ======== EMAIL / CORREO ======== */
+.email {
+    border-color: #EA4335;
+    color: #EA4335;
+    background: #ffffff;
+}
+
+.email:hover {
+    background: #EA4335;
+    color: #ffffff;
+}
+
+.email.invert {
+    background: #EA4335;
+    border-color: #EA4335;
+    color: #ffffff;
+}
+
+.email.invert:hover {
+    background: #ffffff;
+    color: #EA4335;
 }

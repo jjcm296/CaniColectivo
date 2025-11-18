@@ -23,6 +23,7 @@ const db = {
             name: "JordaIn",
             city: "Minatitlan, Ver.",
             tags: ["Acústico"],
+            email: "jordanjaircruzmendoza@gmail.com",
             social: {
                 whatsapp: "9221860109",
                 instagram: "https://www.instagram.com/jordanjair.cruz/",

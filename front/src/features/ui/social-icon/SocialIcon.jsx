@@ -115,6 +115,32 @@ const icons = {
             />
         </svg>
     ),
+    email: (
+        <svg
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+            className={styles.svg}
+        >
+            <rect
+                x="7"
+                y="11"
+                width="34"
+                height="26"
+                rx="4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.6"
+            />
+            <path
+                d="M9 15l15 11 15-11"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+        ),
 };
 
 export default function SocialIcon({ type, href, invert = true, ariaLabel }) {
