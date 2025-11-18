@@ -5,7 +5,7 @@ import {
     Sparkles, Heart, Palette, Trophy, Music, BookOpen, Theater, ChevronDown
 } from "lucide-react";
 import CategoryTile from "@/features/ui/components/CategoryTile";
-import styles from "../styles/ArtistsFilters.module.css";
+import styles from "./ArtistsFilters.module.css";
 
 const CATEGORIES = [
     { key: "all",       label: "Todos",            icon: Sparkles, gradient: "linear-gradient(135deg, var(--bl) 0%, #1c8ad0 100%)", decor: false },

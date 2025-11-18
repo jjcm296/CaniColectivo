@@ -1,9 +1,8 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import ActionButton from "@/features/ui/components/ActionButton";
 import SearchBar from "@/features/ui/components/SearchBar";
-import FilterPillDropdown from "@/features/artists/components/FilterPillDropdown";
-import styles from "../styles/ArtistsHeader.module.css";
+import FilterPillDropdown from "@/features/artists/artists-header/components/FilterPillDropdown";
+import styles from "./ArtistsHeader.module.css";
 
 export default function ArtistsHeader() {
     const router = useRouter();

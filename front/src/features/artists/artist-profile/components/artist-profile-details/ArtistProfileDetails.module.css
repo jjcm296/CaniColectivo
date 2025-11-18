@@ -1,0 +1,74 @@
+.card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.cardTitle {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--nv);
+}
+
+.infoGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Burbuja de ícono para detalles */
+.iconWrapper {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(251, 182, 49, 0.15); /* amarillo suave */
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    color: var(--yl);
+}
+
+.label {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--gr);
+    text-transform: uppercase;
+}
+
+.value {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--nv);
+}
+
+/* Tags */
+
+.tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background: rgba(251, 182, 49, 0.15);
+    border: 1px solid rgba(251, 182, 49, 0.4);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: #9a6200;
+}
