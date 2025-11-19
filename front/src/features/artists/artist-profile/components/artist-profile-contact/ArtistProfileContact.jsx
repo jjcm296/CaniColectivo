@@ -57,7 +57,11 @@ export default function ArtistProfileContact({ artist }) {
 
                 <div className={styles.row}>
                     <div className={styles.iconWrapper}>
-                        <MapPin className={styles.icon} aria-hidden="true" />
+                        <SocialIcon
+                            type="gps"
+                            href="https://maps.app.goo.gl/"
+                            ariaLabel="Ubicación"
+                        />
                     </div>
                     <div>
                         <p className={styles.label}>Ubicación</p>

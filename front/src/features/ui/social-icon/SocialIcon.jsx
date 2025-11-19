@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import styles from './SocialIcon.module.css';
+import Image from "next/image";
+
 
 const icons = {
     whatsapp: (
@@ -19,7 +21,6 @@ const icons = {
 
     facebook: (
         <div className={styles.iconWrapper}>
-            {/* SVG COLOR (AZUL) */}
             <svg viewBox="0 0 512 512" className={`${styles.fullIcon} ${styles.fbColor}`}>
                 <circle cx="256" cy="256" r="256" fill="#1877F2" />
                 <path
@@ -28,7 +29,6 @@ const icons = {
                 />
             </svg>
 
-            {/* SVG BLANCO */}
             <svg viewBox="0 0 512 512" className={`${styles.fullIcon} ${styles.fbWhite}`}>
                 <circle cx="256" cy="256" r="256" fill="#ffffff" />
                 <path
@@ -51,7 +51,6 @@ const icons = {
                 </linearGradient>
             </defs>
 
-            {/* SÓLIDO (usa currentColor → blanco cuando toque) */}
             <g
                 className={styles.igGlyphSolid}
                 fill="none"
@@ -65,7 +64,6 @@ const icons = {
                 <circle cx="70" cy="30" r="4" fill="currentColor" stroke="none" />
             </g>
 
-            {/* DEGRADADO */}
             <g
                 className={styles.igGlyphGradient}
                 fill="none"
@@ -83,7 +81,6 @@ const icons = {
 
     tiktok: (
         <svg viewBox="0 0 256 256" aria-hidden="true" className={styles.svg}>
-            {/* Turquoise Shadow */}
             <path
                 d="M180.7 68.1c-14.6-8.2-24-23.4-24-40.3V24h-35v133.2c0 14.2-11.5 25.7-25.7 25.7S70.3 171.4 70.3 157.2c0-14.1 11.3-25.5 25.4-25.7 3 0 5.9.5 8.6 1.5V95.4a63.2 63.2 0 0 0-8.7-.6c-34.9 0-63.3 28.4-63.3 63.3S60.7 221.4 95.6 221.4c34.9 0 63.3-28.4 63.3-63.3v-51c12.6 9.6 28.3 15.3 45.3 15.3h1.4V87.3a74 74 0 0 1-24.9-19.2z"
                 fill="#25F4EE"
@@ -144,18 +141,30 @@ const icons = {
 };
 
 export default function SocialIcon({ type, href, invert = true, ariaLabel }) {
+    if (!href) return null;
+
+    const isGps = type === 'gps';
     const icon = icons[type];
-    if (!icon || !href) return null;
 
     return (
         <Link
             href={href}
-            className={`${styles.icon} ${styles[type]} ${invert ? styles.invert : ""}`}
+            className={`${styles.icon} ${styles[type]} ${invert ? styles.invert : ''}`}
             aria-label={ariaLabel || type}
             target="_blank"
             rel="noopener noreferrer"
         >
-            {icon}
+            {isGps ? (
+                <Image
+                    src="/icons/Google_Maps-icon-Logo.svg"
+                    alt={ariaLabel || 'Ubicación'}
+                    width={35}
+                    height={35}
+                    className={styles.gpsLogo}
+                />
+            ) : (
+                icon
+            )}
         </Link>
     );
 }
