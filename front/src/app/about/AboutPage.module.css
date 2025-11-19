@@ -1,0 +1,352 @@
+/* ABOUT PAGE – CANI */
+
+/* ===== HERO ===== */
+
+.hero {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(260px, 2.2fr);
+    gap: 24px;
+    margin-bottom: 32px;
+    padding: 24px 22px;
+    border-radius: calc(var(--radius) + 2px);
+    background: radial-gradient(circle at top left,
+    rgba(37, 160, 226, 0.14),
+    rgba(251, 182, 49, 0.05),
+    #ffffff 45%
+    );
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.heroContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.heroTag {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--bl);
+    font-weight: 600;
+    margin: 0;
+}
+
+.heroTitle {
+    margin: 0;
+    font-size: clamp(1.9rem, 3.2vw, 2.4rem);
+    line-height: 1.15;
+    color: var(--nv);
+    font-weight: 750;
+}
+
+.heroLead {
+    margin: 6px 0 0;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: rgba(26, 43, 84, 0.9);
+}
+
+.heroAside {
+    align-self: stretch;
+    padding: 16px 16px 18px;
+    border-radius: var(--radius);
+    background: #ffffff;
+    border: 1px solid rgba(26, 43, 84, 0.08);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.heroAsideLabel {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--or);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.heroList {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.92rem;
+    color: rgba(26, 43, 84, 0.9);
+}
+
+.heroList li::before {
+    content: "•";
+    color: var(--gr);
+    margin-right: 0.35rem;
+}
+
+/* ===== SECCIONES GENERALES ===== */
+
+.section {
+    margin-bottom: 40px;
+}
+
+.sectionHeader {
+    margin-bottom: 16px;
+}
+
+.sectionKicker {
+    margin: 0 0 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--red);
+    font-weight: 600;
+}
+
+.sectionTitle {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--nv);
+}
+
+.sectionIntro {
+    margin: 8px 0 0;
+    font-size: 0.94rem;
+    color: rgba(26, 43, 84, 0.88);
+}
+
+/* ===== HISTORIA – TIMELINE ===== */
+
+.timeline {
+    position: relative;
+    display: grid;
+    gap: 16px;
+    padding-left: 10px;
+}
+
+.timelineLine {
+    position: absolute;
+    inset: 4px auto 4px 12px;
+    width: 2px;
+    background: linear-gradient(
+            to bottom,
+            var(--bl),
+            var(--yl),
+            var(--gr)
+    );
+    opacity: 0.7;
+}
+
+.timelineItem {
+    position: relative;
+    display: flex;
+    gap: 14px;
+}
+
+.timelineDot {
+    position: relative;
+    margin-top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 2px solid var(--bl);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(37, 160, 226, 0.18);
+}
+
+.timelineCard {
+    background: #ffffff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px 14px 12px;
+    border: 1px solid rgba(26, 43, 84, 0.06);
+}
+
+.timelineTitle {
+    margin: 0 0 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--nv);
+}
+
+.timelineText {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: rgba(26, 43, 84, 0.92);
+}
+
+/* ===== MISIÓN / VISIÓN ===== */
+
+.mvGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.mvCard {
+    background: #ffffff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 18px 20px;
+    border: 1px solid rgba(26, 43, 84, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.mvCard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            135deg,
+            rgba(255, 34, 34, 0.08),
+            rgba(251, 182, 49, 0.05)
+    );
+    opacity: 0.6;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+.mvLabel {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(26, 43, 84, 0.04);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--nv);
+    margin: 0 0 6px;
+}
+
+.mvTitle {
+    position: relative;
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 650;
+    color: var(--nv);
+}
+
+.mvText {
+    position: relative;
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: rgba(26, 43, 84, 0.92);
+}
+
+/* ===== VALORES ===== */
+
+.valuesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.valueCard {
+    background: #ffffff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 12px 12px 14px;
+    border: 1px solid rgba(26, 43, 84, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.valuePill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Variantes de color para cada valor */
+.valuePillInclusion {
+    background: linear-gradient(135deg, var(--bl), var(--yl));
+}
+
+.valuePillPassion {
+    background: linear-gradient(135deg, var(--red), var(--or));
+}
+
+.valuePillIndep {
+    background: linear-gradient(135deg, var(--nv), #000000);
+}
+
+.valuePillTransp {
+    background: linear-gradient(135deg, #ffffff, var(--bl));
+    color: var(--nv);
+    border: 1px solid rgba(26, 43, 84, 0.18);
+}
+
+.valuePillCommunity {
+    background: linear-gradient(135deg, var(--gr), var(--bl));
+}
+
+.valueText {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(26, 43, 84, 0.92);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+    .hero {
+        grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.6fr);
+        padding: 20px 18px;
+    }
+
+    .mvGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .valuesGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        grid-template-columns: 1fr;
+        padding: 18px 16px;
+        gap: 16px;
+        margin-bottom: 26px;
+    }
+
+    .heroAside {
+        order: -1;
+    }
+
+    .mvGrid {
+        gap: 16px;
+    }
+
+    .valuesGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .heroTitle {
+        font-size: 1.6rem;
+    }
+
+    .heroLead {
+        font-size: 0.93rem;
+    }
+}
