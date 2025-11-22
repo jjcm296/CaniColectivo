@@ -301,21 +301,31 @@
     box-shadow: 0 12px 34px rgba(233, 90, 13, 0.45);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
     .nbInner {
         padding: 6px 12px;
     }
-    .nbNav,
-    .nbActions {
+
+    .nbNav {
         display: none;
     }
+
+    .nbActions {
+        display: flex;
+        margin-left: auto;
+    }
+
     .nbToggle {
         display: inline-flex;
+        margin-left: 8px;
     }
+
     .nbLogo {
         width: 44px;
     }
 }
+
+
 
 @media (min-width: 901px) {
     .nbPanel {
