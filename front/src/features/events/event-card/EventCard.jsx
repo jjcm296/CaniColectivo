@@ -32,7 +32,7 @@ export default function EventCard({ event }) {
         }).format(new Date(dateISO))
         : '';
 
-    const eventUrl = slug ? `/eventos/${slug}` : '#';
+    const eventUrl = slug ? `/events/${slug}` : '#';
 
     return (
         <article className={styles.card}>

@@ -23,29 +23,32 @@ body {
     font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Efecto hover para TODOS los botones */
-button {
+/* ======== Efecto GLOBAL: hundimiento en clic ======== */
+
+button,
+.btn,
+[type="button"],
+[type="submit"],
+[type="reset"] {
     border-radius: 10px;
+    cursor: pointer;
     transition:
-            background 0.16s ease,
-            box-shadow 0.16s ease,
-            transform 0.08s ease;
+            transform 0.10s ease,
+            box-shadow 0.10s ease;
 }
 
-/* Hover con efecto levantar */
-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+/* Hover = levanta */
+button:hover,
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
 }
 
-button:focus {
-    outline: none;
-}
-
-/* Estado activo */
-button:active {
-    transform: translateY(0px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+/* Active = se hunde hacia adentro */
+button:active,
+.btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 /* Animación de “apretar” para TODOS los <a href> */
