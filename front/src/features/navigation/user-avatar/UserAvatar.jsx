@@ -9,6 +9,7 @@ export default function UserAvatar({
                                        imageUrl,
                                        href = '/profile',
                                        showLabel = true,
+                                       onClick, // ⭐ NUEVO: permite abrir el panel lateral
                                    }) {
     const trimmedName = (name || '').trim();
     const initial = trimmedName.charAt(0).toUpperCase() || '?';
@@ -19,12 +20,22 @@ export default function UserAvatar({
         ? trimmedName.split(' ')[0]
         : 'Usuario';
 
+    // ⭐ Importante:
+    // Si existe onClick, evitamos navegación y ejecutamos el callback
+    const handleClick = (event) => {
+        if (onClick) {
+            event.preventDefault();
+            onClick(event);
+        }
+    };
+
     return (
         <Link
             href={href}
             className={styles.avatarLink}
             aria-label={name ? `Ir al perfil de ${name}` : 'Ir a mi perfil'}
             title={name || 'Mi perfil'}
+            onClick={handleClick} /* ⭐ Soporte para abrir el panel */
         >
             <div className={styles.avatarCircle}>
                 {hasImage ? (

@@ -1,0 +1,74 @@
+/* Contenedor principal */
+.wrapper {
+    position: relative;
+    width: 160px;
+    height: 160px;
+}
+
+/* Avatar redondo grande */
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    overflow: hidden;
+
+    background: #fff;
+    border: 5px solid var(--or);
+
+    box-shadow:
+            0 8px 30px rgba(0,0,0,0.10),
+            0 2px 8px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+/* Imagen */
+.img {
+    object-fit: cover;
+}
+
+/* Placeholder cuando NO hay imagen */
+.placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--yl), var(--or));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.initial {
+    font-size: 3.4rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Botón tipo Google (overlay) */
+.edit {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 999px;
+    border: none;
+
+    background: #fff;
+    color: var(--nv);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.24);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.15s ease;
+}
+
+.edit:hover {
+    transform: scale(1.07);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+    filter: brightness(1.05);
+}

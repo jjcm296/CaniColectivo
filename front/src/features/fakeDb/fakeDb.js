@@ -132,9 +132,23 @@ const db = {
             bio: "Violeta Mar construye canciones etéreas con capas de guitarras, sintetizadores y voces reverberadas. Su propuesta se mueve entre el indie y el dream pop, ideal para espacios de escucha y festivales alternativos."
         },
     ],
+
+    users: [
+        {
+            id: 1,
+            name: "JordaIn",
+            email: "jordanjaircruzmendoza@gmail.com",
+            artistId: 2,
+        },
+        {
+            id: 2,
+            name: "Invitada Demo",
+            email: "invitada@example.com",
+            artistId: 1,
+        },
+    ],
 };
 
-// ==== Helpers específicos de artistas ====
 export function dbGetAllArtists() {
     return [...db.artists];
 }
@@ -145,6 +159,18 @@ export function dbGetArtistById(id) {
 
 export function dbGetArtistBySlug(slug) {
     return db.artists.find((artist) => slugify(artist.name) === slug) || null;
+}
+
+export function dbGetAllUsers() {
+    return [...db.users];
+}
+
+export function dbGetUserById(id) {
+    return db.users.find((user) => user.id === Number(id)) || null;
+}
+
+export function dbGetCurrentUser() {
+    return db.users[0] || null;
 }
 
 export default db;

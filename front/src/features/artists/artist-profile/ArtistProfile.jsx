@@ -6,7 +6,7 @@ import ArtistProfileContact
 import ArtistProfileDetails
     from "@/features/artists/artist-profile/components/artist-profile-details/ArtistProfileDetails";
 
-export default function ArtistProfile({ artist }) {
+export default function ArtistProfile({ artist, isOwner = false }) {
     if (!artist) return null;
 
     const { bio } = artist;
@@ -23,7 +23,7 @@ export default function ArtistProfile({ artist }) {
 
             <div className={styles.grid}>
                 <ArtistProfileContact artist={artist} />
-                <ArtistProfileDetails artist={artist} />
+                <ArtistProfileDetails artist={artist} isOwner={isOwner} />
             </div>
         </section>
     );
