@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import EventCard from '../../../events/components/EventCard';
+import EventCard from '@/features/events/event-card/EventCard';
 import styles from './EventSpotlight.module.css';
 
 export default function EventSpotlight({ events = [] }) {
@@ -14,7 +14,7 @@ export default function EventSpotlight({ events = [] }) {
             <section className={styles.section} aria-labelledby="ev-title">
                 <div className={styles.header}>
                     <h2 id="ev-title" className={styles.title}>Próximos eventos</h2>
-                    <Link className={styles.linkAll} href="/eventos">Ver todos</Link>
+                    <Link className={styles.linkAll} href="/events">Ver todos</Link>
                 </div>
                 <p className={styles.empty}>Aún no hay eventos programados. ¡Vuelve pronto!</p>
             </section>
@@ -27,7 +27,7 @@ export default function EventSpotlight({ events = [] }) {
             <section className={styles.section} aria-labelledby="ev-title">
                 <div className={styles.header}>
                     <h2 id="ev-title" className={styles.title}>Próximos eventos</h2>
-                    <Link className={styles.linkAll} href="/eventos">Ver todos</Link>
+                    <Link className={styles.linkAll} href="/events">Ver todos</Link>
                 </div>
                 <div className={styles.single}>
                     <EventCard event={events[0]} />

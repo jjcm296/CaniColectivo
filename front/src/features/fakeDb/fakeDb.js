@@ -147,6 +147,69 @@ const db = {
             artistId: 1,
         },
     ],
+
+    evets: [
+        {
+            id: 1,
+            title: 'Baladas y baleros',
+            dateISO: '2026-01-03T15:00:00-06:00',
+            venue: 'Av Universidad Veracruzana 2919',
+            poster: '/home/events/evento1.jpeg', // pon tu poster en /public/eventos/...
+            slug: 'baladas-y-baleros',
+            registerUrl: '', // o una URL externa si aplica
+            isCause: true,
+        },
+        {
+            id: 2,
+            title: 'Residencia Creativa',
+            dateISO: '2025-11-15T10:00:00-06:00',
+            venue: 'Parque Miguel Hidalgo \n  Coatzacoalcos, Ver.',
+            poster: '/home/events/evento2.jpeg',
+            slug: 'residencia-creativa-otono',
+            registerUrl: '/eventos/residencia-creativa-otono/inscripcion',
+            isCause: false,
+        },
+        {
+            id: 3,
+            title: 'Baladas y baleros',
+            dateISO: '2026-01-03T15:00:00-06:00',
+            venue: 'Av Universidad Veracruzana 2919',
+            poster: '/home/events/evento1.jpeg', // pon tu poster en /public/eventos/...
+            slug: 'baladas-y-baleros',
+            registerUrl: '', // o una URL externa si aplica
+            isCause: true,
+        },
+        {
+            id: 4,
+            title: 'Residencia Creativa',
+            dateISO: '2025-11-15T10:00:00-06:00',
+            venue: 'Parque Miguel Hidalgo \n  Coatzacoalcos, Ver.',
+            poster: '/home/events/evento2.jpeg',
+            slug: 'residencia-creativa-otono',
+            registerUrl: '/eventos/residencia-creativa-otono/inscripcion',
+            isCause: false,
+        },
+        {
+            id: 5,
+            title: 'Baladas y baleros',
+            dateISO: '2026-01-03T15:00:00-06:00',
+            venue: 'Av Universidad Veracruzana 2919, Fovissste',
+            poster: '/home/events/evento1.jpeg', // pon tu poster en /public/eventos/...
+            slug: 'baladas-y-baleros',
+            registerUrl: '', // o una URL externa si aplica
+            isCause: false,
+        },
+        {
+            id: 6,
+            title: 'Residencia Creativa',
+            dateISO: '2025-11-15T10:00:00-06:00',
+            venue: 'Parque Miguel Hidalgo \n  Coatzacoalcos, Ver.',
+            poster: '/home/events/evento2.jpeg',
+            slug: 'residencia-creativa-otono',
+            registerUrl: '/eventos/residencia-creativa-otono/inscripcion',
+            isCause: false,
+        },
+    ],
 };
 
 export function dbGetAllArtists() {
@@ -171,6 +234,18 @@ export function dbGetUserById(id) {
 
 export function dbGetCurrentUser() {
     return db.users[0] || null;
+}
+
+export function dbGetAllEvents() {
+    return [...db.evets];
+}
+
+export function dbGetEventById(id) {
+    return db.evets.find((event) => event.id === Number(id)) || null;
+}
+
+export function dbGetEventByName(name) {
+    return db.evets.find((event) => event.name === name) || null;
 }
 
 export default db;
