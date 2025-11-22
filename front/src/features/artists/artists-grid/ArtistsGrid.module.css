@@ -9,6 +9,7 @@
     grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
 }
 
+/* Estado vacío */
 .emptyState {
     grid-column: 1 / -1;
     text-align: center;
@@ -17,24 +18,22 @@
     color: #6b7280;
 }
 
+/* Tablet */
 @media (max-width: 1024px) {
     .grid {
         grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     }
 }
 
+
 @media (max-width: 768px) {
     .gridSection {
         padding: 10px 4px 40px;
-    }
-    .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 320px) {
     .grid {
-        grid-template-columns: 1fr; /* solo teléfonos super angostos */
+        grid-template-columns: 1fr;
     }
 }
-
