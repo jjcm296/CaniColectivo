@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 public class AuthController {
     private final UserService userService;
     private AuthService authService;
