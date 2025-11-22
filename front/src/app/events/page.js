@@ -1,5 +1,5 @@
 // src/app/events/page.js
-import ArtistsHeader from "@/features/artists/artists-header/ArtistsHeader";
+import ContentHeader from "@/features/ui/content-header/ContentHeader";
 import ArtistsGrid from "@/features/artists/artists-grid/ArtistsGrid";
 import {Suspense} from "react";
 import EventsGrid from "@/features/events/events-grid/EventsGrid";
@@ -10,7 +10,7 @@ export default function EventsPage() {
     return (
         <main className="p-10">
             <Suspense fallback={<div>Cargando encabezado...</div>}>
-                <ArtistsHeader />
+                <ContentHeader scope={"events"}/>
                 <EventsGrid/>
             </Suspense>
         </main>

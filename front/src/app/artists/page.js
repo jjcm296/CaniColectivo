@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ArtistsHeader from "@/features/artists/artists-header/ArtistsHeader";
+import ContentHeader from "@/features/ui/content-header/ContentHeader";
 import ArtistsGrid from "@/features/artists/artists-grid/ArtistsGrid";
 import { getArtists } from "@/features/artists/services/artistsService";
 
@@ -9,7 +9,7 @@ export default async function ArtistsPage() {
     return (
         <main style={{ padding: "24px" }}>
             <Suspense fallback={<div>Cargando encabezado...</div>}>
-                <ArtistsHeader />
+                <ContentHeader scope={"artists"}/>
                 <ArtistsGrid artists={artists}/>
             </Suspense>
         </main>

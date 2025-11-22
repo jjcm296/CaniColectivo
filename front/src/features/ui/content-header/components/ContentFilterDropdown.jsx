@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -10,11 +11,15 @@ import {
     BookOpen,
     Theater,
     ChevronDown,
+    MapPin,
+    User,
 } from "lucide-react";
-import styles from "./FilterPillDropdown.module.css";
+import styles from "./ContentFilterDropdown.module.css";
 
-// Reutiliza tus categorías
-const CATEGORIES = [
+/* ============================
+   CONFIG: EVENTOS
+============================ */
+const EVENT_CATEGORIES = [
     {
         key: "all",
         label: "Todos",
@@ -66,30 +71,94 @@ const CATEGORIES = [
     },
 ];
 
-export default function FilterPillDropdown() {
+/* ============================
+   CONFIG: ARTISTAS
+   (modo: cómo buscar al artista)
+============================ */
+const ARTIST_FILTERS = [
+    {
+        key: "all",
+        label: "Todos",
+        icon: Sparkles,
+        gradient: "linear-gradient(135deg, var(--gr) 0%, #1CA155 100%)",
+        color: "var(--gr)",
+    },
+    {
+        key: "name",
+        label: "Por nombre",
+        icon: User,
+        gradient: "linear-gradient(135deg, var(--bl) 0%, #1c8ad0 100%)",
+        color: "var(--bl)",
+    },
+    {
+        key: "city",
+        label: "Por ciudad",
+        icon: MapPin,
+        gradient: "linear-gradient(135deg, var(--or) 0%, #c24a0b 100%)",
+        color: "var(--or)",
+    },
+    {
+        key: "discipline",
+        label: "Por disciplina",
+        icon: Palette,
+        gradient: "linear-gradient(135deg, var(--nv) 0%, #0f1833 100%)",
+        color: "var(--nv)",
+    },
+];
+
+/* ============================
+   MAPA GENERAL POR SCOPE
+============================ */
+const SCOPE_CONFIG = {
+    events: {
+        paramKey: "cat",
+        options: EVENT_CATEGORIES,
+    },
+    artists: {
+        paramKey: "filter",
+        options: ARTIST_FILTERS,
+    },
+};
+
+export default function ContentFilterDropdown({ scope = "events" }) {
     const router = useRouter();
     const params = useSearchParams();
-    const cat = params.get("cat") ?? "all";
-
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
 
+    // Elegimos config según el scope
+    const config = SCOPE_CONFIG[scope] || SCOPE_CONFIG.events;
+    const { paramKey, options } = config;
+
+    // Valor actual desde la URL
+    const currentKey = params.get(paramKey) ?? options[0].key;
+
+    const active = options.find((c) => c.key === currentKey) || options[0];
+    const ActiveIcon = active.icon;
+
     useEffect(() => {
         function onDoc(e) {
-            if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+            if (ref.current && !ref.current.contains(e.target)) {
+                setOpen(false);
+            }
         }
         document.addEventListener("click", onDoc);
         return () => document.removeEventListener("click", onDoc);
     }, []);
 
-    const active = CATEGORIES.find((c) => c.key === cat) || CATEGORIES[0];
-    const ActiveIcon = active.icon;
-
-    const setCat = (key) => {
+    const setFilter = (key) => {
         const url = new URL(window.location.href);
-        if (key === "all") url.searchParams.delete("cat");
-        else url.searchParams.set("cat", key);
+
+        if (key === options[0].key) {
+            // primer elemento = "Todos" -> limpiar filtro
+            url.searchParams.delete(paramKey);
+        } else {
+            url.searchParams.set(paramKey, key);
+        }
+
+        // Reiniciamos página
         url.searchParams.delete("page");
+
         router.push(url.toString());
         setOpen(false);
     };
@@ -122,26 +191,26 @@ export default function FilterPillDropdown() {
                 className={`${styles.dropdown} ${open ? styles.show : ""}`}
                 role="listbox"
             >
-                {CATEGORIES.map((c) => {
-                    const Ico = c.icon;
-                    const isActive = c.key === active.key;
+                {options.map((opt) => {
+                    const Ico = opt.icon;
+                    const isActive = opt.key === active.key;
                     return (
                         <button
-                            key={c.key}
+                            key={opt.key}
                             role="option"
                             aria-selected={isActive}
                             className={`${styles.option} ${
                                 isActive ? styles.optionActive : ""
                             }`}
-                            onClick={() => setCat(c.key)}
+                            onClick={() => setFilter(opt.key)}
                         >
                             <span
                                 className={styles.optionSwatch}
-                                style={{ background: c.gradient }}
+                                style={{ background: opt.gradient }}
                             />
                             <Ico size={16} className={styles.optionIcon} />
                             <span className={styles.optionLabel}>
-                                {c.label}
+                                {opt.label}
                             </span>
                         </button>
                     );
