@@ -54,6 +54,17 @@
     object-fit: cover;
 }
 
+.poster {
+    object-fit: cover;
+    transition: transform 0.35s ease-out;
+}
+
+.posterFrame:hover .poster {
+    transform: scale(1.06);
+}
+
+
+
 /* ===== Badge ===== */
 .badge {
     display: inline-block;

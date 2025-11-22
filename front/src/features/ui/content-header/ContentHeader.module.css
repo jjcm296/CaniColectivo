@@ -32,7 +32,7 @@
 
 /* Asegura que el buscador se expanda */
 .searchWrap {
-    flex: 1; /* <-- hace que el buscador se estire */
+    flex: 1;
     display: flex;
     align-items: center;
 }
