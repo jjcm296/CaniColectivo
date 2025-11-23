@@ -37,14 +37,96 @@
     font-style: italic;
 }
 
+/* Grid container for cards */
 .grid {
-    margin-top: 8px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, max-content));
-
-    gap: 22px;
-    justify-content: start;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
 }
+
+/* Inline empty state next to the "Agregar foto" card */
+.emptyInline {
+    min-height: 100%;
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    background: #f9fafb;
+    border: 1px dashed rgba(148, 163, 184, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    color: #4b5563;
+}
+
+.emptyInlineTitle {
+    margin: 0 0 4px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.emptyInlineText {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #6b7280;
+}
+
+/* Full-width empty state (cuando ni siquiera hay tarjeta de agregar) */
+.emptyState {
+    margin-top: 32px;
+    padding: 32px 24px;
+    border-radius: var(--radius);
+    background: #f9fafb;
+    text-align: center;
+    border: 1px dashed rgba(148, 163, 184, 0.6);
+}
+
+.emptyIcon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.emptyTitle {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.emptyText {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #6b7280;
+}
+
+.emptyWrapper {
+    width: 100%;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    padding: 30px 20px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+    background: #f8fafc;
+}
+
+.emptyMessage {
+    flex: 1;
+    padding: 20px 10px;
+}
+
+.emptyMessage h3 {
+    margin: 0 0 6px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.emptyMessage p {
+    margin: 0;
+    font-size: 1rem;
+    color: #475569;
+}
+
 
 @media (max-width: 768px) {
     .block {

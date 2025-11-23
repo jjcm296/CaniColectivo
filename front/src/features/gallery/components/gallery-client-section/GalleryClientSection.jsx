@@ -1,40 +1,48 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useGalleryMedia } from "@/features/gallery/hooks/useGalleryMedia";
 import GalleryImagesSection from "../gallery-images-section/GalleryImagesSection";
 
-export default function GalleryClientSection({ isAdmin, initialItems }) {
-    const [items, setItems] = useState(initialItems ?? []);
-    const [view, setView] = useState("all"); // "all" | "featured" | "hidden"
+export default function GalleryClientSection({ isAdmin }) {
+    const {
+        items,
+        loading,
+        error,
+        updateItem,
+        removeItem,
+        // reload, addItem
+    } = useGalleryMedia();
+
+    const [view, setView] = useState("all");
 
     function handleToggle(id) {
-        setItems((prev) =>
-            prev.map((item) =>
-                item.id === id
-                    ? { ...item, isActive: !(item.isActive ?? true) }
-                    : item
-            )
-        );
+        const current = items.find((item) => item.id === id);
+        if (!current) return;
+
+        updateItem({
+            ...current,
+            isActive: !(current.isActive ?? true),
+        });
     }
 
     function handleToggleFeatured(id) {
-        setItems((prev) =>
-            prev.map((item) =>
-                item.id === id
-                    ? { ...item, isFeatured: !item.isFeatured }
-                    : item
-            )
-        );
+        const current = items.find((item) => item.id === id);
+        if (!current) return;
+
+        updateItem({
+            ...current,
+            isFeatured: !current.isFeatured,
+        });
     }
 
     function handleRemove(id) {
         const ok = window.confirm("¿Eliminar este elemento?");
         if (!ok) return;
-        setItems((prev) => prev.filter((item) => item.id !== id));
+        removeItem(id);
     }
 
     function handleAddImage() {
-        // TODO: connect with your "add image" modal/form
         console.log("Add image clicked");
     }
 
@@ -59,16 +67,21 @@ export default function GalleryClientSection({ isAdmin, initialItems }) {
         });
     }, [items, view, isAdmin]);
 
+    const hasItems = filteredItems.length > 0;
+
     return (
-        <GalleryImagesSection
-            isAdmin={isAdmin}
-            items={filteredItems}
-            view={view}
-            onChangeView={setView}
-            onToggleActive={handleToggle}
-            onToggleFeatured={handleToggleFeatured}
-            onRemove={handleRemove}
-            onAddImage={isAdmin ? handleAddImage : undefined}
-        />
+        <>
+
+            <GalleryImagesSection
+                isAdmin={isAdmin}
+                items={filteredItems}
+                view={view}
+                onChangeView={setView}
+                onToggleActive={handleToggle}
+                onToggleFeatured={handleToggleFeatured}
+                onRemove={handleRemove}
+                onAddImage={isAdmin ? handleAddImage : undefined}
+            />
+        </>
     );
 }

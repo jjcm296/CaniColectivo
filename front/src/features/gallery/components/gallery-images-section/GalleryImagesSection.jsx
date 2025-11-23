@@ -15,10 +15,12 @@ export default function GalleryImagesSection({
                                                  onRemove,
                                                  onAddImage,
                                              }) {
-    const images = items.filter((item) => item.type === "image" || !item.type);
+    const images = items.filter(
+        (item) => item.type === "image" || !item.type
+    );
 
+    const noImages = images.length === 0;
     const showAddCard = isAdmin && onAddImage && view === "all";
-    const showGrid = images.length > 0 || showAddCard;
 
     return (
         <section className={styles.block}>
@@ -39,11 +41,24 @@ export default function GalleryImagesSection({
                 )}
             </header>
 
-            {showGrid ? (
-                <div className={styles.grid}>
+            {/* Si NO hay imágenes → mensaje ancho completo */}
+            {noImages ? (
+                <div className={styles.emptyWrapper}>
                     {showAddCard && (
                         <GalleryAddImageCard onClick={onAddImage} />
                     )}
+
+                    <div className={styles.emptyMessage}>
+                        <h3>Tu galería todavía no tiene imágenes</h3>
+                        <p>
+                            Usa el botón <strong>“Agregar foto”</strong> para subir la primera imagen.
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                /* Si HAY imágenes → grid normal */
+                <div className={styles.grid}>
+                    {showAddCard && <GalleryAddImageCard onClick={onAddImage} />}
 
                     {images.map((item) => (
                         <GalleryImageCard
@@ -56,8 +71,6 @@ export default function GalleryImagesSection({
                         />
                     ))}
                 </div>
-            ) : (
-                <p className={styles.empty}>Aún no hay imágenes para mostrar.</p>
             )}
         </section>
     );
