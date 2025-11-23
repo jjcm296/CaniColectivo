@@ -6,13 +6,10 @@ import styles from "./GalleryTabs.module.css";
 
 export default function GalleryTabs({ isAdmin, view, onChange }) {
     const tabs = [
-        { id: "all", label: "Todas",      icon: <FiGrid /> },
-        { id: "featured", label: "Destacadas", icon: <FiStar /> },
+        { id: "all",        icon: <FiGrid /> },
+        { id: "featured",   icon: <FiStar /> },
+        { id: "hidden",     icon: <FiEyeOff /> }
     ];
-
-    if (isAdmin) {
-        tabs.push({ id: "hidden", label: "Ocultas", icon: <FiEyeOff /> });
-    }
 
     const activeIndex = Math.max(
         0,
@@ -41,7 +38,6 @@ export default function GalleryTabs({ isAdmin, view, onChange }) {
                         onClick={() => onChange(tab.id)}
                     >
                         <span className={styles.icon}>{tab.icon}</span>
-                        <span className={styles.label}>{tab.label}</span>
                     </button>
                 ))}
             </div>
