@@ -4,19 +4,18 @@
     margin-top: 18px;
 }
 
+/* Barra de tabs */
 .tabs {
     --tabs-count: 3;
     --active-index: 0;
 
     position: relative;
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(var(--tabs-count), 1fr);
-    gap: 4px;
+    display: flex;          /* ← antes era grid */
+    align-items: stretch;
 
     padding: 4px;
     border-radius: 999px;
-
     background: #e5e7eb; /* gris claro, sin degradado */
 }
 
@@ -27,17 +26,13 @@
     bottom: 4px;
     left: 4px;
 
-    width: calc(
-            (100% - (var(--tabs-count) - 1) * 4px) / var(--tabs-count)
-    );
-
+    width: calc(100% / var(--tabs-count));
     border-radius: 999px;
     background: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
 
-    transform: translateX(
-            calc(var(--active-index) * (100% + 4px))
-    );
+    /* se mueve un “slot” por índice (0, 1, 2…) */
+    transform: translateX(calc(var(--active-index) * 100%));
     transition: transform 0.22s ease-out;
     z-index: 0;
 }
@@ -47,6 +42,7 @@
     position: relative;
     z-index: 1;
 
+    flex: 1;
     border: none;
     background: transparent;
     border-radius: 999px;
@@ -99,7 +95,6 @@
 @media (max-width: 640px) {
     .tabs {
         padding: 4px;
-        gap: 3px;
     }
 
     .tab {
