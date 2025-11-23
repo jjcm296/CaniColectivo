@@ -1,0 +1,101 @@
+.card {
+    border-radius: var(--radius);
+    border: 3px dashed rgba(148, 163, 184, 0.9);
+    background:
+            radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), #f3f4f6),
+            linear-gradient(145deg, #f9fafb, #e5e7eb);
+    box-shadow: var(--shadow);
+    padding: 18px 16px;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    width: 100%;
+    max-width: 320px;
+    margin-inline: auto;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: radial-gradient(
+            circle at 20% 0%,
+            rgba(255, 255, 255, 0.8),
+            transparent 60%
+    );
+    transition: opacity 0.18s ease-out;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.addCard {
+    cursor: pointer;
+    border-style: dashed;
+}
+
+.addInner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.addIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 26px;
+
+    background:
+            radial-gradient(circle at 30% 0%, #ffffff, #f9fafb 50%, #e5e7eb 100%);
+    border: 2px solid rgba(148, 163, 184, 0.9);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    color: var(--or);
+}
+
+.addText {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--nv);
+}
+
+.addCard:focus-visible {
+    outline: 2px solid var(--bl);
+    outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        min-height: 150px;
+        padding: 14px 12px;
+    }
+
+    .addIcon {
+        width: 46px;
+        height: 46px;
+        font-size: 22px;
+    }
+
+    .addText {
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+    }
+}

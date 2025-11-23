@@ -48,36 +48,6 @@ export default function GalleryImageCard({
                     )}
                 </div>
             </div>
-
-            <div className={styles.meta}>
-                {item.description && (
-                    <p className={styles.description}>{item.description}</p>
-                )}
-
-                {isAdmin && (
-                    <div className={styles.actions}>
-                        {onToggleActive && (
-                            <button
-                                type="button"
-                                className={styles.actionToggle}
-                                onClick={() => onToggleActive(item.id)}
-                            >
-                                {active ? "Ocultar" : "Mostrar"}
-                            </button>
-                        )}
-
-                        {onRemove && (
-                            <button
-                                type="button"
-                                className={styles.actionDelete}
-                                onClick={() => onRemove(item.id)}
-                            >
-                                Eliminar
-                            </button>
-                        )}
-                    </div>
-                )}
-            </div>
         </article>
     );
 }

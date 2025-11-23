@@ -1,5 +1,8 @@
+"use client";
+
 import GalleryTabs from "../gallery-tabs/GalleryTabs";
 import GalleryImageCard from "../gallery-image-card/GalleryImageCard";
+import GalleryAddImageCard from "../gallery-addImage-card/GalleryAddImageCard";
 import styles from "./GalleryImagesSection.module.css";
 
 export default function GalleryImagesSection({
@@ -10,8 +13,12 @@ export default function GalleryImagesSection({
                                                  onToggleActive,
                                                  onToggleFeatured,
                                                  onRemove,
+                                                 onAddImage,
                                              }) {
     const images = items.filter((item) => item.type === "image" || !item.type);
+
+    const showAddCard = isAdmin && onAddImage && view === "all";
+    const showGrid = images.length > 0 || showAddCard;
 
     return (
         <section className={styles.block}>
@@ -19,7 +26,8 @@ export default function GalleryImagesSection({
                 <p className={styles.kicker}>Imágenes</p>
                 <h2 className={styles.title}>Galería de imágenes</h2>
                 <p className={styles.subtitle}>
-                    Fotografías, carteles y momentos capturados en eventos y procesos de CANI.
+                    Fotografías, carteles y momentos capturados en eventos y procesos
+                    de CANI.
                 </p>
 
                 {isAdmin && (
@@ -31,18 +39,26 @@ export default function GalleryImagesSection({
                 )}
             </header>
 
-            <div className={styles.grid}>
-                {images.map((item) => (
-                    <GalleryImageCard
-                        key={item.id}
-                        item={item}
-                        isAdmin={isAdmin}
-                        onToggleFeatured={onToggleFeatured}
-                        onToggleActive={onToggleActive}
-                        onRemove={onRemove}
-                    />
-                ))}
-            </div>
+            {showGrid ? (
+                <div className={styles.grid}>
+                    {showAddCard && (
+                        <GalleryAddImageCard onClick={onAddImage} />
+                    )}
+
+                    {images.map((item) => (
+                        <GalleryImageCard
+                            key={item.id}
+                            item={item}
+                            isAdmin={isAdmin}
+                            onToggleFeatured={onToggleFeatured}
+                            onToggleActive={onToggleActive}
+                            onRemove={onRemove}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <p className={styles.empty}>Aún no hay imágenes para mostrar.</p>
+            )}
         </section>
     );
 }

@@ -1,4 +1,3 @@
-// src/features/gallery/gallery-client-section/GalleryClientSection.jsx
 "use client";
 
 import { useMemo, useState } from "react";
@@ -18,14 +17,27 @@ export default function GalleryClientSection({ isAdmin, initialItems }) {
         );
     }
 
+    function handleToggleFeatured(id) {
+        setItems((prev) =>
+            prev.map((item) =>
+                item.id === id
+                    ? { ...item, isFeatured: !item.isFeatured }
+                    : item
+            )
+        );
+    }
+
     function handleRemove(id) {
         const ok = window.confirm("¿Eliminar este elemento?");
         if (!ok) return;
-
         setItems((prev) => prev.filter((item) => item.id !== id));
     }
 
-    // Filtro según pestaña
+    function handleAddImage() {
+        // TODO: connect with your "add image" modal/form
+        console.log("Add image clicked");
+    }
+
     const filteredItems = useMemo(() => {
         return items.filter((item) => {
             const active = item.isActive ?? true;
@@ -42,21 +54,10 @@ export default function GalleryClientSection({ isAdmin, initialItems }) {
                 return !active;
             }
 
-            // "all"
             if (isAdmin) return true;
             return active;
         });
     }, [items, view, isAdmin]);
-
-    function handleToggleFeatured(id) {
-        setItems((prev) =>
-            prev.map((item) =>
-                item.id === id
-                    ? { ...item, isFeatured: !item.isFeatured }
-                    : item
-            )
-        );
-    }
 
     return (
         <GalleryImagesSection
@@ -67,6 +68,7 @@ export default function GalleryClientSection({ isAdmin, initialItems }) {
             onToggleActive={handleToggle}
             onToggleFeatured={handleToggleFeatured}
             onRemove={handleRemove}
+            onAddImage={isAdmin ? handleAddImage : undefined}
         />
     );
 }
