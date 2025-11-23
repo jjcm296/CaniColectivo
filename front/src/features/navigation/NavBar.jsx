@@ -28,6 +28,7 @@ export default function NavBar() {
         { href: '/artists',  label: 'Artistas' },
         { href: '/events',   label: 'Eventos' },
         { href: '/about',    label: 'Nosotros' },
+        {href: '/gallery', label: 'Galería' },
         { href: '/#footer', label: 'Contacto' }
     ];
 

@@ -1,0 +1,118 @@
+/* Contenedor dentro del bloque de galería */
+.wrapper {
+    width: 100%;
+    margin-top: 18px;
+}
+
+.tabs {
+    --tabs-count: 3;
+    --active-index: 0;
+
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(var(--tabs-count), 1fr);
+    gap: 4px;
+
+    padding: 4px;
+    border-radius: 999px;
+
+    background: #e5e7eb; /* gris claro, sin degradado */
+}
+
+/* Pastilla móvil detrás de los tabs */
+.slider {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+
+    width: calc(
+            (100% - (var(--tabs-count) - 1) * 4px) / var(--tabs-count)
+    );
+
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+
+    transform: translateX(
+            calc(var(--active-index) * (100% + 4px))
+    );
+    transition: transform 0.22s ease-out;
+    z-index: 0;
+}
+
+/* Cada tab encima del slider */
+.tab {
+    position: relative;
+    z-index: 1;
+
+    border: none;
+    background: transparent;
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 8px 10px;
+
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    color: #4b5563;
+    opacity: 0.8;
+
+    box-shadow: none !important;
+    transform: none !important;
+    transition:
+            color 0.15s ease,
+            opacity 0.15s ease;
+}
+
+.tab:hover {
+    opacity: 1;
+}
+
+/* Icono react-icons */
+.icon {
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Activo: texto azul CANI, icono naranja */
+.active {
+    color: var(--nv);
+    opacity: 1;
+}
+
+.active .icon {
+    color: var(--or);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .tabs {
+        padding: 4px;
+        gap: 3px;
+    }
+
+    .tab {
+        padding: 7px 6px;
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    .icon {
+        font-size: 15px;
+    }
+
+    .label {
+        font-size: 10px;
+    }
+}

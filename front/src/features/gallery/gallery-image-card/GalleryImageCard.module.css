@@ -1,0 +1,152 @@
+/* Tarjeta base */
+.card {
+    background: #ffffff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.cardInactive {
+    opacity: 0.6;
+}
+
+/* Aspect ratio tipo Instagram 4:5 */
+.mediaWrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 125%; /* 4:5 */
+    overflow: hidden;
+    border-radius: var(--radius);
+}
+
+.image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== Estrella destacada ===== */
+.starBtn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(4px);
+
+    cursor: pointer;
+    transition:
+            background 0.15s ease,
+            transform 0.12s ease,
+            box-shadow 0.15s ease;
+}
+
+/* Iconos */
+.starIcon,
+.starIconFilled {
+    font-size: 22px;
+}
+
+.starIcon {
+    color: #888;
+}
+
+.starIconFilled {
+    color: var(--or); /* naranja CANI */
+}
+
+.starBtn:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.06);
+}
+
+.starActive {
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    transform: scale(1.08);
+}
+
+/* Overlay inferior con título/tipo */
+.overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 12px;
+    background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.65),
+            transparent
+    );
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.itemTitle {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--nv);
+}
+
+/* Meta y acciones */
+.meta {
+    padding: 10px 12px 12px;
+}
+
+.description {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.actionToggle,
+.actionDelete {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.actionToggle {
+    background: rgba(28, 161, 85, 0.08);
+    border-color: rgba(28, 161, 85, 0.45);
+    color: #1ca155;
+}
+
+.actionDelete {
+    background: rgba(255, 34, 34, 0.05);
+    border-color: rgba(255, 34, 34, 0.45);
+    color: #ff2222;
+}

@@ -210,6 +210,91 @@ const db = {
             isCause: false,
         },
     ],
+    gallery: [
+        {
+            id: 1,
+            type: "image",
+            url: "/home/circle-carousel/imagen.jpeg",
+            title: "Imagen 1",
+            description: "Imagen del carrusel 1",
+            isActive: true,
+        },
+        {
+            id: 2,
+            type: "image",
+            url: "/home/circle-carousel/imagen2.jpeg",
+            title: "Imagen 2",
+            description: "Imagen del carrusel 2",
+            isActive: true,
+        },
+        {
+            id: 3,
+            type: "image",
+            url: "/home/circle-carousel/imagen3.jpeg",
+            title: "Imagen 3",
+            description: "Imagen del carrusel 3",
+            isActive: true,
+        },
+        {
+            id: 4,
+            type: "image",
+            url: "/home/circle-carousel/imagen4.jpeg",
+            title: "Imagen 4",
+            description: "Imagen del carrusel 4",
+            isActive: true,
+        },
+        {
+            id: 5,
+            type: "image",
+            url: "/home/circle-carousel/imagen5.jpeg",
+            title: "Imagen 5",
+            description: "Imagen del carrusel 5",
+            isActive: true,
+        },
+
+        // Repetidas si deseas más
+        {
+            id: 6,
+            type: "image",
+            url: "/home/circle-carousel/imagen.jpeg",
+            title: "Imagen 1 Extra",
+            description: "Imagen adicional",
+            isActive: true,
+        },
+        {
+            id: 7,
+            type: "image",
+            url: "/home/circle-carousel/imagen2.jpeg",
+            title: "Imagen 2 Extra",
+            description: "Imagen adicional",
+            isActive: true,
+        },
+        {
+            id: 8,
+            type: "image",
+            url: "/home/circle-carousel/imagen3.jpeg",
+            title: "Imagen 3 Extra",
+            description: "Imagen adicional",
+            isActive: true,
+        },
+        {
+            id: 9,
+            type: "image",
+            url: "/home/circle-carousel/imagen4.jpeg",
+            title: "Imagen 4 Extra",
+            description: "Imagen adicional",
+            isActive: true,
+        },
+        {
+            id: 10,
+            type: "image",
+            url: "/home/circle-carousel/imagen5.jpeg",
+            title: "Imagen 5 Extra",
+            description: "Imagen adicional",
+            isActive: true,
+        },
+    ]
+
 };
 
 export function dbGetAllArtists() {
@@ -246,6 +331,10 @@ export function dbGetEventById(id) {
 
 export function dbGetEventByName(name) {
     return db.evets.find((event) => event.name === name) || null;
+}
+
+export function dbGetAllGallery() {
+    return [...db.gallery];
 }
 
 export default db;

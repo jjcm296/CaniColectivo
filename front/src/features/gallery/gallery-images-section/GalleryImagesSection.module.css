@@ -1,0 +1,56 @@
+/* ===== Bloque de sección ===== */
+.block {
+    margin-bottom: 40px;
+    padding: 24px;
+    border-radius: var(--radius);
+    background: #ffffff;
+    /* Si quieres sombra: box-shadow: var(--shadow); */
+    /* Si no quieres sombra: box-shadow: none; */
+}
+
+.header {
+    margin-bottom: 18px;
+}
+
+.kicker {
+    margin: 0 0 4px;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--or);
+}
+
+.title {
+    margin: 0 0 6px;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--nv);
+}
+
+.subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.empty {
+    margin-top: 20px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+
+/* ===== Grid de tarjetas ===== */
+.grid {
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .block {
+        padding: 18px;
+    }
+}
