@@ -31,6 +31,8 @@ public class Multimedia {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    public Multimedia() {}
+
     public Multimedia(MediaType mediaType, String url, MediaScope scope) {
         this.mediaType = mediaType;
         this.url = url;
