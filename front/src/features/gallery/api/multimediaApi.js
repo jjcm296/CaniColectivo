@@ -22,9 +22,19 @@ export async function uploadBannerImage(file) {
         method: "POST",
         body: formData,
     });
-    if (!res.ok) throw new Error("Error al subir la imagen");
+
+    // Verifica si la respuesta no es exitosa
+    if (!res.ok) {
+        // Extrae el texto del error para diagnóstico
+        const errorText = await res.text();
+        console.error("Error response from server:", errorText);
+        throw new Error(`Error al subir la imagen: ${errorText}`);
+    }
+
+    // Si la respuesta es exitosa, retorna el JSON de la respuesta
     return res.json();
 }
+
 
 // Obtener imágenes
 export async function getBannerImages() {

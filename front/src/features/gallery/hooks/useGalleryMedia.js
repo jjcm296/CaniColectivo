@@ -3,18 +3,26 @@
 import { useEffect, useState, useCallback } from "react";
 import { getBannerImages, getBannerVideos } from "../api/multimediaApi";
 
-// Normaliza el DTO del backend al formato interno
-function mapMultimediaDtoToGalleryItem(dto) {
+import { API_URL } from "@/config/apiConfig";
+
+export function mapMultimediaDtoToGalleryItem(dto) {
+    const rawUrl = dto.url || "";
+
+    const finalUrl = rawUrl.startsWith("http")
+        ? rawUrl
+        : `${API_URL}${rawUrl}`;
+
     return {
         id: dto.id,
         type: dto.mediaType === "IMAGE" ? "image" : "video",
-        url: dto.url,
-        isActive: dto.active ?? true,
+        url: finalUrl,
+        isActive: dto.activo ?? true,
         isFeatured: dto.featured ?? false,
         scope: dto.scope ?? null,
         createdAt: dto.createdAt ?? null,
     };
 }
+
 
 export function useGalleryMedia() {
     const [items, setItems] = useState([]);

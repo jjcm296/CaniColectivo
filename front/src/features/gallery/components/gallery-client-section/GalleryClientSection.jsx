@@ -1,8 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useGalleryMedia } from "@/features/gallery/hooks/useGalleryMedia";
+import {
+    useGalleryMedia,
+    mapMultimediaDtoToGalleryItem,
+} from "@/features/gallery/hooks/useGalleryMedia";
 import GalleryImagesSection from "../gallery-images-section/GalleryImagesSection";
+import GalleryAddImageModal from "../gallery-upload-image-modal/GalleryUploadImageModal";
+import { uploadBannerImage } from "@/features/gallery/api/multimediaApi";
 
 export default function GalleryClientSection({ isAdmin }) {
     const {
@@ -11,10 +16,12 @@ export default function GalleryClientSection({ isAdmin }) {
         error,
         updateItem,
         removeItem,
-        // reload, addItem
+        addItem,
+        reload,
     } = useGalleryMedia();
 
     const [view, setView] = useState("all");
+    const [showAddModal, setShowAddModal] = useState(false);
 
     function handleToggle(id) {
         const current = items.find((item) => item.id === id);
@@ -42,8 +49,23 @@ export default function GalleryClientSection({ isAdmin }) {
         removeItem(id);
     }
 
-    function handleAddImage() {
-        console.log("Add image clicked");
+    function handleAddImageClick() {
+        setShowAddModal(true);
+    }
+
+    async function handleUpload(file) {
+        return uploadBannerImage(file);
+    }
+
+    function handleImageUploaded(createdDto) {
+        if (createdDto) {
+            const mapped = mapMultimediaDtoToGalleryItem(createdDto);
+            addItem(mapped);
+        } else {
+            reload();
+        }
+
+        setShowAddModal(false);
     }
 
     const filteredItems = useMemo(() => {
@@ -71,7 +93,6 @@ export default function GalleryClientSection({ isAdmin }) {
 
     return (
         <>
-
             <GalleryImagesSection
                 isAdmin={isAdmin}
                 items={filteredItems}
@@ -80,8 +101,17 @@ export default function GalleryClientSection({ isAdmin }) {
                 onToggleActive={handleToggle}
                 onToggleFeatured={handleToggleFeatured}
                 onRemove={handleRemove}
-                onAddImage={isAdmin ? handleAddImage : undefined}
+                onAddImage={isAdmin ? handleAddImageClick : undefined}
             />
+
+            {isAdmin && (
+                <GalleryAddImageModal
+                    isOpen={showAddModal}
+                    onClose={() => setShowAddModal(false)}
+                    onUpload={handleUpload}
+                    onSuccess={handleImageUploaded}
+                />
+            )}
         </>
     );
 }
