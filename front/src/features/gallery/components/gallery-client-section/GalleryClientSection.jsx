@@ -43,11 +43,18 @@ export default function GalleryClientSection({ isAdmin }) {
         });
     }
 
-    function handleRemove(id) {
+    async function handleRemove(id) {
         const ok = window.confirm("¿Eliminar este elemento?");
         if (!ok) return;
-        removeItem(id);
+
+        try {
+            await removeItem(id);
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo eliminar la imagen. Intenta de nuevo.");
+        }
     }
+
 
     function handleAddImageClick() {
         setShowAddModal(true);

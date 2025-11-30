@@ -49,3 +49,18 @@ export async function getBannerVideos() {
     if (!res.ok) throw new Error("Error al obtener videos");
     return res.json();
 }
+
+// Eliminar multimedia por id
+export async function deleteMultimedia(id) {
+    const res = await fetch(`${MULTIMEDIA_URL}/${id}`, {
+        method: "DELETE",
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text().catch(() => "");
+        console.error("Error al eliminar multimedia:", errorText);
+        throw new Error("Error al eliminar multimedia");
+    }
+
+    return true;
+}

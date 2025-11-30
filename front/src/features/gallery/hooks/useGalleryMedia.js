@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { getBannerImages, getBannerVideos } from "../api/multimediaApi";
+import { getBannerImages, getBannerVideos,  deleteMultimedia } from "../api/multimediaApi";
 
 import { API_URL } from "@/config/apiConfig";
 
@@ -73,8 +73,15 @@ export function useGalleryMedia() {
         );
     }, []);
 
-    const removeItem = useCallback((id) => {
-        setItems((prev) => prev.filter((item) => item.id !== id));
+    //eliminar en backend + limpiar estado
+    const removeItem = useCallback(async (id) => {
+        try {
+            await deleteMultimedia(id);
+            setItems((prev) => prev.filter((item) => item.id !== id));
+        } catch (err) {
+            console.error("Error al eliminar multimedia:", err);
+            throw err; // para que el componente pueda mostrar alerta si quiere
+        }
     }, []);
 
     return {
