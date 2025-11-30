@@ -20,13 +20,10 @@ import java.util.stream.Collectors;
 public class MultimediaService {
 
     private final MultimediaRepository multimediaRepository;
-    private final StorageService storageService;
     private final CloudflareService cloudflareService;
 
-    public MultimediaService(MultimediaRepository multimediaRepository,
-                             StorageService storageService, CloudflareService cloudflareService) {
+    public MultimediaService(MultimediaRepository multimediaRepository, CloudflareService cloudflareService) {
         this.multimediaRepository = multimediaRepository;
-        this.storageService = storageService;
         this.cloudflareService = cloudflareService;
     }
 
@@ -151,5 +148,31 @@ public class MultimediaService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // ============ ELIMINAR MULTIMEDIA (IMAGEN O VIDEO) ============
+    public void deleteMultimedia(Long id) {
+        Multimedia multimedia = multimediaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Multimedia with id " + id + " not found"
+                        )
+                );
+
+        if (multimedia.getMediaType() == MediaType.IMAGE) {
+            String url = multimedia.getUrl();
+            try {
+                cloudflareService.deleteByUrl(url);
+            } catch (IOException e) {
+                throw new ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Error deleting image from Cloudflare R2",
+                        e
+                );
+            }
+        }
+
+        multimediaRepository.delete(multimedia);
     }
 }

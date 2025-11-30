@@ -1,67 +1,102 @@
-package com.canicolectivo.caniweb.service.multimedia;
+    package com.canicolectivo.caniweb.service.multimedia;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+    import io.github.cdimascio.dotenv.Dotenv;
+    import org.springframework.stereotype.Service;
+    import org.springframework.web.multipart.MultipartFile;
+    import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+    import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+    import software.amazon.awssdk.core.sync.RequestBody;
+    import software.amazon.awssdk.regions.Region;
+    import software.amazon.awssdk.services.s3.S3Client;
+    import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+    import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.IOException;
-import java.net.URI;
+    import java.io.IOException;
+    import java.net.URI;
 
-@Service
-public class CloudflareService {
+    @Service
+    public class CloudflareService {
 
-    private final String bucketName;
-    private final String publicUrl;
-    private final S3Client s3Client;
+        private final String bucketName;
+        private final String publicUrl;
+        private final S3Client s3Client;
 
-    public CloudflareService() {
-        Dotenv dotenv = Dotenv.load();
+        public CloudflareService() {
+            Dotenv dotenv = Dotenv.load();
 
-        // ---- Endpoint interno para SUBIR archivos (S3 API) ----
-        String s3Endpoint = dotenv.get("CLOUDFLARE_S3_ENDPOINT");
+            // ---- Endpoint interno para SUBIR archivos (S3 API) ----
+            String s3Endpoint = dotenv.get("CLOUDFLARE_S3_ENDPOINT");
 
-        // ---- URL pública para mostrar imágenes ----
-        this.publicUrl = dotenv.get("CLOUDFLARE_PUBLIC_URL");
+            // ---- URL pública para mostrar imágenes ----
+            this.publicUrl = dotenv.get("CLOUDFLARE_PUBLIC_URL");
 
-        this.bucketName = dotenv.get("CLOUDFLARE_BUCKET_NAME");
-        String access   = dotenv.get("CLOUDFLARE_ACCESS_KEY");
-        String secret   = dotenv.get("CLOUDFLARE_SECRET_KEY");
+            this.bucketName = dotenv.get("CLOUDFLARE_BUCKET_NAME");
+            String access   = dotenv.get("CLOUDFLARE_ACCESS_KEY");
+            String secret   = dotenv.get("CLOUDFLARE_SECRET_KEY");
 
-        AwsBasicCredentials creds = AwsBasicCredentials.create(access, secret);
+            AwsBasicCredentials creds = AwsBasicCredentials.create(access, secret);
 
-        this.s3Client = S3Client.builder()
-                .endpointOverride(URI.create(s3Endpoint))
-                .region(Region.of("auto"))
-                .credentialsProvider(StaticCredentialsProvider.create(creds))
-                .build();
-    }
-
-    public String uploadImage(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) {
-            throw new IOException("No file selected or file is empty");
-        }
-
-        String key = "banners/" + file.getOriginalFilename();
-
-        try {
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .contentType(file.getContentType())
+            this.s3Client = S3Client.builder()
+                    .endpointOverride(URI.create(s3Endpoint))
+                    .region(Region.of("auto"))
+                    .credentialsProvider(StaticCredentialsProvider.create(creds))
                     .build();
+        }
 
-            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+        public String uploadImage(MultipartFile file) throws IOException {
+            if (file == null || file.isEmpty()) {
+                throw new IOException("No file selected or file is empty");
+            }
 
-            return publicUrl + "/" + key;
+            String key = "banners/" + file.getOriginalFilename();
 
-        } catch (Exception e) {
-            throw new IOException("Error uploading file to Cloudflare R2: " + e.getMessage(), e);
+            try {
+                PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .contentType(file.getContentType())
+                        .build();
+
+                s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+
+                return publicUrl + "/" + key;
+
+            } catch (Exception e) {
+                throw new IOException("Error uploading file to Cloudflare R2: " + e.getMessage(), e);
+            }
+        }
+
+        // ============ DELETE BY URL (IMAGE) ============
+        public void deleteByUrl(String url) throws IOException {
+            if (url == null || url.isBlank()) {
+                return; // nothing to delete
+            }
+
+            if (!url.startsWith(publicUrl)) {
+                throw new IOException("URL does not belong to configured Cloudflare public base URL");
+            }
+
+            String key = url.substring(publicUrl.length() + 1); // +1 for the '/'
+
+            deleteByKey(key);
+        }
+
+        // ============ DELETE BY KEY ============
+        public void deleteByKey(String key) throws IOException {
+            if (key == null || key.isBlank()) {
+                return;
+            }
+
+            try {
+                DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build();
+
+                s3Client.deleteObject(deleteObjectRequest);
+
+            } catch (Exception e) {
+                throw new IOException("Error deleting file from Cloudflare R2: " + e.getMessage(), e);
+            }
         }
     }
-}

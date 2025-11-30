@@ -23,7 +23,23 @@ public class MultimediaController {
         this.multimediaService = multimediaService;
     }
 
-    // ============ CREAR BANNER VIDEO (Url) ============
+    // ======= IMAGENES BANNER PÚBLICO =======
+    // ============ Crear imagen banner (file) ===========
+    @PostMapping("/banner/image")
+    public ResponseEntity<MultimediaDTO> uploadBannerImage (@RequestParam("file") MultipartFile file) {
+
+        MultimediaDTO created = multimediaService.createBannerImage(file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    // ============ Obtener imagenes banner ============
+    @GetMapping("/banner/image")
+    public ResponseEntity<List<MultimediaDTO>> getBannerImages() {
+        return ResponseEntity.ok(multimediaService.getPublicBannerImages());
+    }
+
+    // ======= VIDEOS BANNER PÚBLICO =======
+    // ============ Crear banner video============
     @PostMapping("/banner/video")
     public ResponseEntity<MultimediaDTO> createBannerVideo(
             @RequestBody BannerVideoRequestDTO request) {
@@ -39,23 +55,17 @@ public class MultimediaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // ============ CREAR BANNER IMAGEN (file) ===========
-    @PostMapping("/banner/image")
-    public ResponseEntity<MultimediaDTO> uploadBannerImage (@RequestParam("file") MultipartFile file) {
-
-        MultimediaDTO created = multimediaService.createBannerImage(file);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
-
-    // ============ OBTENER SOLO IMÁGENES ============
-    @GetMapping("/banner/image")
-    public ResponseEntity<List<MultimediaDTO>> getBannerImages() {
-        return ResponseEntity.ok(multimediaService.getPublicBannerImages());
-    }
-
-    // ============ OBTENER SOLO VIDEOS ============
+    // ============ Obtener banner videos ============
     @GetMapping("/banner/video")
     public ResponseEntity<List<MultimediaDTO>> getBannerVideos() {
         return ResponseEntity.ok(multimediaService.getPublicBannerVideos());
+    }
+
+    // ========= MULTIMEDIA GENERAL ==============
+    // ============ Eliminar multimedia por id ============
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMultimedia(@PathVariable Long id) {
+        multimediaService.deleteMultimedia(id);
+        return ResponseEntity.noContent().build(); // 204
     }
 }
