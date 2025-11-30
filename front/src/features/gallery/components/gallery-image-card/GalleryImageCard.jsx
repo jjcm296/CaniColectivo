@@ -1,7 +1,8 @@
-// src/features/gallery/gallery-image-card/GalleryImageCard.jsx
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { HiOutlineStar, HiStar } from "react-icons/hi";
+import { FiMoreVertical, FiEyeOff, FiEye, FiTrash2 } from "react-icons/fi";
 import styles from "./GalleryImageCard.module.css";
 
 export default function GalleryImageCard({
@@ -11,7 +12,48 @@ export default function GalleryImageCard({
                                              onToggleActive,
                                              onRemove,
                                          }) {
+    const [menuOpen, setMenuOpen] = useState(false);
+
     const active = item.isActive ?? true;
+    const featured = item.isFeatured ?? false;
+
+    const menuRef = useRef(null);
+
+    const handleToggleMenu = () => {
+        setMenuOpen((prev) => !prev);
+    };
+
+    const handleFeaturedClick = () => {
+        onToggleFeatured?.(item.id);
+        setMenuOpen(false);
+    };
+
+    const handleToggleActiveClick = () => {
+        onToggleActive?.(item.id);
+        setMenuOpen(false);
+    };
+
+    const handleRemoveClick = () => {
+        onRemove?.(item.id);
+        setMenuOpen(false);
+    };
+
+    // Cerrar menú al hacer clic fuera
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setMenuOpen(false);
+            }
+        }
+
+        if (menuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [menuOpen]);
 
     return (
         <article
@@ -26,19 +68,65 @@ export default function GalleryImageCard({
                 />
 
                 {isAdmin && (
-                    <button
-                        type="button"
-                        className={`${styles.starBtn} ${
-                            item.isFeatured ? styles.starActive : ""
-                        }`}
-                        onClick={() => onToggleFeatured(item.id)}
-                    >
-                        {item.isFeatured ? (
-                            <HiStar className={styles.starIconFilled} />
-                        ) : (
-                            <HiOutlineStar className={styles.starIcon} />
+                    <div className={styles.menuWrapper} ref={menuRef}>
+                        <button
+                            type="button"
+                            className={styles.menuButton}
+                            onClick={handleToggleMenu}
+                        >
+                            <FiMoreVertical />
+                        </button>
+
+                        {menuOpen && (
+                            <div className={styles.menu}>
+                                <button
+                                    type="button"
+                                    className={styles.menuItem}
+                                    onClick={handleFeaturedClick}
+                                >
+                                    <span className={styles.menuIcon}>
+                                        {featured ? (
+                                            <HiStar className={styles.starFeatured} />
+                                        ) : (
+                                            <HiOutlineStar className={styles.starNormal} />
+                                        )}
+                                    </span>
+
+                                    <span>
+                                        {featured
+                                            ? "Quitar"
+                                            : "Destacar"}
+                                    </span>
+                                </button>
+
+                                {/* OCULTAR / MOSTRAR */}
+                                <button
+                                    type="button"
+                                    className={styles.menuItem}
+                                    onClick={handleToggleActiveClick}
+                                >
+                                    <span className={styles.menuIcon}>
+                                        {active ? <FiEyeOff /> : <FiEye />}
+                                    </span>
+                                    <span>
+                                        {active ? "Ocultar" : "Mostrar"}
+                                    </span>
+                                </button>
+
+                                {/* ELIMINAR */}
+                                <button
+                                    type="button"
+                                    className={`${styles.menuItem} ${styles.menuItemDanger}`}
+                                    onClick={handleRemoveClick}
+                                >
+                                    <span className={styles.menuIcon}>
+                                        <FiTrash2 />
+                                    </span>
+                                    <span>Eliminar</span>
+                                </button>
+                            </div>
                         )}
-                    </button>
+                    </div>
                 )}
 
                 <div className={styles.overlay}>

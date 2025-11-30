@@ -32,6 +32,7 @@
     object-fit: cover;
 }
 
+/* (la estrella ya no se usa, pero dejo los estilos por si acaso)
 .starBtn {
     position: absolute;
     top: 8px;
@@ -62,7 +63,7 @@
 }
 
 .starIconFilled {
-    color: var(--or); /* naranja CANI */
+    color: var(--or);
 }
 
 .starBtn:hover {
@@ -75,6 +76,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
     transform: scale(1.08);
 }
+*/
 
 .overlay {
     position: absolute;
@@ -141,4 +143,116 @@
     background: rgba(255, 34, 34, 0.05);
     border-color: rgba(255, 34, 34, 0.45);
     color: #ff2222;
+}
+
+/* ---------- MENÚ DESPLEGABLE ---------- */
+
+.menuWrapper {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 20;
+}
+
+.menuButton {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.18);
+    /* Degradado suave tipo CANI */
+    background:
+            radial-gradient(circle at 30% 0%, #ffffff, #e5e7eb 55%, #d1d5db 100%);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.2);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    font-size: 18px;
+    color: #111827;
+
+    transition:
+            transform 0.12s ease-out,
+            box-shadow 0.18s ease-out,
+            background 0.15s ease-out,
+            border-color 0.15s ease-out;
+}
+
+.menuButton:hover {
+    transform: translateY(-1px) scale(1.03);
+    background:
+            radial-gradient(circle at 30% 0%, #ffffff, #e5e7eb 45%, #cbd5e1 100%);
+    border-color: rgba(15, 23, 42, 0.35);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+}
+
+.menuButton:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.22);
+}
+
+
+.menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    min-width: 190px;
+    padding: 6px 0;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.18);
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    z-index: 30;
+}
+
+.menuItem {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #0f172a;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.menuItem:hover {
+    background: #f3f4f6;
+}
+
+.menuItemDanger {
+    color: #b91c1c;
+}
+
+.menuItemDanger:hover {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.menuIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.starFeatured {
+    color: var(--or);
+}
+
+.starNormal {
+    color: #bbb;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .menu {
+        right: 4px;
+    }
 }
