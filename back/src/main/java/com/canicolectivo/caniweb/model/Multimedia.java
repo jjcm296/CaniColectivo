@@ -28,6 +28,9 @@ public class Multimedia {
     @Column(name = "activo", nullable = false)
     private Boolean activo = Boolean.TRUE;
 
+    @Column(name="isFeatured", nullable = false)
+    private Boolean isFeatured = Boolean.FALSE;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -87,6 +90,13 @@ public class Multimedia {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public Boolean getIsFeatured() {
+        return isFeatured;
+    }
+    public void setIsFeatured(Boolean isFeatured) {
+        this.isFeatured = isFeatured;
     }
 
     public LocalDateTime getCreatedAt() {

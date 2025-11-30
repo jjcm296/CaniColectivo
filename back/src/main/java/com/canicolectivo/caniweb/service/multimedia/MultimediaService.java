@@ -120,6 +120,7 @@ public class MultimediaService {
         dto.setUrl(entity.getUrl());
         dto.setScope(entity.getScope());
         dto.setActivo(entity.getActivo());
+        dto.setIsFeatured(entity.getIsFeatured());
         dto.setCreatedAt(entity.getCreatedAt());
         return dto;
     }
@@ -175,4 +176,23 @@ public class MultimediaService {
 
         multimediaRepository.delete(multimedia);
     }
+
+    // ============ ACTUALIZAR DESTACADO ============
+    public MultimediaDTO toggleFeatured(Long id) {
+        Multimedia multimedia = multimediaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Multimedia with id " + id + " not found"
+                        )
+                );
+
+        boolean newValue = !multimedia.getIsFeatured();
+        multimedia.setIsFeatured(newValue);
+
+        Multimedia saved = multimediaRepository.save(multimedia);
+        return toDTO(saved);
+    }
+
+
 }

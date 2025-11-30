@@ -11,6 +11,7 @@ public class MultimediaDTO {
     private String url;
     private MediaScope Scope;
     Boolean activo;
+    Boolean isFeatured;
     private LocalDateTime createdAt;
 
     public MultimediaDTO() {}
@@ -62,6 +63,14 @@ public class MultimediaDTO {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public Boolean getIsFeatured() {
+        return isFeatured;
+    }
+
+    public void setIsFeatured(Boolean isFeatured) {
+        this.isFeatured = isFeatured;
     }
 
     public LocalDateTime getCreatedAt() {

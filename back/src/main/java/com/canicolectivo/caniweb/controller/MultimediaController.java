@@ -68,4 +68,13 @@ public class MultimediaController {
         multimediaService.deleteMultimedia(id);
         return ResponseEntity.noContent().build(); // 204
     }
+
+    // ============ Actualizar destacado (isFeatured) ============
+    @PatchMapping("/{id}/featured/toggle")
+    public ResponseEntity<MultimediaDTO> toggleFeatured(@PathVariable Long id) {
+        MultimediaDTO updated = multimediaService.toggleFeatured(id);
+        return ResponseEntity.ok(updated);
+    }
+
+
 }
