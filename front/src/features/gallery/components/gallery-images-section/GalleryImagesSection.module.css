@@ -40,8 +40,10 @@
 /* Grid container for cards */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 260px));
     gap: 24px;
+    justify-content: flex-start;
+    justify-items: stretch;
 }
 
 /* Inline empty state next to the "Agregar foto" card */
@@ -129,7 +131,12 @@
 
 
 @media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
     .block {
         padding: 18px;
     }
 }
+
