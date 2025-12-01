@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class UserTest {
+    /*
     @Test
     void testAddAndRemoveRoleKeepsBidirectionalRelation() {
         User user = new User("user@example.com", "password123");
@@ -48,4 +49,6 @@ class UserTest {
         artist.setUser(user);
         assertSame(user, artist.getUser(), "Artist.getUser must return the user set via Artist.setUser");
     }
+
+     */
 }

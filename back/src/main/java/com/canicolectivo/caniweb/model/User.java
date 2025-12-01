@@ -62,7 +62,7 @@ public class User implements UserDetails {
         return id;
     }
 
-    public @NotNull String getUsername() {
+    public @NotNull String getUsernameNotOverriden() {
         return username;
     }
 
@@ -134,6 +134,11 @@ public class User implements UserDetails {
 
     // UserDetails
 
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
     //TODO: add proper boolean checks
     @Override
     public boolean isAccountNonExpired() {
@@ -142,17 +147,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return enabled;
     }
 
     @Override
