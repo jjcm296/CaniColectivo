@@ -5,11 +5,11 @@ import com.canicolectivo.caniweb.dto.multimedia.MultimediaDTO;
 import com.canicolectivo.caniweb.service.multimedia.MultimediaService;
 
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -24,57 +24,50 @@ public class MultimediaController {
     }
 
     // ======= IMAGENES BANNER PÚBLICO =======
-    // ============ Crear imagen banner (file) ===========
+    // subir imagen de banner
     @PostMapping("/banner/image")
-    public ResponseEntity<MultimediaDTO> uploadBannerImage (@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<MultimediaDTO> uploadBannerImage(
+            @RequestParam("file") MultipartFile file) {
+
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
 
         MultimediaDTO created = multimediaService.createBannerImage(file);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-
-    // ============ Obtener imagenes banner ============
+    // obtener lista de imágenes de banner público
     @GetMapping("/banner/image")
     public ResponseEntity<List<MultimediaDTO>> getBannerImages() {
         return ResponseEntity.ok(multimediaService.getPublicBannerImages());
     }
 
     // ======= VIDEOS BANNER PÚBLICO =======
-    // ============ Crear banner video============
+    // subir video mediante URL
     @PostMapping("/banner/video")
     public ResponseEntity<MultimediaDTO> createBannerVideo(
-            @RequestBody BannerVideoRequestDTO request) {
-
-        if (request == null || request.getUrl() == null || request.getUrl().isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "URL is required"
-            );
-        }
+            @Valid @RequestBody BannerVideoRequestDTO request) {
 
         MultimediaDTO created = multimediaService.createBannerVideo(request.getUrl());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-
-    // ============ Obtener banner videos ============
+    // obtener lista de videos de banner público
     @GetMapping("/banner/video")
     public ResponseEntity<List<MultimediaDTO>> getBannerVideos() {
         return ResponseEntity.ok(multimediaService.getPublicBannerVideos());
     }
 
-    // ========= MULTIMEDIA GENERAL ==============
-    // ============ Eliminar multimedia por id ============
+    // ===== MULTIMEDIA GENERAL =====
+    // Eliminar multimedia por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMultimedia(@PathVariable Long id) {
         multimediaService.deleteMultimedia(id);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
     }
-
-    // ============ Actualizar destacado (isFeatured) ============
+    // Alternar el estado destacado de una multimedia
     @PatchMapping("/{id}/featured/toggle")
     public ResponseEntity<MultimediaDTO> toggleFeatured(@PathVariable Long id) {
         MultimediaDTO updated = multimediaService.toggleFeatured(id);
         return ResponseEntity.ok(updated);
     }
-
-
 }
