@@ -50,7 +50,7 @@ public class User implements UserDetails {
 
     private boolean enabled;
 
-    public User() {}
+    public User(String mail, String password123) {}
 
     public User(String username, String email, String password) {
         this.username = username;

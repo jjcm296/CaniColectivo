@@ -16,4 +16,22 @@ public interface MultimediaRepository extends JpaRepository<Multimedia, Long> {
     Optional<Multimedia> findByIdAndActivoTrue(Long id);
 
     List<Multimedia> findByScopeAndMediaTypeAndActivoTrue(MediaScope scope, MediaType mediaType);
+
+    // Activas y NO destacadas
+    List<Multimedia> findByScopeAndMediaTypeAndActivoTrueAndIsFeaturedFalse(
+            MediaScope scope,
+            MediaType mediaType
+    );
+
+    // Activas y destacadas
+    List<Multimedia> findByScopeAndMediaTypeAndActivoTrueAndIsFeaturedTrue(
+            MediaScope scope,
+            MediaType mediaType
+    );
+
+    // NO activas (independientemente de si son destacadas)
+    List<Multimedia> findByScopeAndMediaTypeAndActivoFalse(
+            MediaScope scope,
+            MediaType mediaType
+    );
 }
