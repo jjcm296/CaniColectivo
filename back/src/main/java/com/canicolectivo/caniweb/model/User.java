@@ -3,13 +3,12 @@ package com.canicolectivo.caniweb.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -142,7 +141,7 @@ public class User implements UserDetails {
     //TODO: add proper boolean checks
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
@@ -157,11 +156,15 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (roles == null || roles.isEmpty()) return List.of();
+
+        return roles.stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName().toUpperCase(Locale.ROOT)))
+                .collect(Collectors.toList());
     }
 }
