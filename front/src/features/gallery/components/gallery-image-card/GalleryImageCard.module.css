@@ -32,11 +32,12 @@
     object-fit: cover;
 }
 
-/* (la estrella ya no se usa, pero dejo los estilos por si acaso)
+/* ---------- ESTRELLA DESTACADA (afuera) ---------- */
+
 .starBtn {
     position: absolute;
     top: 8px;
-    right: 8px;
+    left: 8px; /* 👈 ahora en la izquierda para no chocar con el menú */
     width: 32px;
     height: 32px;
     border: none;
@@ -76,7 +77,8 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
     transform: scale(1.08);
 }
-*/
+
+/* ---------- OVERLAY TEXTO ---------- */
 
 .overlay {
     position: absolute;
@@ -159,19 +161,15 @@
     height: 36px;
     border-radius: 999px;
     border: 1px solid rgba(15, 23, 42, 0.18);
-    /* Degradado suave tipo CANI */
     background:
             radial-gradient(circle at 30% 0%, #ffffff, #e5e7eb 55%, #d1d5db 100%);
     box-shadow: 0 6px 14px rgba(15, 23, 42, 0.2);
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     cursor: pointer;
     font-size: 18px;
     color: #111827;
-
     transition:
             transform 0.12s ease-out,
             box-shadow 0.18s ease-out,
@@ -191,7 +189,6 @@
     transform: translateY(0) scale(0.97);
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.22);
 }
-
 
 .menu {
     position: absolute;
@@ -248,7 +245,6 @@
 .starNormal {
     color: #bbb;
 }
-
 
 /* Responsive */
 @media (max-width: 768px) {
