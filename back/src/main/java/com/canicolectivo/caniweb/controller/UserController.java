@@ -1,10 +1,12 @@
 package com.canicolectivo.caniweb.controller;
 
+import com.canicolectivo.caniweb.dto.UserDTO;
 import com.canicolectivo.caniweb.model.User;
 import com.canicolectivo.caniweb.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +26,25 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getMe() {
+    public ResponseEntity<UserDTO> getMe() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()
+                || !(authentication.getPrincipal() instanceof User)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         User currentUser = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(currentUser);
+        UserDTO userDTO = userService.getCurrentUser(currentUser);
+        return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List <User> users = userService.allUsers();
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        System.out.println(">>> getAllUsers() UserController");
+        List <UserDTO> users = userService.allUsers();
         return ResponseEntity.ok(users);
     }
 

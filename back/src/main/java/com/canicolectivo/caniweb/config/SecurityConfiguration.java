@@ -34,10 +34,14 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "artists/**").permitAll()
-                        .requestMatchers("/multimedia/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/artists/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/artists/*/verify").hasRole("ADMIN")
+
+                        .requestMatchers("/users/me").authenticated()
                         .requestMatchers("/users/**").hasRole("ADMIN")
-                        .requestMatchers("/artists/**/verify").hasRole("ADMIN")
+                        .requestMatchers("/multimedia/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -48,6 +52,7 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
