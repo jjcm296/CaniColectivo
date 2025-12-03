@@ -1,11 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import {
-    getAllFeaturesBannerImages,
-    getBannerVideos,
-} from "@/features/gallery/api/multimediaApi";
-
+import { getAllFeaturesBannerImages } from "@/features/gallery/api/multimediaApi";
 import { mapMultimediaDtoToGalleryItem } from "@/features/gallery/hooks/useGalleryMedia";
 
 export function useFeaturedBannerImages() {
@@ -18,17 +14,11 @@ export function useFeaturedBannerImages() {
             setLoading(true);
             setError(null);
 
-            const [imagesDto, videosDto] = await Promise.all([
-                getAllFeaturesBannerImages(),
-                getBannerVideos(),
-            ]);
+            const imagesDto = await getAllFeaturesBannerImages();
 
-            let mapped = [
-                ...imagesDto.map(mapMultimediaDtoToGalleryItem),
-                ...videosDto.map(mapMultimediaDtoToGalleryItem),
-            ];
+            let mapped = imagesDto.map(mapMultimediaDtoToGalleryItem);
 
-            // Para el carrusel: solo IMÁGENES activas y destacadas
+            // Solo IMÁGENES activas y destacadas
             mapped = mapped.filter(
                 (m) => m.type === "image" && m.isActive && m.isFeatured
             );

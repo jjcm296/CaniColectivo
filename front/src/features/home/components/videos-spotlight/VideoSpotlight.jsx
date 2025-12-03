@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './VideoSpotlight.module.css';
 import TiktokVideoCard from './TiktokVideoCard';
+import { useBannerVideos } from '../../hooks/useBannerVideos';
 
 const DEFAULT_VIDEOS = [
     {
@@ -23,9 +24,21 @@ const DEFAULT_VIDEOS = [
     },
 ];
 
-export default function VideoSpotlight({ videos = DEFAULT_VIDEOS }) {
-    const list = videos.length ? videos : DEFAULT_VIDEOS;
+export default function VideoSpotlight() {
+    const { items, loading, error } = useBannerVideos();
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    // Adaptar lo que viene del hook al formato que espera el carrusel
+    const apiVideos = (items || [])
+        .filter((item) => item.type === 'video' && item.isActive !== false)
+        .map((item) => ({
+            id: item.id,
+            url: item.url,
+            title: item.title || 'Video de Cani',
+        }));
+
+    // Si hay videos del back, usamos esos. Si no, fallback a los default.
+    const list = apiVideos.length > 0 ? apiVideos : DEFAULT_VIDEOS;
 
     const total = list.length;
 
@@ -41,7 +54,7 @@ export default function VideoSpotlight({ videos = DEFAULT_VIDEOS }) {
     useEffect(() => {
         if (total <= 1) return;
 
-        const AUTO_MS = 30000; // 20s aprox
+        const AUTO_MS = 30000; // 30s
         const id = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % total);
         }, AUTO_MS);
