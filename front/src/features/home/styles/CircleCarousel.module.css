@@ -34,7 +34,7 @@
     max-width:100vw; /* nunca más que viewport */
 }
 
-/* Slide */
+/* Slide: ancho fijo más pequeño → caben 3 a cada lado */
 .slide{
     width:var(--slide-w) !important;
     display:flex;
@@ -44,9 +44,23 @@
     z-index:0;
     overflow:visible;
 }
+
 .slide:hover{z-index:3;}
 
-/* Imagen */
+/* Contenedor interno para la card */
+.slideContainer{
+    width: 100%;
+    max-width: var(--slide-w);
+    height: 100%;
+    max-height: var(--slide-h);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+
+/* Imagen (cuando se usaba <img> directo, lo dejamos para compat) */
 .imageWrap{
     position:relative;
     width:var(--slide-w);
@@ -101,40 +115,34 @@
     line-height:1;
 }
 
-/* Tablet: ancho fluido + aspect-ratio */
 @media (max-width:1024px){
-    .slide{width:clamp(180px,46vw,var(--slide-w-md)) !important;}
-    .imageWrap,.empty{
-        width:clamp(180px,46vw,var(--slide-w-md));
-        height:auto;
-        aspect-ratio:2/3;
+    .slide{
+        width: clamp(180px, 40vw, var(--slide-w-md)) !important;
     }
-    .swiper{height:auto; padding-bottom:44px;}
+    .slideContainer{
+        max-width: clamp(180px, 40vw, var(--slide-w-md));
+        max-height: auto;
+    }
 }
 
-/* Móvil */
 @media (max-width:768px){
-    .title{font-size:24px;}
-    .slide{width:clamp(160px,70vw,var(--slide-w-sm)) !important;}
-    .imageWrap,.empty{
-        width:clamp(160px,70vw,var(--slide-w-sm));
-        height:auto;
-        aspect-ratio:13/20;
+    .slide{
+        width: clamp(150px, 70vw, var(--slide-w-sm)) !important;
     }
-    .swiper{height:auto; padding-bottom:42px;}
-    .carouselSection{padding:64px 20px;}
+    .slideContainer{
+        max-width: clamp(150px, 70vw, var(--slide-w-sm));
+    }
 }
 
-/* XS */
 @media (max-width:480px){
-    .carouselSection{padding:56px 16px;}
+    .slide{
+        width: clamp(130px, 80vw, var(--slide-w-sm)) !important;
+    }
+    .slideContainer{
+        max-width: clamp(130px, 80vw, var(--slide-w-sm));
+    }
 }
 
-/* Accesibilidad */
-.imageWrap:focus-within,.slide:focus-within{
-    outline:2px solid #25A0E2;
-    outline-offset:4px;
-}
 
 /* Reduced motion */
 @media (prefers-reduced-motion:reduce){
