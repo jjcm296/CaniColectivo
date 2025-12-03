@@ -172,7 +172,6 @@ export default function CircleCarousel({
                                         item={{
                                             id: img.id,
                                             url: img.src,
-                                            title: img.alt || `Imagen destacada`,
                                             isActive: true,
                                             isFeatured: img.isFeatured ?? true,
                                             type: "image",

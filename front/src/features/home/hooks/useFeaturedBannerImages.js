@@ -27,7 +27,8 @@ export function useFeaturedBannerImages() {
                 ...imagesDto.map(mapMultimediaDtoToGalleryItem),
                 ...videosDto.map(mapMultimediaDtoToGalleryItem),
             ];
-            
+
+            // Para el carrusel: solo IMÁGENES activas y destacadas
             mapped = mapped.filter(
                 (m) => m.type === "image" && m.isActive && m.isFeatured
             );

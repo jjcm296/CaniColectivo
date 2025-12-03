@@ -9,7 +9,6 @@ export default function HomeCarouselSection() {
     const images = items.map((item) => ({
         id: item.id,
         src: item.url,
-        alt: "Imagen destacada",
     }));
 
     return (

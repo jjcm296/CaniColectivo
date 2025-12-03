@@ -2,15 +2,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {
-    getBannerVideos,
-    deleteMultimedia,
     getAllActiveBannerImages,
     getAllFeaturesBannerImages,
     getAllInactiveBannerImages,
+    deleteMultimedia,
     toggleMultimediaFeatured,
     toggleMultimediaStatus,
     uploadBannerImage,
-    createBannerVideo,
 } from "../api/multimediaApi";
 
 import { API_URL } from "@/config/apiConfig";
@@ -24,7 +22,7 @@ export function mapMultimediaDtoToGalleryItem(dto) {
         type: dto.mediaType === "IMAGE" ? "image" : "video",
         url: finalUrl,
         isActive: dto.activo ?? true,
-        isFeatured: dto.isFeatured ?? false, // viene así del back
+        isFeatured: dto.isFeatured ?? false,
         scope: dto.scope ?? null,
         createdAt: dto.createdAt ?? null,
     };
@@ -39,15 +37,14 @@ export function useGalleryMedia() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // --- Load media by filter ---
     const loadMedia = useCallback(async (targetFilter) => {
         const finalFilter = targetFilter ?? "active";
 
         try {
             setLoading(true);
             setError(null);
-
             setItems([]);
+
             let imagesPromise;
 
             switch (finalFilter) {
@@ -65,15 +62,9 @@ export function useGalleryMedia() {
                     break;
             }
 
-            const [imagesDto, videosDto] = await Promise.all([
-                imagesPromise,
-                getBannerVideos(),
-            ]);
+            const imagesDto = await imagesPromise;
 
-            let mapped = [
-                ...imagesDto.map(mapMultimediaDtoToGalleryItem),
-                ...videosDto.map(mapMultimediaDtoToGalleryItem),
-            ];
+            let mapped = imagesDto.map(mapMultimediaDtoToGalleryItem);
 
             if (finalFilter === "active") {
                 mapped = mapped.filter((m) => m.isActive);
@@ -98,7 +89,6 @@ export function useGalleryMedia() {
         }
     }, []);
 
-    // Initial load: active
     useEffect(() => {
         loadMedia("active");
     }, [loadMedia]);
@@ -168,21 +158,6 @@ export function useGalleryMedia() {
         [addItem]
     );
 
-    const createVideo = useCallback(
-        async (url) => {
-            try {
-                const dto = await createBannerVideo(url);
-                const newItem = mapMultimediaDtoToGalleryItem(dto);
-                addItem(newItem);
-                return newItem;
-            } catch (err) {
-                console.error("Error al crear video de banner:", err);
-                throw err;
-            }
-        },
-        [addItem]
-    );
-
     const showActive = () => loadMedia("active");
     const showFeatured = () => loadMedia("featured");
     const showInactive = () => loadMedia("inactive");
@@ -199,7 +174,6 @@ export function useGalleryMedia() {
         toggleStatus,
         toggleFeatured,
         createImage,
-        createVideo,
         showActive,
         showFeatured,
         showInactive,
