@@ -20,7 +20,8 @@ export default function GalleryImagesSection({
     );
 
     const noImages = images.length === 0;
-    const showAddCard = isAdmin && onAddImage && view === "all";
+    // Ahora mostramos la tarjeta de "Agregar" en la vista ACTIVA
+    const showAddCard = isAdmin && onAddImage && view === "active";
 
     return (
         <section className={styles.block}>
@@ -41,7 +42,6 @@ export default function GalleryImagesSection({
                 )}
             </header>
 
-            {/* Si NO hay imágenes → mensaje ancho completo */}
             {noImages ? (
                 <div className={styles.emptyWrapper}>
                     {showAddCard && (
@@ -56,7 +56,6 @@ export default function GalleryImagesSection({
                     </div>
                 </div>
             ) : (
-                /* Si HAY imágenes → grid normal */
                 <div className={styles.grid}>
                     {showAddCard && <GalleryAddImageCard onClick={onAddImage} />}
 

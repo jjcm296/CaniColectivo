@@ -6,9 +6,9 @@ import styles from "./GalleryTabs.module.css";
 
 export default function GalleryTabs({ isAdmin, view, onChange }) {
     const tabs = [
-        { id: "all",        icon: <FiGrid /> },
-        { id: "featured",   icon: <FiStar /> },
-        { id: "hidden",     icon: <FiEyeOff /> }
+        { id: "active", icon: <FiGrid /> },
+        { id: "featured", icon: <FiStar /> },
+        { id: "hidden", icon: <FiEyeOff /> }
     ];
 
     const activeIndex = Math.max(

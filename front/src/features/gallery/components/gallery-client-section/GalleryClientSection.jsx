@@ -1,46 +1,53 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-    useGalleryMedia,
-    mapMultimediaDtoToGalleryItem,
-} from "@/features/gallery/hooks/useGalleryMedia";
+import { useGalleryMedia } from "@/features/gallery/hooks/useGalleryMedia";
 import GalleryImagesSection from "../gallery-images-section/GalleryImagesSection";
 import GalleryAddImageModal from "../gallery-upload-image-modal/GalleryUploadImageModal";
-import { uploadBannerImage } from "@/features/gallery/api/multimediaApi";
 
-export default function GalleryClientSection({ isAdmin }) {
+export function GalleryClientSection({ isAdmin }) {
     const {
         items,
-        loading,
-        error,
-        updateItem,
         removeItem,
-        addItem,
-        reload,
+        toggleStatus,
+        toggleFeatured,
+        createImage,
+        showActive,
+        showFeatured,
+        showInactive,
     } = useGalleryMedia();
 
-    const [view, setView] = useState("all");
+    const [view, setView] = useState("active");
     const [showAddModal, setShowAddModal] = useState(false);
 
-    function handleToggle(id) {
-        const current = items.find((item) => item.id === id);
-        if (!current) return;
+    function handleChangeView(newView) {
+        setView(newView);
 
-        updateItem({
-            ...current,
-            isActive: !(current.isActive ?? true),
-        });
+        if (newView === "active") {
+            showActive();
+        } else if (newView === "featured") {
+            showFeatured();
+        } else if (newView === "hidden") {
+            showInactive();
+        }
     }
 
-    function handleToggleFeatured(id) {
-        const current = items.find((item) => item.id === id);
-        if (!current) return;
+    async function handleToggle(id) {
+        try {
+            await toggleStatus(id);
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo cambiar el estado. Intenta de nuevo.");
+        }
+    }
 
-        updateItem({
-            ...current,
-            isFeatured: !current.isFeatured,
-        });
+    async function handleToggleFeatured(id) {
+        try {
+            await toggleFeatured(id);
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo cambiar el destacado. Intenta de nuevo.");
+        }
     }
 
     async function handleRemove(id) {
@@ -55,48 +62,33 @@ export default function GalleryClientSection({ isAdmin }) {
         }
     }
 
-
     function handleAddImageClick() {
         setShowAddModal(true);
     }
 
     async function handleUpload(file) {
-        return uploadBannerImage(file);
+        return createImage(file);
     }
 
-    function handleImageUploaded(createdDto) {
-        if (createdDto) {
-            const mapped = mapMultimediaDtoToGalleryItem(createdDto);
-            addItem(mapped);
-        } else {
-            reload();
-        }
-
+    function handleImageUploaded() {
         setShowAddModal(false);
     }
 
     const filteredItems = useMemo(() => {
-        return items.filter((item) => {
-            const active = item.isActive ?? true;
-            const featured = item.isFeatured ?? false;
+        if (!isAdmin) {
+            return items.filter((item) => item.isActive ?? true);
+        }
 
-            if (!isAdmin && !active) return false;
-
-            if (view === "featured") {
-                return featured && (isAdmin ? true : active);
-            }
-
-            if (view === "hidden") {
-                if (!isAdmin) return false;
-                return !active;
-            }
-
-            if (isAdmin) return true;
-            return active;
-        });
-    }, [items, view, isAdmin]);
-
-    const hasItems = filteredItems.length > 0;
+        switch (view) {
+            case "featured":
+                return items.filter((item) => item.isFeatured);
+            case "hidden":
+                return items.filter((item) => !item.isActive);
+            case "active":
+            default:
+                return items.filter((item) => item.isActive ?? true);
+        }
+    }, [items, isAdmin, view]);
 
     return (
         <>
@@ -104,7 +96,7 @@ export default function GalleryClientSection({ isAdmin }) {
                 isAdmin={isAdmin}
                 items={filteredItems}
                 view={view}
-                onChangeView={setView}
+                onChangeView={handleChangeView}
                 onToggleActive={handleToggle}
                 onToggleFeatured={handleToggleFeatured}
                 onRemove={handleRemove}
