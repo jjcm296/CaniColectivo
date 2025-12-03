@@ -107,11 +107,9 @@ public class MultimediaService {
     }
 
     // ============ NUEVOS MÉTODOS PARA SECCIONES EN EL FRONT ============
-
     /**
      * Imágenes de banner:
      * - Activas
-     * - NO destacadas
      */
     public List<MultimediaDTO> getActiveNonFeaturedBannerImages() {
         return multimediaRepository

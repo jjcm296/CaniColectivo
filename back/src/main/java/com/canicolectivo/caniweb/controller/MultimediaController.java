@@ -43,10 +43,10 @@ public class MultimediaController {
     }
 
     // =====SECCIONES EN EL FRONT =====
-    // Activas y NO destacadas (sección "Todas")
+    // Todas las Activas
     @GetMapping("/banner/image/active")
     public ResponseEntity<List<MultimediaDTO>> getActiveNonFeaturedBannerImages() {
-        return ResponseEntity.ok(multimediaService.getActiveNonFeaturedBannerImages());
+        return ResponseEntity.ok(multimediaService.getPublicBannerImages());
     }
 
     // Activas y destacadas (sección "Destacadas")
