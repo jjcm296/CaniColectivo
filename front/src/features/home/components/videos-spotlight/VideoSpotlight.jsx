@@ -7,6 +7,7 @@ import styles from './VideoSpotlight.module.css';
 import TiktokVideoCard from './TiktokVideoCard';
 import { useBannerVideos } from '../../hooks/useBannerVideos';
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
+import ConfirmModal from "@/features/ui/confirm-modal/ConfirmModal";
 
 const DEFAULT_VIDEOS = [
     {
@@ -288,44 +289,17 @@ export default function VideoSpotlight({ isAdmin = true }) {
                 </div>
             )}
 
-            {/* Modal de confirmación de eliminación */}
-            {isAdmin && showConfirmDelete && (
-                <div className={styles.modalBackdrop}>
-                    <div className={`${styles.modal} ${styles.modalDelete}`}>
-                        <div className={styles.modalDeleteIcon}>
-                            <FiAlertTriangle
-                                className={styles.modalDeleteIconMark}
-                                aria-hidden="true"
-                            />
-                        </div>
-                        <h3 className={styles.modalTitle}>
-                            Eliminar video
-                        </h3>
-                        <p className={styles.modalText}>
-                            ¿Seguro que quieres eliminar este video del carrusel? Esta acción no se puede deshacer.
-                        </p>
-
-                        <div className={styles.modalActions}>
-                            <button
-                                type="button"
-                                className={styles.modalCancel}
-                                onClick={handleCloseConfirmDelete}
-                                disabled={deleting}
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                type="button"
-                                className={styles.modalDanger}
-                                onClick={handleConfirmDelete}
-                                disabled={deleting}
-                            >
-                                {deleting ? 'Eliminando...' : 'Eliminar definitivamente'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <ConfirmModal
+                open={isAdmin && showConfirmDelete}
+                variant="danger"
+                title="Eliminar video"
+                description="¿Seguro que quieres eliminar este video del carrusel? Esta acción no se puede deshacer."
+                cancelLabel="Cancelar"
+                confirmLabel={deleting ? "Eliminando..." : "Eliminar definitivamente"}
+                loading={deleting}
+                onCancel={handleCloseConfirmDelete}
+                onConfirm={handleConfirmDelete}
+            />
         </section>
     );
 }
