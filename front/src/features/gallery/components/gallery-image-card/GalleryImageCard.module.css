@@ -19,7 +19,7 @@
 .mediaWrapper {
     position: relative;
     width: 100%;
-    padding-top: 125%;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
     border-radius: var(--radius);
 }
