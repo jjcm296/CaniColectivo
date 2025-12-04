@@ -18,6 +18,7 @@ export function GalleryClientSection({ isAdmin }) {
         showActive,
         showFeatured,
         showInactive,
+        loading, // estado de carga desde el hook
     } = useGalleryMedia();
 
     const { showLoading, showSuccess, showError, hide } = useFeedback();
@@ -167,6 +168,7 @@ export function GalleryClientSection({ isAdmin }) {
                 isAdmin={isAdmin}
                 items={filteredItems}
                 view={view}
+                isLoading={loading} // se pasa estado de carga a la sección
                 onChangeView={handleChangeView}
                 onToggleActive={handleToggle}
                 onToggleFeatured={handleToggleFeatured}
