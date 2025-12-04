@@ -25,7 +25,7 @@ const DEFAULT_VIDEOS = [
 ];
 
 export default function VideoSpotlight({ isAdmin = true }) {
-    const { items, loading, error, createVideo } = useBannerVideos();
+    const { items, loading, error, createVideo, removeVideo } = useBannerVideos();
     const [currentIndex, setCurrentIndex] = useState(0);
 
     // Modal para agregar video
@@ -64,6 +64,10 @@ export default function VideoSpotlight({ isAdmin = true }) {
 
     const current = list[currentIndex];
 
+    // Saber si el video actual viene del backend
+    const isCurrentFromApi = apiVideos.some((v) => v.id === current.id);
+    const canDeleteCurrent = isAdmin && isCurrentFromApi;
+
     // Abrir modal
     const handleOpenModal = () => {
         setVideoUrl('');
@@ -99,6 +103,24 @@ export default function VideoSpotlight({ isAdmin = true }) {
             setCreateError('No se pudo registrar el video. Intenta de nuevo.');
         } finally {
             setCreating(false);
+        }
+    };
+
+    // 🗑 Eliminar video actual
+    const handleDeleteCurrent = async () => {
+        if (!canDeleteCurrent) return;
+
+        const confirmed = window.confirm(
+            '¿Quieres eliminar este video del carrusel?'
+        );
+        if (!confirmed) return;
+
+        try {
+            await removeVideo(current.id);
+            setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
+        } catch (err) {
+            console.error(err);
+            alert('No se pudo eliminar el video. Intenta de nuevo.');
         }
     };
 
@@ -163,7 +185,26 @@ export default function VideoSpotlight({ isAdmin = true }) {
                     ›
                 </button>
 
-                <p className={styles.counter}>{currentIndex + 1} / {total}</p>
+                {/* Contador + botón eliminar */}
+                <div className={styles.counterRow}>
+                    <p className={styles.counter}>
+                        {currentIndex + 1} / {total}
+                    </p>
+
+                    {canDeleteCurrent && (
+                        <button
+                            type="button"
+                            className={styles.deleteBtn}
+                            onClick={handleDeleteCurrent}
+                            aria-label="Eliminar este video"
+                        >
+                            <span className={styles.deleteIcon} aria-hidden="true">
+                                🗑
+                            </span>
+                            <span className={styles.deleteText}>Eliminar</span>
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Modal */}
