@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { FiTrash2, FiAlertTriangle } from 'react-icons/fi';
 import styles from './VideoSpotlight.module.css';
 import TiktokVideoCard from './TiktokVideoCard';
 import { useBannerVideos } from '../../hooks/useBannerVideos';
+import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 
 const DEFAULT_VIDEOS = [
     {
@@ -26,6 +28,8 @@ const DEFAULT_VIDEOS = [
 
 export default function VideoSpotlight({ isAdmin = true }) {
     const { items, loading, error, createVideo, removeVideo } = useBannerVideos();
+    const { showLoading, showSuccess, showError, hide } = useFeedback();
+
     const [currentIndex, setCurrentIndex] = useState(0);
 
     // Modal para agregar video
@@ -33,6 +37,10 @@ export default function VideoSpotlight({ isAdmin = true }) {
     const [videoUrl, setVideoUrl] = useState('');
     const [creating, setCreating] = useState(false);
     const [createError, setCreateError] = useState(null);
+
+    // Estado para confirmar eliminación
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     // Adaptar videos del backend
     const apiVideos = (items || [])
@@ -68,14 +76,14 @@ export default function VideoSpotlight({ isAdmin = true }) {
     const isCurrentFromApi = apiVideos.some((v) => v.id === current.id);
     const canDeleteCurrent = isAdmin && isCurrentFromApi;
 
-    // Abrir modal
+    // Abrir modal de alta
     const handleOpenModal = () => {
         setVideoUrl('');
         setCreateError(null);
         setShowModal(true);
     };
 
-    // Cerrar modal
+    // Cerrar modal de alta
     const handleCloseModal = () => {
         if (!creating) {
             setShowModal(false);
@@ -96,31 +104,57 @@ export default function VideoSpotlight({ isAdmin = true }) {
 
         try {
             setCreating(true);
+            setCreateError(null);
+
+            showLoading('Guardando video...');
             await createVideo(trimmed);
+
+            hide();
+            showSuccess('Video agregado correctamente.');
+
             handleCloseModal();
         } catch (err) {
             console.error(err);
+            hide();
+            showError('No se pudo registrar el video. Intenta de nuevo.');
             setCreateError('No se pudo registrar el video. Intenta de nuevo.');
         } finally {
             setCreating(false);
         }
     };
 
-    // 🗑 Eliminar video actual
-    const handleDeleteCurrent = async () => {
-        if (!canDeleteCurrent) return;
+    // Click en botón "Eliminar" => solo abre modal de confirmación
+    const handleOpenConfirmDelete = () => {
+        if (!canDeleteCurrent || deleting) return;
+        setShowConfirmDelete(true);
+    };
 
-        const confirmed = window.confirm(
-            '¿Quieres eliminar este video del carrusel?'
-        );
-        if (!confirmed) return;
+    const handleCloseConfirmDelete = () => {
+        if (deleting) return;
+        setShowConfirmDelete(false);
+    };
+
+    // Confirmar eliminación
+    const handleConfirmDelete = async () => {
+        if (!canDeleteCurrent || deleting) return;
 
         try {
+            setDeleting(true);
+            showLoading('Eliminando video...');
+
             await removeVideo(current.id);
+
+            hide();
+            showSuccess('Video eliminado correctamente.');
+            setShowConfirmDelete(false);
+
             setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
         } catch (err) {
             console.error(err);
-            alert('No se pudo eliminar el video. Intenta de nuevo.');
+            hide();
+            showError('No se pudo eliminar el video. Intenta de nuevo.');
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -195,19 +229,20 @@ export default function VideoSpotlight({ isAdmin = true }) {
                         <button
                             type="button"
                             className={styles.deleteBtn}
-                            onClick={handleDeleteCurrent}
+                            onClick={handleOpenConfirmDelete}
                             aria-label="Eliminar este video"
+                            disabled={deleting}
                         >
-                            <span className={styles.deleteIcon} aria-hidden="true">
-                                🗑
+                            <FiTrash2 className={styles.deleteIcon} />
+                            <span className={styles.deleteText}>
+                                {deleting ? 'Eliminando...' : 'Eliminar'}
                             </span>
-                            <span className={styles.deleteText}>Eliminar</span>
                         </button>
                     )}
                 </div>
             </div>
 
-            {/* Modal */}
+            {/* Modal agregar video */}
             {isAdmin && showModal && (
                 <div className={styles.modalBackdrop}>
                     <div className={styles.modal}>
@@ -249,6 +284,45 @@ export default function VideoSpotlight({ isAdmin = true }) {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de confirmación de eliminación */}
+            {isAdmin && showConfirmDelete && (
+                <div className={styles.modalBackdrop}>
+                    <div className={`${styles.modal} ${styles.modalDelete}`}>
+                        <div className={styles.modalDeleteIcon}>
+                            <FiAlertTriangle
+                                className={styles.modalDeleteIconMark}
+                                aria-hidden="true"
+                            />
+                        </div>
+                        <h3 className={styles.modalTitle}>
+                            Eliminar video
+                        </h3>
+                        <p className={styles.modalText}>
+                            ¿Seguro que quieres eliminar este video del carrusel? Esta acción no se puede deshacer.
+                        </p>
+
+                        <div className={styles.modalActions}>
+                            <button
+                                type="button"
+                                className={styles.modalCancel}
+                                onClick={handleCloseConfirmDelete}
+                                disabled={deleting}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.modalDanger}
+                                onClick={handleConfirmDelete}
+                                disabled={deleting}
+                            >
+                                {deleting ? 'Eliminando...' : 'Eliminar definitivamente'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

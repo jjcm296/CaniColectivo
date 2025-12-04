@@ -177,9 +177,11 @@
     box-shadow: none;
 }
 
+/* Icono React Icons (trash) */
 .deleteIcon {
-    font-size: 0.9rem;
-    line-height: 1;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
 }
 
 .deleteText {
@@ -237,7 +239,7 @@
     right: 6px;
 }
 
-/* ===== Modal agregar video ===== */
+/* ===== Modal agregar / eliminar video ===== */
 .modalBackdrop {
     position: fixed;
     inset: 0;
@@ -344,6 +346,66 @@
 .modalCancel:disabled,
 .modalSubmit:disabled {
     opacity: 0.65;
+    cursor: default;
+    box-shadow: none;
+}
+
+/* Modal de confirmación de eliminación */
+.modalDelete {
+    border-top: 4px solid #dc2626; /* rojo en la parte superior */
+}
+
+.modalDeleteIcon {
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    border: 3px solid #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b91c1c;
+    font-weight: 800;
+    font-size: 22px;
+    margin: 0 auto 8px;
+    background: #fef2f2;
+}
+
+/* Icono React Icons dentro del modal de eliminar */
+.modalDeleteIconMark {
+    width: 24px;
+    height: 24px;
+}
+
+/* Botón de eliminar definitivo en modal */
+.modalDanger {
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: #dc2626;
+    color: #fef2f2;
+    font-weight: 600;
+    box-shadow: 0 8px 18px rgba(220, 38, 38, 0.35);
+    transition:
+            background 0.15s ease,
+            transform 0.08s ease,
+            box-shadow 0.15s ease;
+}
+
+.modalDanger:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(220, 38, 38, 0.45);
+}
+
+.modalDanger:active {
+    transform: translateY(1px);
+    box-shadow: 0 5px 12px rgba(220, 38, 38, 0.35);
+}
+
+.modalDanger:disabled {
+    opacity: 0.7;
     cursor: default;
     box-shadow: none;
 }
