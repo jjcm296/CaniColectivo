@@ -34,11 +34,11 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-
+                        .requestMatchers("/specialities/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/artists/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/artists/*/verify").hasRole("ADMIN")
 
                         .requestMatchers("/users/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/artists/*/verify").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/multimedia/**").hasRole("ADMIN")
 
