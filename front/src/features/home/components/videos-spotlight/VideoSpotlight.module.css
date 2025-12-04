@@ -29,6 +29,13 @@
     color: #6b7280;
 }
 
+/* Contenedor de "Ver todos" + botón Agregar */
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 /* Link "Ver todos" */
 .linkAll {
     color: var(--nv);
@@ -47,6 +54,45 @@
     color: #0f1e3e;
     background: rgba(37, 160, 226, 0.06);
 }
+
+.addBtn {
+    padding: 11px 12px;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    background: var(--gr);          /* VERDE GLOBAL */
+    color: #ffffff;
+
+    box-shadow: var(--shadow);
+
+    transition:
+            background 0.15s ease,
+            color 0.15s ease,
+            transform 0.10s ease,
+            box-shadow 0.10s ease;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addBtn:hover {
+    background: #178d48;
+}
+
+.addBtn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.addBtn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
 
 /* ===== Carrusel (1 solo video) ===== */
 .scroller {
@@ -123,6 +169,118 @@
     right: 6px;
 }
 
+/* ===== Modal agregar video ===== */
+.modalBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px 20px 18px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    color: var(--nv);
+    border: 1px solid rgba(26, 43, 84, 0.12); /* tono navy suave */
+}
+
+.modalTitle {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--nv);
+}
+
+.modalText {
+    margin: 0 0 14px;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modalInput {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(26, 43, 84, 0.35);
+    background: #f9fafb;
+    color: var(--nv);
+    font-size: 0.9rem;
+}
+
+.modalInput::placeholder {
+    color: #9ca3af;
+}
+
+.modalInput:focus {
+    outline: none;
+    border-color: var(--bl); /* azul de la paleta */
+    box-shadow: 0 0 0 1px rgba(37, 160, 226, 0.35);
+}
+
+.modalError {
+    margin: 0;
+    color: var(--red);
+    font-size: 0.8rem;
+}
+
+.modalActions {
+    margin-top: 4px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.modalCancel,
+.modalSubmit {
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.modalCancel {
+    background: #ffffff;
+    color: var(--nv);
+    border: 1px solid rgba(26, 43, 84, 0.25);
+}
+
+.modalCancel:hover {
+    background: rgba(26, 43, 84, 0.04);
+}
+
+.modalSubmit {
+    background: var(--bl);
+    color: #f9fafb;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+}
+
+.modalSubmit:hover {
+    background: #1c7fbb;
+}
+
+.modalCancel:disabled,
+.modalSubmit:disabled {
+    opacity: 0.65;
+    cursor: default;
+    box-shadow: none;
+}
+
+
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
     .scroller {
@@ -141,12 +299,16 @@
         align-items: flex-start;
     }
 
+    .headerActions {
+        margin-top: 8px;
+    }
+
     .scroller {
         padding: 0 16px 16px;
     }
 
     .cardShell {
-        max-width: 360px; /* un poco más chico en tablet */
+        max-width: 360px;
     }
 }
 
@@ -164,7 +326,7 @@
     }
 
     .cardShell {
-        max-width: 300px; /* tamaño cómodo en móvil */
+        max-width: 300px;
     }
 }
 
