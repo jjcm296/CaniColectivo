@@ -5,6 +5,7 @@ import com.canicolectivo.caniweb.dto.auth.RegisterUserDTO;
 import com.canicolectivo.caniweb.dto.auth.VerifyUserDTO;
 import com.canicolectivo.caniweb.model.User;
 import com.canicolectivo.caniweb.responses.LoginResponse;
+import com.canicolectivo.caniweb.responses.RegisterResponse;
 import com.canicolectivo.caniweb.service.auth.AuthenticationService;
 import com.canicolectivo.caniweb.service.auth.JwtService;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDTO registerUserDTO) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserDTO registerUserDTO) {
         User registeredUser = authenticationService.signIn(registerUserDTO);
-        return ResponseEntity.ok(registeredUser);
+
+        RegisterResponse response = new RegisterResponse(
+                registeredUser.getId(),
+                registeredUser.getUsernameNotOverriden(),
+                registeredUser.getEmail()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")

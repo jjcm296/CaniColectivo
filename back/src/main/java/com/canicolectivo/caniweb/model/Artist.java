@@ -43,7 +43,7 @@ public class Artist {
     @Column(name = "social_media", columnDefinition = "jsonb")
     private Map<String, String> socialMedia = new HashMap<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
