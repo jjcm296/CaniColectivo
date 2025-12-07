@@ -1,53 +1,53 @@
 "use client";
 
-export function useVerification() {
+import { useCallback, useState } from "react";
+import { verifyUser, resendVerificationCode } from "@/features/auth/api/authApi";
 
-    // Genera código de 6 dígitos
-    const generateCode = () => {
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
+export function useVerification(email) {
+    const [attemptsLeft, setAttemptsLeft] = useState(3);
+    const [isSending, setIsSending] = useState(false);
+    const [isVerifying, setIsVerifying] = useState(false);
 
-        console.log("Código generado (simulado):", code);
+    const generateCode = useCallback(async () => {
+        if (!email) return { ok: false, error: "Email inválido." };
 
-        // Guardar en localStorage (simulación mientras no hay backend)
-        localStorage.setItem("verificationCode", code);
-        localStorage.setItem("verificationExpires", Date.now() + 5 * 60 * 1000); // expira en 5 min
-        localStorage.setItem("attemptsLeft", "3");
-
-        console.log("Código generado (simulado):", code);
-        return code;
-    };
-
-    // Verificar el código ingresado
-    const verifyCode = (inputCode) => {
-        const storedCode = localStorage.getItem("verificationCode");
-        const expires = Number(localStorage.getItem("verificationExpires"));
-        let attempts = Number(localStorage.getItem("attemptsLeft"));
-
-        if (!storedCode || !expires) {
-            return { ok: false, error: "No hay un código válido. Solicita uno nuevo." };
+        setIsSending(true);
+        try {
+            await resendVerificationCode(email);
+            setAttemptsLeft(3);
+            return { ok: true };
+        } catch (err) {
+            return { ok: false, error: err?.message || "Error al reenviar código." };
+        } finally {
+            setIsSending(false);
         }
+    }, [email]);
 
-        if (Date.now() > expires) {
-            return { ok: false, error: "El código ha expirado. Solicita uno nuevo." };
-        }
+    const verifyCode = useCallback(
+        async (inputCode) => {
+            if (!email) return { ok: false, error: "Email inválido." };
+            if (!inputCode) return { ok: false, error: "Código vacío." };
+            if (attemptsLeft <= 0)
+                return { ok: false, error: "Sin intentos restantes. Pide otro código." };
 
-        if (attempts <= 0) {
-            return { ok: false, error: "Demasiados intentos fallidos." };
-        }
+            setIsVerifying(true);
+            try {
+                await verifyUser({ email, verificationCode: inputCode });
+                setAttemptsLeft(3);
+                return { ok: true };
+            } catch (err) {
+                const next = attemptsLeft - 1;
+                setAttemptsLeft(next);
+                return {
+                    ok: false,
+                    error: next > 0 ? `Código incorrecto. Intentos: ${next}` : "Sin intentos.",
+                };
+            } finally {
+                setIsVerifying(false);
+            }
+        },
+        [email, attemptsLeft]
+    );
 
-        if (inputCode !== storedCode) {
-            attempts -= 1;
-            localStorage.setItem("attemptsLeft", attempts.toString());
-            return { ok: false, error: `Código incorrecto. Intentos restantes: ${attempts}` };
-        }
-
-        // ÉXITO: limpiar
-        localStorage.removeItem("verificationCode");
-        localStorage.removeItem("verificationExpires");
-        localStorage.removeItem("attemptsLeft");
-
-        return { ok: true };
-    };
-
-    return { generateCode, verifyCode };
+    return { generateCode, verifyCode, attemptsLeft, isSending, isVerifying };
 }
