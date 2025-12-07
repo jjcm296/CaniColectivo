@@ -1,0 +1,73 @@
+.side {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px 26px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    /* ANTES: justify-content: center; */
+    justify-content: flex-start;   /* ← contenido pegado arriba, como el formulario */
+    align-items: center;           /* ← centrado horizontalmente */
+    gap: 12px;
+}
+
+/* Imagen del panel lateral */
+.sideImage {
+    width: 100%;
+    max-width: 420px;              /* opcional para que no crezca demasiado */
+    border-radius: 12px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
+}
+
+/* Badge superior */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--nv);
+}
+
+.badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background-color: var(--yl);
+}
+
+.sideTitle {
+    margin: 2px 0 4px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--nv);
+    align-self: flex-start;
+}
+
+.sideText {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #4b5563;
+    max-width: 26rem;
+    align-self: flex-start;
+}
+
+.sideTextStrong {
+    font-weight: 600;
+    color: var(--or);
+}
+
+@media (max-width: 640px) {
+    .sideTitle {
+        font-size: 1.1rem;
+    }
+}

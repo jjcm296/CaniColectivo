@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -9,13 +9,16 @@ import styles from './NavBar.module.css';
 import UserAvatar from './user-avatar/UserAvatar';
 import UserPanel from "@/features/navigation/user-panel/UserPanel";
 
-
 export default function NavBar() {
+    // ====== SIMULACIÓN DE AUTENTICACIÓN ======
+    const isAuthenticated = false;
 
-    const user = {
-        name: "JordaIn",
-        imageUrl: null
-    };
+    const user = isAuthenticated
+        ? {
+            name: "JordaIn",
+            imageUrl: null,
+        }
+        : null;
 
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -24,16 +27,16 @@ export default function NavBar() {
     const pathname = usePathname();
 
     const left = [
-        { href: '/',     label: 'Inicio' },
-        { href: '/artists',  label: 'Artistas' },
-        { href: '/events',   label: 'Eventos' },
-        { href: '/about',    label: 'Nosotros' },
-        {href: '/gallery', label: 'Galería' },
-        { href: '/#footer', label: 'Contacto' }
+        { href: '/',        label: 'Inicio' },
+        { href: '/artists', label: 'Artistas' },
+        { href: '/events',  label: 'Eventos' },
+        { href: '/about',   label: 'Nosotros' },
+        { href: '/gallery', label: 'Galería' },
+        { href: '/#footer', label: 'Contacto' },
     ];
 
     const right = [
-        { href: '/login', label: 'Iniciar sesión' },
+        { href: '/login',    label: 'Iniciar sesión' },
         { href: '/register', label: 'Registrarse' },
     ];
 
@@ -54,7 +57,9 @@ export default function NavBar() {
         };
     }, [userPanelOpen]);
 
-    const isActive = (href) => (href === '/' ? pathname === '/' : pathname?.startsWith(href));
+    const isActive = (href) =>
+        href === '/' ? pathname === '/' : pathname?.startsWith(href);
+
     const closeMenu = () => setOpen(false);
 
     const scrollToFooter = () => {
@@ -83,7 +88,6 @@ export default function NavBar() {
 
                     <nav className={styles.nbNav} aria-label="Principal">
                         {left.map((l) => {
-                            // Contacto: comportamiento especial
                             if (l.href === '/#footer') {
                                 return (
                                     <Link
@@ -116,16 +120,28 @@ export default function NavBar() {
                     </nav>
 
                     <div className={styles.nbActions}>
-                        <UserAvatar
-                            name={user.name}
-                            imageUrl={user.imageUrl}
-                            href="/profile"
-                            onClick={() => setUserPanelOpen(v => !v)} // Abrir el panel lateral
-                            showLabel={true}
-                        />
+                        {!isAuthenticated &&
+                            right.map((l) => (
+                                <Link
+                                    key={l.href}
+                                    href={l.href}
+                                    className={styles.nbAction}
+                                >
+                                    {l.label}
+                                </Link>
+                            ))}
 
-
+                        {isAuthenticated && user && (
+                            <UserAvatar
+                                name={user.name}
+                                imageUrl={user.imageUrl}
+                                href="/profile"
+                                onClick={() => setUserPanelOpen((v) => !v)}
+                                showLabel={true}
+                            />
+                        )}
                     </div>
+
                     <button
                         className={styles.nbToggle}
                         aria-label="Abrir menú"
@@ -139,7 +155,11 @@ export default function NavBar() {
                     </button>
                 </div>
 
-                <div id="menu-movil" className={`${styles.nbPanel} ${open ? styles.nbPanelOpen : ''}`}>
+                {/* PANEL MÓVIL */}
+                <div
+                    id="menu-movil"
+                    className={`${styles.nbPanel} ${open ? styles.nbPanelOpen : ''}`}
+                >
                     <div className={styles.nbPanelSection}>
                         {left.map((l) => (
                             <Link
@@ -152,26 +172,30 @@ export default function NavBar() {
                             </Link>
                         ))}
                     </div>
+
                     <div className={styles.nbPanelSection}>
-                        {right.map((l) => (
-                            <Link
-                                key={l.href}
-                                href={l.href}
-                                onClick={closeMenu}
-                                className={`${styles.nbPanelAction} ${isActive(l.href) ? styles.nbActive : ''}`}
-                            >
-                                {l.label}
-                            </Link>
-                        ))}
+                        {!isAuthenticated &&
+                            right.map((l) => (
+                                <Link
+                                    key={l.href}
+                                    href={l.href}
+                                    onClick={closeMenu}
+                                    className={`${styles.nbPanelAction} ${isActive(l.href) ? styles.nbActive : ''}`}
+                                >
+                                    {l.label}
+                                </Link>
+                            ))}
                     </div>
                 </div>
             </header>
 
-            <UserPanel
-                open={userPanelOpen}
-                onClose={() => setUserPanelOpen(false)}
-                user={user}
-            />
+            {isAuthenticated && user && (
+                <UserPanel
+                    open={userPanelOpen}
+                    onClose={() => setUserPanelOpen(false)}
+                    user={user}
+                />
+            )}
         </>
     );
 }
