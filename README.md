@@ -5,6 +5,8 @@ BaseURL: `http://localhost:8080/api`
 
 Routes that marked with auth, admin or artist in authorization use Bearer Token.
 
+[Postman API URL](https://www.postman.com/satellite-candidate-66062631/cani/example/28587478-1e81788e-2d47-400f-a9b1-353ffdd822dc/caniapi?action=share&creator=28587478&ctx=documentation)
+
 ### Authetication
 | Purpose                                | Authorization | Method | Route          | Consumes                    | Returns                         |
 |----------------------------------------|---------------|--------|----------------|-----------------------------|---------------------------------|
