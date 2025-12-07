@@ -28,14 +28,12 @@ public class MultimediaController {
     @PostMapping("/banner/image")
     public ResponseEntity<MultimediaDTO> uploadBannerImage(
             @RequestParam("file") MultipartFile file) {
-
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         MultimediaDTO created = multimediaService.createBannerImage(file);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-
     // obtener lista de imágenes de banner público (todas las activas, sin filtrar featured)
     @GetMapping("/banner/image")
     public ResponseEntity<List<MultimediaDTO>> getBannerImages() {
@@ -70,7 +68,7 @@ public class MultimediaController {
         MultimediaDTO created = multimediaService.createBannerVideo(request.getUrl());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-
+  
     // obtener lista de videos de banner público
     @GetMapping("/banner/video")
     public ResponseEntity<List<MultimediaDTO>> getBannerVideos() {
@@ -84,14 +82,12 @@ public class MultimediaController {
         multimediaService.deleteMultimedia(id);
         return ResponseEntity.noContent().build();
     }
-
     // Alternar el estado destacado de una multimedia
     @PatchMapping("/{id}/featured/toggle")
     public ResponseEntity<MultimediaDTO> toggleFeatured(@PathVariable Long id) {
         MultimediaDTO updated = multimediaService.toggleFeatured(id);
         return ResponseEntity.ok(updated);
     }
-
     // Alternar el estado activo/inactivo de una multimedia
     @PatchMapping("/{id}/active/toggle")
     public ResponseEntity<MultimediaDTO> toggleActive(@PathVariable Long id) {
