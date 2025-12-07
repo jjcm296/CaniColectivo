@@ -1,102 +1,166 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-    useGalleryMedia,
-    mapMultimediaDtoToGalleryItem,
-} from "@/features/gallery/hooks/useGalleryMedia";
+import { useGalleryMedia } from "@/features/gallery/hooks/useGalleryMedia";
 import GalleryImagesSection from "../gallery-images-section/GalleryImagesSection";
 import GalleryAddImageModal from "../gallery-upload-image-modal/GalleryUploadImageModal";
-import { uploadBannerImage } from "@/features/gallery/api/multimediaApi";
 
-export default function GalleryClientSection({ isAdmin }) {
+import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
+import ConfirmModal from "@/features/ui/confirm-modal/ConfirmModal";
+
+export function GalleryClientSection({ isAdmin }) {
     const {
         items,
-        loading,
-        error,
-        updateItem,
         removeItem,
-        addItem,
-        reload,
+        toggleStatus,
+        toggleFeatured,
+        createImage,
+        showActive,
+        showFeatured,
+        showInactive,
+        loading, // estado de carga desde el hook
     } = useGalleryMedia();
 
-    const [view, setView] = useState("all");
+    const { showLoading, showSuccess, showError, hide } = useFeedback();
+
+    const [view, setView] = useState("active");
     const [showAddModal, setShowAddModal] = useState(false);
 
-    function handleToggle(id) {
-        const current = items.find((item) => item.id === id);
-        if (!current) return;
+    // IDs de imágenes recién ocultadas en la vista "active"
+    const [recentlyHiddenIds, setRecentlyHiddenIds] = useState([]);
 
-        updateItem({
-            ...current,
-            isActive: !(current.isActive ?? true),
-        });
-    }
+    // Estado para eliminar
+    const [deleteTargetId, setDeleteTargetId] = useState(null);
+    const [deleting, setDeleting] = useState(false);
 
-    function handleToggleFeatured(id) {
-        const current = items.find((item) => item.id === id);
-        if (!current) return;
+    function handleChangeView(newView) {
+        setView(newView);
 
-        updateItem({
-            ...current,
-            isFeatured: !current.isFeatured,
-        });
-    }
+        // si cambiamos de vista, limpiamos la lista de "recién ocultadas"
+        if (newView !== "active") {
+            setRecentlyHiddenIds([]);
+        }
 
-    async function handleRemove(id) {
-        const ok = window.confirm("¿Eliminar este elemento?");
-        if (!ok) return;
-
-        try {
-            await removeItem(id);
-        } catch (err) {
-            console.error(err);
-            alert("No se pudo eliminar la imagen. Intenta de nuevo.");
+        if (newView === "active") {
+            showActive();
+        } else if (newView === "featured") {
+            showFeatured();
+        } else if (newView === "hidden") {
+            showInactive();
         }
     }
 
+    // Ocultar / mostrar
+    async function handleToggle(id) {
+        // vemos el estado previo antes de hacer la llamada
+        const current = items.find((item) => item.id === id);
+        const wasActive = current ? (current.isActive ?? true) : true;
+
+        try {
+            await toggleStatus(id);
+
+            // Si estaba activa, estamos en la vista principal y es admin,
+            // la agregamos a la lista de "recién ocultadas" para que
+            // siga apareciendo oscura hasta que recargues.
+            if (wasActive && view === "active" && isAdmin) {
+                setRecentlyHiddenIds((prev) =>
+                    prev.includes(id) ? prev : [...prev, id]
+                );
+            }
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo cambiar el estado. Intenta de nuevo.");
+        }
+    }
+
+    // Destacado (igual que antes)
+    async function handleToggleFeatured(id) {
+        try {
+            await toggleFeatured(id);
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo cambiar el destacado. Intenta de nuevo.");
+        }
+    }
+
+    // 🗑Paso 1: abrir modal de confirmación de eliminación
+    function handleRemove(id) {
+        setDeleteTargetId(id);
+    }
+
+    // Cerrar modal de confirmación
+    function handleCloseDeleteModal() {
+        if (deleting) return;
+        setDeleteTargetId(null);
+    }
+
+    // Paso 2: confirmar eliminación
+    async function handleConfirmDelete() {
+        if (!deleteTargetId) return;
+
+        try {
+            setDeleting(true);
+            showLoading("Eliminando imagen...");
+
+            await removeItem(deleteTargetId);
+
+            hide();
+            showSuccess("Imagen eliminada correctamente.");
+            setDeleteTargetId(null);
+        } catch (err) {
+            console.error(err);
+            hide();
+            showError("No se pudo eliminar la imagen. Intenta de nuevo.");
+        } finally {
+            setDeleting(false);
+        }
+    }
 
     function handleAddImageClick() {
         setShowAddModal(true);
     }
 
+    // Subir imagen con feedback global
     async function handleUpload(file) {
-        return uploadBannerImage(file);
+        try {
+            showLoading("Subiendo imagen...");
+            const created = await createImage(file);
+            hide();
+            showSuccess("Imagen subida correctamente.");
+            return created;
+        } catch (err) {
+            console.error(err);
+            hide();
+            showError("No se pudo subir la imagen. Intenta de nuevo.");
+            throw err;
+        }
     }
 
-    function handleImageUploaded(createdDto) {
-        if (createdDto) {
-            const mapped = mapMultimediaDtoToGalleryItem(createdDto);
-            addItem(mapped);
-        } else {
-            reload();
-        }
-
+    function handleImageUploaded() {
         setShowAddModal(false);
     }
 
     const filteredItems = useMemo(() => {
-        return items.filter((item) => {
-            const active = item.isActive ?? true;
-            const featured = item.isFeatured ?? false;
+        // Público: solo ve activas
+        if (!isAdmin) {
+            return items.filter((item) => item.isActive ?? true);
+        }
 
-            if (!isAdmin && !active) return false;
-
-            if (view === "featured") {
-                return featured && (isAdmin ? true : active);
-            }
-
-            if (view === "hidden") {
-                if (!isAdmin) return false;
-                return !active;
-            }
-
-            if (isAdmin) return true;
-            return active;
-        });
-    }, [items, view, isAdmin]);
-
-    const hasItems = filteredItems.length > 0;
+        // Admin
+        switch (view) {
+            case "featured":
+                return items.filter((item) => item.isFeatured);
+            case "hidden":
+                return items.filter((item) => !item.isActive);
+            case "active":
+            default:
+                return items.filter(
+                    (item) =>
+                        (item.isActive ?? true) ||
+                        recentlyHiddenIds.includes(item.id)
+                );
+        }
+    }, [items, isAdmin, view, recentlyHiddenIds]);
 
     return (
         <>
@@ -104,7 +168,8 @@ export default function GalleryClientSection({ isAdmin }) {
                 isAdmin={isAdmin}
                 items={filteredItems}
                 view={view}
-                onChangeView={setView}
+                isLoading={loading} // se pasa estado de carga a la sección
+                onChangeView={handleChangeView}
                 onToggleActive={handleToggle}
                 onToggleFeatured={handleToggleFeatured}
                 onRemove={handleRemove}
@@ -119,6 +184,19 @@ export default function GalleryClientSection({ isAdmin }) {
                     onSuccess={handleImageUploaded}
                 />
             )}
+
+            {/* Modal global de confirmación de eliminación */}
+            <ConfirmModal
+                open={Boolean(deleteTargetId)}
+                variant="danger"
+                title="Eliminar imagen"
+                description="¿Seguro que quieres eliminar esta imagen de la galería? Esta acción no se puede deshacer."
+                cancelLabel="Cancelar"
+                confirmLabel={deleting ? "Eliminando..." : "Eliminar definitivamente"}
+                loading={deleting}
+                onCancel={handleCloseDeleteModal}
+                onConfirm={handleConfirmDelete}
+            />
         </>
     );
 }

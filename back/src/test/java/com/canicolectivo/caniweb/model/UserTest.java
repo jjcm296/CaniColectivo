@@ -28,7 +28,7 @@ class UserTest {
 
     @Test
     void testEmailAndPasswordAccessors() {
-        User user = new User();
+        User user = new User("user@example.com", "password123");
         user.setEmail("alice@example.com");
         user.setPassword("s3cr3t");
 

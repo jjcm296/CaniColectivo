@@ -71,6 +71,105 @@ a[href]:active {
     padding: 24px 24px 40px;
 }
 
+.feedback-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.feedback-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px 22px 18px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.feedback-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.feedback-title {
+    margin: 0 0 6px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #111827;
+}
+
+.feedback-text {
+    margin: 0 0 14px;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.feedback-btn {
+    margin-top: 6px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    background: #2563eb;
+    color: #f9fafb;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+/* Spinner animado */
+.feedback-spinner {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 4px solid rgba(0, 0, 0, 0.15);
+    border-top-color: #2563eb; /* Azul moderno */
+    animation: feedback-spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes feedback-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Icono éxito */
+.feedback-icon-success {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #16a34a22; /* Verde suave translúcido */
+    border: 3px solid #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: #166534;
+    margin: 0 auto;
+}
+
+/* Icono error */
+.feedback-icon-error {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #dc262622; /* Rojo suave translúcido */
+    border: 3px solid #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: #991b1b;
+    margin: 0 auto;
+}
+
+
 /* Laptops / tablets */
 @media (max-width: 1024px) {
     .page-container {

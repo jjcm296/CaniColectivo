@@ -1,19 +1,15 @@
-import CircleCarousel from "@/features/home/components/CicleCarousel";
+'use client';
 
+import { useFeaturedBannerImages } from "@/features/home//hooks/useFeaturedBannerImages";
+import CircleCarousel from "@/features/home/components/CircleCarousel";
 
 export default function HomeCarouselSection() {
-    const images = [
-        { src: '/home/circle-carousel/imagen.jpeg',  alt: 'Imagen 1' },
-        { src: '/home/circle-carousel/imagen2.jpeg', alt: 'Imagen 2' },
-        { src: '/home/circle-carousel/imagen3.jpeg', alt: 'Imagen 3' },
-        { src: '/home/circle-carousel/imagen4.jpeg', alt: 'Imagen 4' },
-        { src: '/home/circle-carousel/imagen5.jpeg', alt: 'Imagen 5' },
-        { src: '/home/circle-carousel/imagen.jpeg',  alt: 'Imagen 1' },
-        { src: '/home/circle-carousel/imagen2.jpeg', alt: 'Imagen 2' },
-        { src: '/home/circle-carousel/imagen3.jpeg', alt: 'Imagen 3' },
-        { src: '/home/circle-carousel/imagen4.jpeg', alt: 'Imagen 4' },
-        { src: '/home/circle-carousel/imagen5.jpeg', alt: 'Imagen 5' },
-    ];
+    const { items, loading, error } = useFeaturedBannerImages();
+
+    const images = items.map((item) => ({
+        id: item.id,
+        src: item.url,
+    }));
 
     return (
         <CircleCarousel

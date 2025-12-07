@@ -1,4 +1,6 @@
-import GalleryClientSection from "@/features/gallery/components/gallery-client-section/GalleryClientSection";
+import {
+    GalleryClientSection
+} from "@/features/gallery/components/gallery-client-section/GalleryClientSection";
 
 export const metadata = { title: "Galería" };
 

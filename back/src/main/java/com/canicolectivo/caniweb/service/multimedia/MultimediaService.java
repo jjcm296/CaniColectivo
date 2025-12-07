@@ -73,20 +73,14 @@ public class MultimediaService {
         }
 
         try {
-            // Subir el archivo a Cloudflare R2 y obtener la URL generada
             String url = cloudflareService.uploadImage(file);
 
-            // Crear una nueva entidad Multimedia con la URL de Cloudflare
             Multimedia entity = new Multimedia(
                     MediaType.IMAGE,
-                    url,  // Usar la URL generada por Cloudflare
+                    url,
                     MediaScope.PUBLIC_BANNER
             );
-
-            // Guardar en la base de datos
             Multimedia saved = multimediaRepository.save(entity);
-
-            // Retornar el DTO creado
             return toDTO(saved);
 
         } catch (IOException e) {
@@ -94,7 +88,8 @@ public class MultimediaService {
         }
     }
 
-    // ============ OBTENER BANNERS POR TIPO ============
+    // ============ OBTENER BANNERS POR TIPO (EXISTENTES) ============
+    // Esta sigue devolviendo TODAS las imágenes activas, sin filtrar featured
     public List<MultimediaDTO> getPublicBannerImages() {
         return multimediaRepository
                 .findByScopeAndMediaTypeAndActivoTrue(MediaScope.PUBLIC_BANNER, MediaType.IMAGE)
@@ -111,6 +106,54 @@ public class MultimediaService {
                 .collect(Collectors.toList());
     }
 
+    // ============ NUEVOS MÉTODOS PARA SECCIONES EN EL FRONT ============
+    /**
+     * Imágenes de banner:
+     * - Activas
+     */
+    public List<MultimediaDTO> getActiveNonFeaturedBannerImages() {
+        return multimediaRepository
+                .findByScopeAndMediaTypeAndActivoTrueAndIsFeaturedFalse(
+                        MediaScope.PUBLIC_BANNER,
+                        MediaType.IMAGE
+                )
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Imágenes de banner:
+     * - Activas
+     * - Destacadas
+     */
+    public List<MultimediaDTO> getFeaturedBannerImages() {
+        return multimediaRepository
+                .findByScopeAndMediaTypeAndActivoTrueAndIsFeaturedTrue(
+                        MediaScope.PUBLIC_BANNER,
+                        MediaType.IMAGE
+                )
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Imágenes de banner:
+     * - NO activas
+     */
+    public List<MultimediaDTO> getInactiveBannerImages() {
+        return multimediaRepository
+                .findByScopeAndMediaTypeAndActivoFalse(
+                        MediaScope.PUBLIC_BANNER,
+                        MediaType.IMAGE
+                )
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // ============ MAPPER ============
     private MultimediaDTO toDTO(Multimedia entity) {
         if (entity == null) return null;
 
@@ -135,7 +178,7 @@ public class MultimediaService {
         }
     }
 
-    // segun debe validar que el recurso en la URL responda
+    // valida que el recurso en la URL responda
     private boolean urlExists(String url) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -194,5 +237,21 @@ public class MultimediaService {
         return toDTO(saved);
     }
 
+    // ============ ACTUALIZAR ACTIVO / INACTIVO ============
+    public MultimediaDTO toggleActive(Long id) {
+        Multimedia multimedia = multimediaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Multimedia with id " + id + " not found"
+                        )
+                );
 
+        // Si está activo, lo desactiva; si está inactivo, lo activa
+        boolean newValue = !Boolean.TRUE.equals(multimedia.getActivo());
+        multimedia.setActivo(newValue);
+
+        Multimedia saved = multimediaRepository.save(multimedia);
+        return toDTO(saved);
+    }
 }

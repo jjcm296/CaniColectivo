@@ -67,6 +67,25 @@ export default function GalleryImageCard({
                     loading="lazy"
                 />
 
+                {/* ⭐ Botón de destacado siempre visible (solo admin) */}
+                {isAdmin && (
+                    <button
+                        type="button"
+                        className={`${styles.starBtn} ${
+                            featured ? styles.starActive : ""
+                        }`}
+                        onClick={handleFeaturedClick}
+                        aria-label={featured ? "Quitar destacado" : "Marcar como destacado"}
+                    >
+                        {featured ? (
+                            <HiStar className={styles.starIconFilled} />
+                        ) : (
+                            <HiOutlineStar className={styles.starIcon} />
+                        )}
+                    </button>
+                )}
+
+                {/* Menú de 3 puntos: solo Ocultar/Mostrar y Eliminar */}
                 {isAdmin && (
                     <div className={styles.menuWrapper} ref={menuRef}>
                         <button
@@ -79,38 +98,16 @@ export default function GalleryImageCard({
 
                         {menuOpen && (
                             <div className={styles.menu}>
-                                <button
-                                    type="button"
-                                    className={styles.menuItem}
-                                    onClick={handleFeaturedClick}
-                                >
-                                    <span className={styles.menuIcon}>
-                                        {featured ? (
-                                            <HiStar className={styles.starFeatured} />
-                                        ) : (
-                                            <HiOutlineStar className={styles.starNormal} />
-                                        )}
-                                    </span>
-
-                                    <span>
-                                        {featured
-                                            ? "Quitar"
-                                            : "Destacar"}
-                                    </span>
-                                </button>
-
                                 {/* OCULTAR / MOSTRAR */}
                                 <button
                                     type="button"
                                     className={styles.menuItem}
                                     onClick={handleToggleActiveClick}
                                 >
-                                    <span className={styles.menuIcon}>
-                                        {active ? <FiEyeOff /> : <FiEye />}
-                                    </span>
-                                    <span>
-                                        {active ? "Ocultar" : "Mostrar"}
-                                    </span>
+                  <span className={styles.menuIcon}>
+                    {active ? <FiEyeOff /> : <FiEye />}
+                  </span>
+                                    <span>{active ? "Ocultar" : "Mostrar"}</span>
                                 </button>
 
                                 {/* ELIMINAR */}
@@ -119,9 +116,9 @@ export default function GalleryImageCard({
                                     className={`${styles.menuItem} ${styles.menuItemDanger}`}
                                     onClick={handleRemoveClick}
                                 >
-                                    <span className={styles.menuIcon}>
-                                        <FiTrash2 />
-                                    </span>
+                  <span className={styles.menuIcon}>
+                    <FiTrash2 />
+                  </span>
                                     <span>Eliminar</span>
                                 </button>
                             </div>
@@ -131,9 +128,7 @@ export default function GalleryImageCard({
 
                 <div className={styles.overlay}>
                     <h3 className={styles.itemTitle}>{item.title}</h3>
-                    {item.type && (
-                        <span className={styles.badge}>{item.type}</span>
-                    )}
+                    {item.type && <span className={styles.badge}>{item.type}</span>}
                 </div>
             </div>
         </article>
