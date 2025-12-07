@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import styles from './RegisterForm.module.css';
 import AuthSidePanel from '../../auth-side-panel/AuthSidePanel';
 import BackButton from "@/features/ui/back-button/BackButton";
+import { useVerification } from "@/features/auth/hooks/useVerification";
 
 export default function RegisterForm() {
     const router = useRouter();
+    const { generateCode } = useVerification();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -48,12 +50,16 @@ export default function RegisterForm() {
         try {
             setSubmitting(true);
 
-            console.log('Registrando usuario:', { email, password });
+            // Guardar email en localStorage
+            localStorage.setItem("pendingEmail", email);
+
+            // Generar código (simulado; luego se conectará al backend)
+            generateCode();
 
             setTimeout(() => {
                 setSubmitting(false);
-                router.push(`/validar-codigo?email=${encodeURIComponent(email)}`);
-            }, 800);
+                router.push(`/auth/validar-codigo?email=${encodeURIComponent(email)}`);
+            }, 600);
         } catch (err) {
             console.error(err);
             setSubmitting(false);
