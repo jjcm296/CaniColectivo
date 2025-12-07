@@ -1,61 +1,68 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './RegisterForm.module.css';
-import AuthSidePanel from '../../auth-side-panel/AuthSidePanel';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./RegisterForm.module.css";
+import AuthSidePanel from "../../auth-side-panel/AuthSidePanel";
 import BackButton from "@/features/ui/back-button/BackButton";
+import { registerUser } from "@/features/auth/api/authApi";
 
 export default function RegisterForm() {
     const router = useRouter();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
     const [errors, setErrors] = useState({});
+    const [formError, setFormError] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
     const validate = () => {
-        const newErrors = {};
+        const e = {};
 
-        if (!email.trim()) {
-            newErrors.email = 'Ingresa un correo electrónico.';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-            newErrors.email = 'Ingresa un correo electrónico válido.';
-        }
+        if (!email.trim()) e.email = "Ingresa un correo.";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+            e.email = "Correo inválido.";
 
-        if (!password) {
-            newErrors.password = 'Ingresa una contraseña.';
-        } else if (password.length < 8) {
-            newErrors.password = 'La contraseña debe tener al menos 8 caracteres.';
-        }
+        if (!password) e.password = "Ingresa una contraseña.";
+        else if (password.length < 8) e.password = "Mínimo 8 caracteres.";
 
-        if (!passwordConfirm) {
-            newErrors.passwordConfirm = 'Confirma tu contraseña.';
-        } else if (password !== passwordConfirm) {
-            newErrors.passwordConfirm = 'Las contraseñas no coinciden.';
-        }
+        if (!passwordConfirm) e.passwordConfirm = "Confirma tu contraseña.";
+        else if (password !== passwordConfirm) e.passwordConfirm = "No coinciden.";
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        setErrors(e);
+        return Object.keys(e).length === 0;
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (ev) => {
+        ev.preventDefault();
+        setFormError("");
 
         if (!validate()) return;
 
         try {
             setSubmitting(true);
 
-            console.log('Registrando usuario:', { email, password });
+            await registerUser({
+                email,
+                password,
+            });
 
-            setTimeout(() => {
-                setSubmitting(false);
-                router.push(`/validar-codigo?email=${encodeURIComponent(email)}`);
-            }, 800);
+            // Guardar credenciales temporales para el login automático
+            localStorage.setItem("pendingEmail", email);
+            localStorage.setItem("pendingPassword", password);
+
+            router.push(`/auth/validar-codigo?email=${encodeURIComponent(email)}`);
         } catch (err) {
-            console.error(err);
+            const msg = err?.message || "";
+
+            if (msg === "REGISTER_FORBIDDEN") {
+                router.push(`/auth/login?email=${encodeURIComponent(email)}`);
+                return;
+            }
+
+            setFormError(msg || "Error al registrar usuario.");
+        } finally {
             setSubmitting(false);
         }
     };
@@ -71,20 +78,20 @@ export default function RegisterForm() {
                     <p className={styles.kicker}>Crear cuenta</p>
                     <h1 className={styles.title}>Únete a la comunidad CANI</h1>
                     <p className={styles.subtitle}>
-                        Regístrate con tu correo para guardar favoritos, seguir artistas y recibir novedades.
+                        Regístrate con tu correo para guardar favoritos, seguir artistas y recibir
+                        novedades.
                     </p>
                 </header>
 
                 <form className={styles.form} onSubmit={handleSubmit} noValidate>
                     <div className={styles.field}>
-                        <label htmlFor="email" className={styles.label}>
-                            Correo electrónico
-                        </label>
+                        <label className={styles.label}>Correo electrónico</label>
                         <input
-                            id="email"
                             type="email"
                             autoComplete="email"
-                            className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+                            className={`${styles.input} ${
+                                errors.email ? styles.inputError : ""
+                            }`}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="tucorreo@ejemplo.com"
@@ -93,14 +100,13 @@ export default function RegisterForm() {
                     </div>
 
                     <div className={styles.field}>
-                        <label htmlFor="password" className={styles.label}>
-                            Contraseña
-                        </label>
+                        <label className={styles.label}>Contraseña</label>
                         <input
-                            id="password"
                             type="password"
                             autoComplete="new-password"
-                            className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
+                            className={`${styles.input} ${
+                                errors.password ? styles.inputError : ""
+                            }`}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Mínimo 8 caracteres"
@@ -109,14 +115,13 @@ export default function RegisterForm() {
                     </div>
 
                     <div className={styles.field}>
-                        <label htmlFor="passwordConfirm" className={styles.label}>
-                            Confirmar contraseña
-                        </label>
+                        <label className={styles.label}>Confirmar contraseña</label>
                         <input
-                            id="passwordConfirm"
                             type="password"
                             autoComplete="new-password"
-                            className={`${styles.input} ${errors.passwordConfirm ? styles.inputError : ''}`}
+                            className={`${styles.input} ${
+                                errors.passwordConfirm ? styles.inputError : ""
+                            }`}
                             value={passwordConfirm}
                             onChange={(e) => setPasswordConfirm(e.target.value)}
                             placeholder="Repite tu contraseña"
@@ -126,17 +131,15 @@ export default function RegisterForm() {
                         )}
                     </div>
 
-                    <button
-                        type="submit"
-                        className={styles.submit}
-                        disabled={submitting}
-                    >
-                        {submitting ? 'Creando cuenta...' : 'Crear cuenta'}
+                    {formError && <p className={styles.error}>{formError}</p>}
+
+                    <button type="submit" className={styles.submit} disabled={submitting}>
+                        {submitting ? "Creando cuenta..." : "Crear cuenta"}
                     </button>
 
                     <p className={styles.footerText}>
-                        ¿Ya tienes cuenta?{' '}
-                        <a href="/login" className={styles.link}>
+                        ¿Ya tienes cuenta?{" "}
+                        <a href="/auth/login" className={styles.link}>
                             Inicia sesión aquí
                         </a>
                     </p>
