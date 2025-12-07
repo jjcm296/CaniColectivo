@@ -66,10 +66,14 @@ a[href]:active {
 
 /* Contenedor general para el contenido de las páginas */
 .page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 24px 40px;
+    min-height: 100vh;              /* Que ocupe toda la altura */
+    display: flex;
+    justify-content: center;        /* Centrado horizontal */
+    align-items: center;            /* Centrado vertical */
+    padding: 32px 16px;
+    background: #f5f7fa;            /* Opcional: fondo suave */
 }
+
 
 .feedback-backdrop {
     position: fixed;
