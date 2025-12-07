@@ -1,4 +1,3 @@
-
 .nbWrapper {
     position: sticky;
     top: 0;
@@ -142,34 +141,29 @@
     transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
-
-.nbActions a[href="/login"] {
+/* botón "Iniciar sesión" */
+.nbActionLogin {
     background: var(--nv);
     color: #fff;
     border-color: var(--nv);
     box-shadow: 0 8px 30px rgba(26, 43, 84, 0.25);
-    transition: all .2s ease;
 }
 
-.nbActions a[href="/login"]:hover {
+.nbActionLogin:hover {
     background: #fff;
     color: var(--nv);
     border-color: var(--nv);
     box-shadow: 0 6px 20px rgba(26, 43, 84, 0.20);
-
-
 }
 
-/* Botón blanco base */
-.nbActions a[href="/register"] {
+/* botón "Registrarse" */
+.nbActionRegister {
     background: #fff;
     color: var(--nv);
     border-color: var(--nv);
-    transition: all .2s ease;
 }
 
-/* Hover → se vuelve azul */
-.nbActions a[href="/register"]:hover {
+.nbActionRegister:hover {
     background: var(--nv);
     color: #fff;
     border-color: var(--nv);
@@ -190,6 +184,7 @@
     flex-direction: column;
     gap: 4px;
 }
+
 .nbToggleBar {
     width: 20px;
     height: 2px;
@@ -205,6 +200,7 @@
     background: #fff;
     transition: max-height 0.25s ease;
 }
+
 .nbPanelOpen {
     max-height: 420px;
 }
@@ -215,6 +211,7 @@
     gap: 8px;
     border-bottom: 1px solid #f3f5f9;
 }
+
 .nbPanelSection:last-child {
     border-bottom: 0;
 }
@@ -229,10 +226,12 @@
     border: 1px solid transparent;
     transition: background 0.15s ease, color 0.15s ease;
 }
+
 .nbPanelLink:hover {
     background: #f7faff;
-    color: var(--bl);
+    color: #1d4ed8;
 }
+
 .nbPanelAction:hover {
     background: #f7f9ff;
 }
@@ -240,6 +239,7 @@
 .nbPanelLink.nbActive {
     color: var(--bl);
 }
+
 .nbPanelAction.nbActive {
     color: var(--nv);
 }
@@ -267,12 +267,10 @@
     transition: transform .15s ease, box-shadow .15s ease, filter .15s ease, color .15s ease;
 }
 
-/* anula el subrayado animado del :after para este botón */
 .nbNav a[href="/artists"]::after {
     background: transparent !important;
 }
 
-/* Hover/Active/Focus */
 .nbNav a[href="/artists"]:hover,
 .nbNav a[href="/artists"].nbActive,
 .nbNav a[href="/artists"]:focus-visible {
@@ -283,8 +281,9 @@
     outline: none;
 }
 
-/* Asegura que las reglas nth-child de color no sobreescriban */
-.nbNav .nbLink[href="/artists"]:hover { color: #fff !important; }
+.nbNav .nbLink[href="/artists"]:hover {
+    color: #fff !important;
+}
 
 /* Móvil (panel desplegable) */
 .nbPanelLink[href="/artists"] {
@@ -294,6 +293,7 @@
     border-color: transparent;
     box-shadow: 0 8px 26px rgba(233, 90, 13, 0.35);
 }
+
 .nbPanelLink[href="/artists"]:hover,
 .nbPanelLink[href="/artists"].nbActive {
     color: #fff;
@@ -324,8 +324,6 @@
         width: 44px;
     }
 }
-
-
 
 @media (min-width: 901px) {
     .nbPanel {
