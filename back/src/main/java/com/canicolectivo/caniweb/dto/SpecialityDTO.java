@@ -4,7 +4,7 @@ import com.canicolectivo.caniweb.Enum.TypeSpeciality;
 import com.canicolectivo.caniweb.model.Speciality;
 
 public class SpecialityDTO {
-    private int id;
+    private Integer id;
     private String name;
     private TypeSpeciality type;
 
@@ -27,11 +27,11 @@ public class SpecialityDTO {
         return entity;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

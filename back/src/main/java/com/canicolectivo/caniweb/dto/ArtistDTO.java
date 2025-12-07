@@ -43,7 +43,7 @@ public class ArtistDTO {
         this.specialities = specialities;
     }
 
-    public static ArtistDTO fromEntity(Artist artist) {
+    public static ArtistDTO formEntity(Artist artist) {
         Set<SpecialityDTO> specialityDTOs = artist.getSpecialities() == null ? null :
                 artist.getSpecialities().stream()
                         .map(SpecialityDTO::formEntity)
@@ -137,5 +137,9 @@ public class ArtistDTO {
 
     public void setSpecialities(Set<SpecialityDTO> specialities) {
         this.specialities = specialities;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

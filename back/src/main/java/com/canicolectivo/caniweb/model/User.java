@@ -17,8 +17,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @Column(unique = true, nullable = false, length = 30)
+    @Column(unique = true, length = 30)
     private String username;
 
     @NotNull
@@ -49,7 +48,7 @@ public class User implements UserDetails {
 
     private boolean enabled;
 
-    public User(String mail, String password123) {}
+    public User() {}
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -61,11 +60,11 @@ public class User implements UserDetails {
         return id;
     }
 
-    public @NotNull String getUsernameNotOverriden() {
+    public String getUsernameNotOverriden() {
         return username;
     }
 
-    public void setUsername(@NotNull String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 

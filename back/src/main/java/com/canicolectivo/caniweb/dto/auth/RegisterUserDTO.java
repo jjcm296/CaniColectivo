@@ -13,7 +13,6 @@ public class RegisterUserDTO {
     @Size(min=4, message = "Password must be at least 4 characters")
     private String password;
 
-    @NotBlank(message = "Username is required")
     private String username;
 
     public RegisterUserDTO() {}
@@ -40,11 +39,11 @@ public class RegisterUserDTO {
         this.password = password;
     }
 
-    public @NotBlank(message = "Username is required") String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(@NotBlank(message = "Username is required") String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 }

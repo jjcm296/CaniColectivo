@@ -45,6 +45,8 @@ public class AuthenticationService {
 
         user.addRole(defaultRole);
 
+        
+
         sendVerificationEmail(user);
         return userRepository.save(user);
     }
@@ -109,11 +111,11 @@ public class AuthenticationService {
         String verificationCode =  user.getVerificationCode();
         String htmlMessage = "<html>"
                 + "<body style=\"font-family: Arial, sans-serif;\">"
-                + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
-                + "<h2 style=\"color: #333;\">Encantados de conocerte !</h2>"
-                + "<p style=\"font-size: 16px;\">Por favor ingresa en la página el siguiente código de verificación:</p>"
+                + "<div style=\"background-color: #f5f5f5; padding: 25px;\">"
+                + "<h2 style=\"color: #333;\">¡Bienvenid@ a CANI Colectivo!</h2>"
+                + "<p style=\"font-size: 21px;\">Por favor ingresa en la página el siguiente código de verificación:</p>"
                 + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
-                + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
+                + "<p style=\"font-size: 23px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
                 + "</div>"
                 + "</div>"
                 + "</body>"
@@ -125,7 +127,7 @@ public class AuthenticationService {
 
     private String generateVerificationCode() {
         Random random = new Random();
-        int code = random.nextInt(9000) + 1000;
+        int code = random.nextInt(900000) + 100000;
         return String.valueOf(code);
     }
 }

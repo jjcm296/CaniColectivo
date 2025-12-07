@@ -35,9 +35,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/specialities/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/artists/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/artists").permitAll()
 
                         .requestMatchers("/users/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/artists").authenticated()
                         .requestMatchers(HttpMethod.POST, "/artists/*/verify").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/multimedia/**").hasRole("ADMIN")
@@ -57,8 +58,8 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080")); //TODO: update backend url
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE",  "OPTIONS","PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
