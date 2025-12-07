@@ -3,13 +3,12 @@ package com.canicolectivo.caniweb.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -33,7 +32,7 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private Artist artist;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -62,7 +61,7 @@ public class User implements UserDetails {
         return id;
     }
 
-    public @NotNull String getUsername() {
+    public @NotNull String getUsernameNotOverriden() {
         return username;
     }
 
@@ -134,29 +133,38 @@ public class User implements UserDetails {
 
     // UserDetails
 
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
     //TODO: add proper boolean checks
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return this.enabled;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (roles == null || roles.isEmpty()) return List.of();
+
+        return roles.stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName().toUpperCase(Locale.ROOT)))
+                .collect(Collectors.toList());
     }
 }

@@ -8,7 +8,7 @@ public class VerifyUserDTO {
     private String email;
 
     @NotBlank(message = "Verification code is required")
-    //@Size(min=4, message = "Verification code must be at least 4 characters")
+    @Size(min=4, message = "Verification code must be at least 4 characters")
     private String verificationCode;
 
     public @NotBlank(message = "Email is required") String getEmail() {

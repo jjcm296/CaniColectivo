@@ -45,6 +45,7 @@ public class JwtService {
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expirationTime) {
+        System.out.println("Generating token with secret key: " + secretKey.substring(0, 10) + "...");
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -69,11 +70,12 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+        System.out.println("Validating token with secret key: " + secretKey.substring(0, 10) + "...");
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 

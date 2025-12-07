@@ -3,9 +3,10 @@ package com.canicolectivo.caniweb.service.auth;
 import com.canicolectivo.caniweb.dto.auth.LoginUserDTO;
 import com.canicolectivo.caniweb.dto.auth.RegisterUserDTO;
 import com.canicolectivo.caniweb.dto.auth.VerifyUserDTO;
+import com.canicolectivo.caniweb.model.Role;
 import com.canicolectivo.caniweb.model.User;
+import com.canicolectivo.caniweb.repository.RoleRepository;
 import com.canicolectivo.caniweb.repository.UserRepository;
-import jakarta.mail.MessagingException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,12 +20,14 @@ import java.util.Random;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
@@ -35,20 +38,27 @@ public class AuthenticationService {
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
+
+        // when registering in the system, artist roles is assigned by default
+        Role defaultRole = roleRepository.findByName("artist")
+                .orElseThrow(() -> new RuntimeException("Default role 'artist' is not found"));
+
+        user.addRole(defaultRole);
+
         sendVerificationEmail(user);
         return userRepository.save(user);
     }
 
     public User authenticate(LoginUserDTO input) {
         User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found") );
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!user.isEnabled()) {
             throw new RuntimeException("Account not verified. Please verify your account.");
         }
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+                new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword())
         );
 
         return user;
@@ -95,15 +105,14 @@ public class AuthenticationService {
     }
 
     private void sendVerificationEmail(User user) {
-        String subject = "Verificación de email CANICOLECTIVO";
-        String verificationCode = "Código de verificación" + user.getVerificationCode();
+        String subject = "Código de verificación CANICOLECTIVO";
+        String verificationCode =  user.getVerificationCode();
         String htmlMessage = "<html>"
                 + "<body style=\"font-family: Arial, sans-serif;\">"
                 + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
                 + "<h2 style=\"color: #333;\">Encantados de conocerte !</h2>"
                 + "<p style=\"font-size: 16px;\">Por favor ingresa en la página el siguiente código de verificación:</p>"
                 + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
-                + "<h3 style=\"color: #333;\">Código de verificación:</h3>"
                 + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
                 + "</div>"
                 + "</div>"
