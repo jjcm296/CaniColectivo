@@ -17,6 +17,7 @@ public class ArtistDTO {
     private String photoUrl;
     private Map<String, String> socialMedia;
     private Set<SpecialityDTO> specialities;
+    private Integer userId;
 
     public ArtistDTO(
             Integer id,
@@ -130,5 +131,15 @@ public class ArtistDTO {
         this.specialities = specialities;
     }
 
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }

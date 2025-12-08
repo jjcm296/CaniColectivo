@@ -25,6 +25,7 @@ public class ArtistController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ArtistDTO> getAll() {
         return artistService.findAll();
     }
@@ -58,6 +59,7 @@ public class ArtistController {
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
+
     /*
 
     @GetMapping("/pending")
@@ -67,5 +69,7 @@ public class ArtistController {
     }
 
      */
+
+
 
 }
