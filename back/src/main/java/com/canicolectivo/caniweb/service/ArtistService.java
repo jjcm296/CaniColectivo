@@ -1,11 +1,13 @@
 package com.canicolectivo.caniweb.service;
 
-import com.canicolectivo.caniweb.dto.ArtistDTO;
-import com.canicolectivo.caniweb.dto.SpecialityDTO;
+import com.canicolectivo.caniweb.dto.artist.ArtistDTO;
+import com.canicolectivo.caniweb.dto.artist.SpecialityDTO;
 import com.canicolectivo.caniweb.model.Artist;
+import com.canicolectivo.caniweb.model.PendingArtist;
 import com.canicolectivo.caniweb.model.Speciality;
 import com.canicolectivo.caniweb.model.User;
 import com.canicolectivo.caniweb.repository.ArtistRepository;
+import com.canicolectivo.caniweb.repository.PendingArtistRepository;
 import com.canicolectivo.caniweb.repository.SpecialityRepository;
 import com.canicolectivo.caniweb.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -21,11 +23,13 @@ public class ArtistService {
     private final ArtistRepository artistRepository;
     private final UserRepository userRepository;
     private final SpecialityRepository specialityRepository;
+    private final PendingArtistRepository pendingArtistRepository;
 
-    public ArtistService(ArtistRepository artistRepository, UserRepository userRepository, SpecialityRepository specialityRepository) {
+    public ArtistService(ArtistRepository artistRepository, UserRepository userRepository, SpecialityRepository specialityRepository, PendingArtistRepository pendingArtistRepository) {
         this.artistRepository = artistRepository;
         this.userRepository = userRepository;
         this.specialityRepository = specialityRepository;
+        this.pendingArtistRepository = pendingArtistRepository;
     }
 
     public List<ArtistDTO> findAll() {
@@ -33,15 +37,25 @@ public class ArtistService {
                 .map(ArtistDTO::formEntity).toList();
     }
 
+    public List<ArtistDTO> findAllApprovedRandom() {
+        return artistRepository.findApprovedArtistsRandomOrder(). stream()
+                . map(ArtistDTO::formEntity). toList();
+    }
+
+    public List<ArtistDTO> findAllApprovedRandom(int limit) {
+        if (limit <= 0) {
+            return List.of();
+        }
+        return artistRepository.findRandomApprovedArtists(limit). stream()
+                . map(ArtistDTO::formEntity). toList();
+    }
+
+
     public Optional<ArtistDTO> findById(Integer id) {
         return artistRepository.findById(id).map(ArtistDTO::formEntity);
     }
 
-    private String normalizeName(String name) {
-        if (name == null || name.isBlank()) return name;
-        name = name.trim();
-        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-    }
+
 
     @Transactional
     public ArtistDTO create(ArtistDTO dto, User currentUser) {
@@ -88,10 +102,12 @@ public class ArtistService {
         }
 
         Artist saved = artistRepository.save(artist);
+
+        PendingArtist pendingArtist = new PendingArtist(saved.getId());
+        pendingArtistRepository.save(pendingArtist);
+
         return ArtistDTO.formEntity(saved);
     }
-
-
 
     public Optional<ArtistDTO> update(Integer id, ArtistDTO dto) {
         Optional<Artist> opt = artistRepository.findById(id);
@@ -139,14 +155,41 @@ public class ArtistService {
 
     public boolean delete (Integer id){
         if (artistRepository.existsById(id)) {
-                artistRepository.deleteById(id);
-                return true;
+            pendingArtistRepository.deleteByArtistId(id);
+            artistRepository.deleteById(id);
+            return true;
         }
         return false;
     }
 
+    @Transactional
+    public Optional<ArtistDTO> approveArtist(Integer id) {
+        return artistRepository.findById(id)
+                .map(artist -> {
+                   artist.setApproved(true);
+                   Artist saved = artistRepository.save(artist);
 
+                   return ArtistDTO.formEntity(saved);
 
+                });
+    }
+
+    @Transactional
+    public Optional<ArtistDTO> rejectArtist(Integer id) {
+        return artistRepository.findById(id)
+                .map(artist -> {
+
+                    pendingArtistRepository.deleteByArtistId(id);
+
+                    return ArtistDTO. formEntity(artist);
+                });
+    }
+
+    private String normalizeName(String name) {
+        if (name == null || name.isBlank()) return name;
+        name = name.trim();
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+    }
 
 
 }

@@ -1,6 +1,6 @@
 package com.canicolectivo.caniweb.service;
 
-import com.canicolectivo.caniweb.dto.SpecialityDTO;
+import com.canicolectivo.caniweb.dto.artist.SpecialityDTO;
 import com.canicolectivo.caniweb.model.Speciality;
 import com.canicolectivo.caniweb.repository.SpecialityRepository;
 import org.springframework.stereotype.Service;

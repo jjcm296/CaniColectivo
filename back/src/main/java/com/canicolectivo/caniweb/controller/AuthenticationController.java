@@ -1,5 +1,6 @@
 package com.canicolectivo.caniweb.controller;
 
+import com.canicolectivo.caniweb.dto.UserDTO;
 import com.canicolectivo.caniweb.dto.auth.LoginUserDTO;
 import com.canicolectivo.caniweb.dto.auth.RegisterUserDTO;
 import com.canicolectivo.caniweb.dto.auth.VerifyUserDTO;
@@ -37,9 +38,13 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDTO) {
+
         User authenticatedUser = authenticationService.authenticate(loginUserDTO);
         String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
+
+        UserDTO authenticatedUserDTO = UserDTO.fromEntity(authenticatedUser);
+
+        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime(),authenticatedUserDTO);
         return ResponseEntity.ok(loginResponse);
     }
 

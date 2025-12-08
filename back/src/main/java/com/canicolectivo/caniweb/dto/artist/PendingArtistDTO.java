@@ -1,4 +1,4 @@
-package com.canicolectivo.caniweb.dto;
+package com.canicolectivo.caniweb.dto.artist;
 
 import com.canicolectivo. caniweb.model.Artist;
 import com.canicolectivo.caniweb.model.PendingArtist;

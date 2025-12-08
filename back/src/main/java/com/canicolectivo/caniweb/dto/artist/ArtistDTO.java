@@ -1,4 +1,4 @@
-package com.canicolectivo.caniweb.dto;
+package com.canicolectivo.caniweb.dto.artist;
 
 import com.canicolectivo.caniweb.Enum.Location;
 import com.canicolectivo.caniweb.model.Artist;
@@ -16,7 +16,6 @@ public class ArtistDTO {
     private String phone;
     private String photoUrl;
     private Map<String, String> socialMedia;
-    private Integer userId;
     private Set<SpecialityDTO> specialities;
 
     public ArtistDTO(
@@ -39,7 +38,6 @@ public class ArtistDTO {
         this.phone = phone;
         this.photoUrl = photoUrl;
         this.socialMedia = socialMedia;
-        this.userId = userId;
         this.specialities = specialities;
     }
 
@@ -123,9 +121,6 @@ public class ArtistDTO {
         this.phone = phone;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
 
     public Set<SpecialityDTO> getSpecialities() {
         return specialities;
@@ -135,7 +130,5 @@ public class ArtistDTO {
         this.specialities = specialities;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+
 }
