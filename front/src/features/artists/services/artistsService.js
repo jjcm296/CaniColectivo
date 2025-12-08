@@ -18,7 +18,7 @@ export async function getCurrentUser() {
     return dbGetCurrentUser();
 }
 
-// 👇 usar users + artists
+// usar users + artists
 export async function getMyArtistProfile() {
     const user = dbGetCurrentUser();
 
