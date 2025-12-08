@@ -9,10 +9,11 @@ import ArtistProfileDetails
 export default function ArtistProfile({ artist, isOwner = false }) {
     if (!artist) return null;
 
-    const { bio } = artist;
+    const { bio, description } = artist || {};
 
     const displayBio =
-        bio ||
+        (bio && bio.trim().length > 0 && bio) ||
+        (description && description.trim().length > 0 && description) ||
         "Próximamente agregaremos una descripción más detallada sobre este perfil artístico y sus proyectos.";
 
     return (
