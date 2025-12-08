@@ -28,8 +28,8 @@ public class ArtistDTO {
             String phone,
             String photoUrl,
             Map<String, String> socialMedia,
-            Integer userId,
-            Set<SpecialityDTO> specialities
+            Set<SpecialityDTO> specialities,
+            Integer userId
     ) {
         this.id = id;
         this.name = name;
@@ -40,6 +40,7 @@ public class ArtistDTO {
         this.photoUrl = photoUrl;
         this.socialMedia = socialMedia;
         this.specialities = specialities;
+        this.userId = userId;
     }
 
     public static ArtistDTO formEntity(Artist artist) {
@@ -57,8 +58,8 @@ public class ArtistDTO {
                 artist.getPhone(),
                 artist.getPhotoUrl(),
                 artist.getSocialMedia(),
-                artist.getUser() != null ? artist.getUser().getId() : null,
-                specialityDTOs
+                specialityDTOs,
+                artist.getUser() != null ? artist.getUser().getId() : null
         );
     }
 
