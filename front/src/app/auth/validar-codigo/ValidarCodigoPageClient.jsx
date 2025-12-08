@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useVerification } from "@/features/auth/hooks/useVerification";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useRouter } from "next/navigation";
 import BackButton from "@/features/ui/back-button/BackButton";
 import styles from "./ValidarCodigo.module.css";
 
 const RESEND_COOLDOWN = 30;
 
-export default function ValidarCodigoPageClient({ emailParam }) {
+export default function ValidarCodigoPageClient() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Leemos el email directamente de la URL
+    const emailParam = searchParams?.get("email") ?? "";
 
     const { verifyCode, generateCode, isVerifying } = useVerification(emailParam);
     const { login } = useAuth();
@@ -23,10 +27,7 @@ export default function ValidarCodigoPageClient({ emailParam }) {
 
     const inputsRef = useRef([]);
 
-    useEffect(() => {
-        if (!emailParam) router.push("/auth/register");
-    }, [emailParam, router]);
-
+    // Timer para reenviar código
     useEffect(() => {
         if (canResend) return;
         if (secondsLeft === 0) {
@@ -41,6 +42,7 @@ export default function ValidarCodigoPageClient({ emailParam }) {
         return () => clearInterval(id);
     }, [secondsLeft, canResend]);
 
+    // Autoverificar cuando se llenen los 6 dígitos
     useEffect(() => {
         const filled = digits.every((d) => d !== "");
         if (filled && status !== "success" && !isVerifying) {
@@ -199,9 +201,7 @@ export default function ValidarCodigoPageClient({ emailParam }) {
                             className={`${styles.codeInput} ${
                                 status === "error" ? styles.codeInputError : ""
                             } ${
-                                status === "success"
-                                    ? styles.codeInputSuccess
-                                    : ""
+                                status === "success" ? styles.codeInputSuccess : ""
                             }`}
                             value={d}
                             onChange={(e) => handleChange(i, e.target.value)}

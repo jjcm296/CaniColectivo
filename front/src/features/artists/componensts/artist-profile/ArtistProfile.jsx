@@ -1,10 +1,10 @@
 import styles from "./ArtistProfile.module.css";
 import ArtistProfileHeader
-    from "@/features/artists/artist-profile/components/artist-profile-header/ArtistProfileHeader";
+    from "@/features/artists/componensts/artist-profile/components/artist-profile-header/ArtistProfileHeader";
 import ArtistProfileContact
-    from "@/features/artists/artist-profile/components/artist-profile-contact/ArtistProfileContact";
+    from "@/features/artists/componensts/artist-profile/components/artist-profile-contact/ArtistProfileContact";
 import ArtistProfileDetails
-    from "@/features/artists/artist-profile/components/artist-profile-details/ArtistProfileDetails";
+    from "@/features/artists/componensts/artist-profile/components/artist-profile-details/ArtistProfileDetails";
 
 export default function ArtistProfile({ artist, isOwner = false }) {
     if (!artist) return null;
