@@ -13,7 +13,6 @@ export async function registerUser(data) {
 
     if (!res.ok) {
         if (res.status === 403) {
-            // caso especial: ya registrado o no permitido
             throw new Error("REGISTER_FORBIDDEN");
         }
         throw new Error(raw || "Error registering user");
@@ -24,17 +23,54 @@ export async function registerUser(data) {
         return raw;
     }
 }
-export async function loginUser(credentials) {
+
+export async function loginUser(data) {
     const res = await fetch(`${AUTH_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials), // { email, password }
+        body: JSON.stringify(data),
     });
-    if (!res.ok) {
-        const errorText = await res.text().catch(() => "");
-        throw new Error(errorText || "Error al iniciar sesión");
+
+    const raw = await res.text();
+
+    let parsed = null;
+    try {
+        parsed = raw ? JSON.parse(raw) : null;
+    } catch {
+        // no es JSON, se queda en null
     }
-    return res.json();
+
+    console.log("LOGIN API RAW RESPONSE:", res.status, parsed ?? raw);
+
+    if (!res.ok) {
+        // mapeos explícitos por status
+        if (res.status === 401) {
+            throw new Error("INVALID_CREDENTIALS");
+        }
+        if (res.status === 403) {
+            throw new Error("USER_NOT_VERIFIED");
+        }
+
+        console.error("LOGIN API ERROR:", {
+            status: res.status,
+            body: parsed ?? raw,
+        });
+
+        const msg =
+            (parsed && (parsed.message || parsed.error || parsed.code)) ||
+            raw ||
+            res.statusText ||
+            "LOGIN_ERROR";
+
+        throw new Error(msg);
+    }
+
+    if (!parsed) {
+        throw new Error("LOGIN_INVALID_RESPONSE");
+    }
+
+    // aquí esperamos { token, expiresIn }
+    return parsed;
 }
 
 export async function verifyUser({ email, verificationCode }) {
