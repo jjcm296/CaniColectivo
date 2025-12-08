@@ -1,12 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { registerUser, loginUser } from "@/features/auth/api/authApi";
 
 const TOKEN_KEY = "authToken";
 const TOKEN_EXP_KEY = "authTokenExpiration";
 
-export function useAuth() {
+const AuthContext = createContext(null);
+
+export function AuthProvider({ children }) {
     const [token, setToken] = useState(null);
     const [tokenExpiration, setTokenExpiration] = useState(null);
     const [isAuth, setIsAuth] = useState(false);
@@ -50,8 +58,9 @@ export function useAuth() {
             const res = await registerUser(data);
             return { ok: true, data: res };
         } catch (err) {
-            setAuthError(err?.message || "Error al registrar usuario");
-            return { ok: false, error: err?.message || "Error al registrar usuario" };
+            const msg = err?.message || "Error al registrar usuario";
+            setAuthError(msg);
+            return { ok: false, error: msg };
         } finally {
             setIsLoading(false);
         }
@@ -63,7 +72,6 @@ export function useAuth() {
             setAuthError(null);
             try {
                 const res = await loginUser(credentials);
-                // res: { token, expiresIn }
 
                 if (!res || !res.token) {
                     throw new Error("TOKEN_NOT_PROVIDED");
@@ -78,9 +86,10 @@ export function useAuth() {
                 handleAuthSuccess(res.token, expirationTime);
                 return { ok: true, data: res };
             } catch (err) {
+                const msg = err?.message || "Error al iniciar sesión";
                 console.log("LOGIN ERROR:", err);
-                setAuthError(err?.message || "Error al iniciar sesión");
-                return { ok: false, error: err?.message || "Error al iniciar sesión" };
+                setAuthError(msg);
+                return { ok: false, error: msg };
             } finally {
                 setIsLoading(false);
             }
@@ -100,7 +109,7 @@ export function useAuth() {
         }
     }, []);
 
-    return {
+    const value = {
         token,
         tokenExpiration,
         isAuth,
@@ -110,4 +119,14 @@ export function useAuth() {
         login,
         logout,
     };
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+    const ctx = useContext(AuthContext);
+    if (!ctx) {
+        throw new Error("useAuth must be used within AuthProvider");
+    }
+    return ctx;
 }
