@@ -3,7 +3,7 @@
     padding: 15px 10px 50px;
 }
 
-/* Header del grid (título + botón recargar) */
+/* Header */
 .gridHeader {
     display: flex;
     align-items: center;
@@ -17,27 +17,10 @@
     margin: 0;
 }
 
-/* Botón recargar */
-.reloadButton {
-    background: #000;
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: opacity 0.2s ease;
-}
-
-.reloadButton:hover {
-    opacity: 0.8;
-}
-
-/* === AQUÍ EL CAMBIO IMPORTANTE === */
+/* GRID */
 .grid {
     display: grid;
     gap: 16px;
-    /* columnas de ancho fijo (~260px) y siempre alineadas a la izquierda */
     grid-template-columns: repeat(auto-fill, minmax(260px, 260px));
     justify-content: flex-start;
 }
@@ -58,6 +41,30 @@
     padding: 32px 16px;
     font-size: 1rem;
     color: #d32f2f;
+}
+
+/* === SKELETON CARD === */
+.skeletonCard {
+    width: 260px;
+    height: 310px;
+    border-radius: 14px;
+    background: linear-gradient(
+            90deg,
+            #e0e0e0 0%,
+            #f5f5f5 50%,
+            #e0e0e0 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 /* Tablet */
