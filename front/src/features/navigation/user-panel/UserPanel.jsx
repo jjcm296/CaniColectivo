@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PanelAvatar from "@/features/navigation/panel-avatar/PanelAvatar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 import styles from "./UserPanel.module.css";
 
 export default function UserPanel({ open, onClose, user }) {
     const router = useRouter();
     const { logout } = useAuth();
+    const { showLoading, showSuccess, showError, hide } = useFeedback();
 
     const handleBackdropClick = (event) => {
         if (event.target === event.currentTarget && onClose) {
@@ -16,10 +18,22 @@ export default function UserPanel({ open, onClose, user }) {
         }
     };
 
-    const handleLogout = () => {
-        logout();
-        onClose?.();
-        router.push("/");
+    const handleLogout = async () => {
+        try {
+            showLoading("Cerrando sesión...");
+
+            await logout();
+
+            hide();
+            showSuccess("Sesión cerrada. Vuelve pronto a CANI.");
+
+            onClose?.();
+            router.push("/");
+        } catch (error) {
+            console.error("Error al cerrar sesión:", error);
+            hide();
+            showError("No pudimos cerrar tu sesión. Intenta de nuevo.");
+        }
     };
 
     const name = user?.name || "Invitado";
