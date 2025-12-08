@@ -1,8 +1,10 @@
 package com.canicolectivo.caniweb.controller;
 
+import com.canicolectivo.caniweb.dto.artist.ApproveArtistDTO;
 import com.canicolectivo.caniweb.dto.artist.ArtistDTO;
 import com.canicolectivo.caniweb.model.User;
 import com.canicolectivo.caniweb.service.ArtistService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -59,16 +61,27 @@ public class ArtistController {
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-
-    /*
-
     @GetMapping("/pending")
     @PreAuthorize("hasRole('ADMIN')")
     public List<ArtistDTO> getPending() {
+        return artistService.findPendingArtists();
 
     }
 
-     */
+    @PostMapping("/{id}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> approve(@PathVariable Integer id, @Valid @RequestBody ApproveArtistDTO approveArtistDTO) {
+        try {
+            boolean result = artistService.processApproval(id, approveArtistDTO.getApproved());
+
+            if (approveArtistDTO.getApproved()) {
+                return result ? ResponseEntity.ok("Artist is approved") : ResponseEntity.badRequest().build();
+            } else {
+                return ResponseEntity.ok("Artist was rejected");
+            }
+        } catch (Exception e) {
+            return ResponseEntity. badRequest().body("Error processing approval: " + e.getMessage());        }
+    }
 
 
 

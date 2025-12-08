@@ -15,4 +15,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Integer> {
     @Query(value = "SELECT * FROM artists WHERE approved = true ORDER BY RANDOM() LIMIT :limit", nativeQuery = true)
     List<Artist> findRandomApprovedArtists(int limit);
 
+    @Query("SELECT a FROM Artist a JOIN PendingArtist p ON a.id = p.artistId WHERE p.pending = true ORDER BY p.createdAt ASC")
+    List<Artist> findPendingArtists();
+
 }
