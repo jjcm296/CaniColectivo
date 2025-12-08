@@ -9,11 +9,16 @@ import styles from "./NavBar.module.css";
 import UserAvatar from "./user-avatar/UserAvatar";
 import UserPanel from "@/features/navigation/user-panel/UserPanel";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useCurrentUser } from "@/features/artists/hooks/useCurrentUser";
+import PendingArtistsBell from "@/features/artists/componensts/pending/PendingArtistsBell";
+import {
+    getPendingArtists, // usamos la lista para asegurar el número
+    getPendingArtistsCount, // lo puedes dejar para uso futuro
+} from "@/features/artists/api/artistAdminApi";
 
 export default function NavBar() {
     const pathname = usePathname();
 
-    // Ocultar navbar en páginas de auth
     const hideNavbar =
         pathname?.startsWith("/auth") ||
         pathname === "/auth" ||
@@ -21,18 +26,14 @@ export default function NavBar() {
 
     if (hideNavbar) return null;
 
-    // Datos mock del usuario (puedes reemplazar luego con uno real)
-    const user = {
-        name: "JordaIn",
-        imageUrl: null,
-    };
-
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [userPanelOpen, setUserPanelOpen] = useState(false);
 
-    // ✅ Aquí obtenemos el estado real de autenticación
+    const [pendingCount, setPendingCount] = useState(0);
+
     const { isAuth: isAuthenticated } = useAuth();
+    const { user: currentUser, isLoadingUser, token } = useCurrentUser();
 
     const left = [
         { href: "/", label: "Inicio" },
@@ -77,15 +78,67 @@ export default function NavBar() {
         }
     };
 
+    const displayName =
+        currentUser?.artist?.name ||
+        currentUser?.username ||
+        currentUser?.email ||
+        "Usuario";
+
+    const avatarImage = currentUser?.artist?.photoUrl || null;
+
+    // roles puede ser array o un objeto
+    const roleNames = Array.isArray(currentUser?.roles)
+        ? currentUser.roles.map((r) => r.name)
+        : currentUser?.roles?.name
+            ? [currentUser.roles.name]
+            : [];
+
+    const isAdmin =
+        roleNames.includes("admin") || roleNames.includes("ROLE_ADMIN");
+
+    // 🔹 Cargamos la lista de pendientes al montar NavBar (solo admins autenticados)
+    useEffect(() => {
+        if (!token || !isAuthenticated || !isAdmin) {
+            setPendingCount(0);
+            return;
+        }
+
+        let cancelled = false;
+
+        async function loadPendingCount() {
+            // opción robusta: sacamos el número desde la lista
+            const res = await getPendingArtists(token);
+
+            if (cancelled) return;
+
+            if (res.ok && Array.isArray(res.data)) {
+                setPendingCount(res.data.length);
+            } else {
+                setPendingCount(0);
+            }
+        }
+
+        loadPendingCount();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [token, isAuthenticated, isAdmin]);
+
     return (
         <>
             <header
-                className={`${styles.nbWrapper} ${scrolled ? styles.nbScrolled : ""}`}
+                className={`${styles.nbWrapper} ${
+                    scrolled ? styles.nbScrolled : ""
+                }`}
             >
                 <div className={styles.nbInner}>
-                    {/* LOGO */}
                     <div className={styles.nbBrand}>
-                        <Link href="/" className={styles.nbBrandLink} onClick={closeMenu}>
+                        <Link
+                            href="/"
+                            className={styles.nbBrandLink}
+                            onClick={closeMenu}
+                        >
                             <Image
                                 src="/home/Logo_cani.svg"
                                 alt="Logo"
@@ -97,7 +150,6 @@ export default function NavBar() {
                         </Link>
                     </div>
 
-                    {/* MENÚ DESKTOP */}
                     <nav className={styles.nbNav} aria-label="Principal">
                         {left.map((l) => {
                             if (l.href === "/#footer") {
@@ -133,12 +185,20 @@ export default function NavBar() {
                         })}
                     </nav>
 
-                    {/* ACCIONES DERECHA */}
                     <div className={styles.nbActions}>
+                        {isAuthenticated && isAdmin && token && (
+                            <div className={styles.nbNotifSlot}>
+                                <PendingArtistsBell
+                                    token={token}
+                                    initialCount={pendingCount}
+                                />
+                            </div>
+                        )}
+
                         {isAuthenticated ? (
                             <UserAvatar
-                                name={user.name}
-                                imageUrl={user.imageUrl}
+                                name={isLoadingUser ? "Cargando..." : displayName}
+                                imageUrl={avatarImage}
                                 href="/profile"
                                 onClick={() => setUserPanelOpen((v) => !v)}
                                 showLabel={true}
@@ -161,7 +221,6 @@ export default function NavBar() {
                         )}
                     </div>
 
-                    {/* BOTÓN MENÚ MÓVIL */}
                     <button
                         className={styles.nbToggle}
                         aria-label="Abrir menú"
@@ -175,7 +234,6 @@ export default function NavBar() {
                     </button>
                 </div>
 
-                {/* PANEL MÓVIL */}
                 <div
                     id="menu-movil"
                     className={`${styles.nbPanel} ${
@@ -219,7 +277,9 @@ export default function NavBar() {
             <UserPanel
                 open={userPanelOpen}
                 onClose={() => setUserPanelOpen(false)}
-                user={user}
+                user={currentUser}
+                isAdmin={isAdmin}
+                token={token}
             />
         </>
     );

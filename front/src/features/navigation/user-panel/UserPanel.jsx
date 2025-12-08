@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import PanelAvatar from "@/features/navigation/panel-avatar/PanelAvatar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
+import PendingArtistsBell from "@/features/artists/componensts/pending/PendingArtistsBell";
 import styles from "./UserPanel.module.css";
 
-export default function UserPanel({ open, onClose, user }) {
+export default function UserPanel({ open, onClose, user, isAdmin, token }) {
     const router = useRouter();
     const { logout } = useAuth();
     const { showLoading, showSuccess, showError, hide } = useFeedback();
@@ -36,19 +37,45 @@ export default function UserPanel({ open, onClose, user }) {
         }
     };
 
-    const name = user?.name || "Invitado";
-    const firstName = name.split(" ")[0] || "Invitado";
+    // Mismo criterio que en el NavBar
+    const displayName =
+        user?.artist?.name || user?.username || user?.email || "Invitado";
+    const firstName = displayName.split(" ")[0] || "Invitado";
 
     const accountLinks = [
-        { href: "/profile", label: "Ver perfil", description: "Edita tus datos y tu bio" },
-        { href: "/events", label: "Mis eventos", description: "Revisa tus eventos y participaciones" },
-        { href: "/settings", label: "Configuración", description: "Preferencias de cuenta y privacidad" },
+        {
+            href: "/profile",
+            label: "Ver perfil",
+            description: "Edita tus datos y tu bio",
+        },
+        {
+            href: "/events",
+            label: "Mis eventos",
+            description: "Revisa tus eventos y participaciones",
+        },
+        {
+            href: "/settings",
+            label: "Configuración",
+            description: "Preferencias de cuenta y privacidad",
+        },
     ];
 
     const exploreLinks = [
-        { href: "/artists", label: "Explorar artistas", description: "Descubre nuevos proyectos y colectivos" },
-        { href: "/events", label: "Explorar eventos", description: "Encuentra eventos y exposiciones" },
-        { href: "/#footer", label: "Contacto", description: "Escríbenos para soporte o colaboraciones" },
+        {
+            href: "/artists",
+            label: "Explorar artistas",
+            description: "Descubre nuevos proyectos y colectivos",
+        },
+        {
+            href: "/events",
+            label: "Explorar eventos",
+            description: "Encuentra eventos y exposiciones",
+        },
+        {
+            href: "/#footer",
+            label: "Contacto",
+            description: "Escríbenos para soporte o colaboraciones",
+        },
     ];
 
     return (
@@ -63,7 +90,13 @@ export default function UserPanel({ open, onClose, user }) {
                 onClick={(e) => e.stopPropagation()}
             >
                 <header className={styles.topBar}>
-                    <span className={styles.topTitle}>{name}</span>
+                    <span className={styles.topTitle}>{displayName}</span>
+
+                    {/* Campanita dentro del panel lateral solo para admin */}
+                    {isAdmin && token && (
+                        <PendingArtistsBell token={token} />
+                    )}
+
                     <button
                         type="button"
                         className={styles.closeButton}
@@ -77,8 +110,8 @@ export default function UserPanel({ open, onClose, user }) {
                 <section className={styles.profileSection}>
                     <div>
                         <PanelAvatar
-                            name={name}
-                            imageUrl={user?.imageUrl}
+                            name={displayName}
+                            imageUrl={user?.artist?.photoUrl}
                             href="/profile"
                             showLabel={false}
                         />
@@ -128,12 +161,21 @@ export default function UserPanel({ open, onClose, user }) {
                                     className={styles.cardItem}
                                     onClick={onClose}
                                 >
-                                    <div className={styles.cardIcon} aria-hidden="true">
+                                    <div
+                                        className={styles.cardIcon}
+                                        aria-hidden="true"
+                                    >
                                         <span className={styles.iconDot} />
                                     </div>
                                     <div className={styles.cardText}>
-                                        <span className={styles.cardTitle}>{item.label}</span>
-                                        <span className={styles.cardDescription}>
+                                        <span className={styles.cardTitle}>
+                                            {item.label}
+                                        </span>
+                                        <span
+                                            className={
+                                                styles.cardDescription
+                                            }
+                                        >
                                             {item.description}
                                         </span>
                                     </div>
@@ -152,12 +194,21 @@ export default function UserPanel({ open, onClose, user }) {
                                     className={styles.cardItem}
                                     onClick={onClose}
                                 >
-                                    <div className={styles.cardIcon} aria-hidden="true">
+                                    <div
+                                        className={styles.cardIcon}
+                                        aria-hidden="true"
+                                    >
                                         <span className={styles.iconDot} />
                                     </div>
                                     <div className={styles.cardText}>
-                                        <span className={styles.cardTitle}>{item.label}</span>
-                                        <span className={styles.cardDescription}>
+                                        <span className={styles.cardTitle}>
+                                            {item.label}
+                                        </span>
+                                        <span
+                                            className={
+                                                styles.cardDescription
+                                            }
+                                        >
                                             {item.description}
                                         </span>
                                     </div>

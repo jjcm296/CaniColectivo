@@ -301,6 +301,19 @@
     box-shadow: 0 12px 34px rgba(233, 90, 13, 0.45);
 }
 
+.nbActions {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.nbNotifSlot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media (max-width: 720px) {
     .nbInner {
         padding: 6px 12px;
