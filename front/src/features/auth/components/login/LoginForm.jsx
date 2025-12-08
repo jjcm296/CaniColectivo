@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import styles from "./LoginForm.module.css";
 import AuthSidePanel from "../auth-side-panel/AuthSidePanel";
 import BackButton from "@/features/ui/back-button/BackButton";
@@ -11,15 +11,12 @@ import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 const GENERIC_ERROR =
     "No pudimos iniciar tu sesión. Revisa tu correo y contraseña.";
 
-export default function LoginForm() {
+export default function LoginForm({ initialEmail = "" }) {
     const router = useRouter();
-    const searchParams = useSearchParams();
-
-    const emailFromQuery = searchParams?.get("email") || "";
     const { login, isLoading } = useAuth();
     const { showLoading, showSuccess, showError, hide } = useFeedback();
 
-    const [email, setEmail] = useState(emailFromQuery);
+    const [email, setEmail] = useState(initialEmail);
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
     const [formError, setFormError] = useState("");
