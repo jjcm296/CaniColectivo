@@ -14,8 +14,7 @@ BaseURL: `http://localhost:8080/api`
 
 Routes that marked with auth, admin or artist in authorization use Bearer Token.
 
-[Postman API URL](https://www.postman.com/satellite-candidate-66062631/cani/example/28587478-1e81788e-2d47-400f-a9b1-353ffdd822dc/caniapi?action=share&creator=28587478&ctx=documentation)
-
+[Postman API URL](https://www.postman.com/satellite-candidate-66062631/cani/collection/28587478-70ed0601-87de-4dbe-8630-ade44b96defe/?action=share&creator=28587478)
 ### Authetication
 | Purpose                                | Authorization | Method | Route          | Consumes                    | Returns                                          |
 |----------------------------------------|---------------|--------|----------------|-----------------------------|--------------------------------------------------|
@@ -30,12 +29,13 @@ Routes that marked with auth, admin or artist in authorization use Bearer Token.
 | Get all users registered in the system | admin         | GET    | /users    | Nothing  | [ ]                                                                                                                                                            |
 
 ### Artist
-| Purpose                        | Authorization | Method | Route                 | Consumes                                                                                    | Returns                                                                                         |
-|--------------------------------|---------------|--------|-----------------------|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| Create artist's profile        | auth          | POST   | /artists              | { name*, location*, description, phone, photoUrl, socialMedia: { }, specialities: [ { } ] } | {id, name, location, description, approved, phone, photoUrl, socialMedia, userId, specialities} | 
-| Get all (approved) artists     | no auth       | GET    | /artists              | Nothing                                                                                     | Array of artist objects                                                                         |
-| Get pending unapproved artists | admin         | GET    | /artists/pending      | Nothing                                                                                     | Array of artist objects                                                                         |
-| Approve or reject an artist    | admin         | POST   | /artists/{id}/approve | `{"isApproved":true}` or `{"isApproved":false}`                                             | 200 OK Code and message                                                                         |
+| Purpose                        | Authorization | Method | Route                   | Consumes                                                                                    | Returns                                                                                         |
+|--------------------------------|---------------|--------|-------------------------|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| Create artist's profile        | auth          | POST   | /artists                | { name*, location*, description, phone, photoUrl, socialMedia: { }, specialities: [ { } ] } | {id, name, location, description, approved, phone, photoUrl, socialMedia, userId, specialities} | 
+| Get all (approved) artists     | no auth       | GET    | /artists                | Nothing                                                                                     | Array of artist objects                                                                         |
+| Get pending unapproved artists | admin         | GET    | /artists/pending        | Nothing                                                                                     | Array of artist objects                                                                         |
+| Approve or reject an artist    | admin         | POST   | /artists/{id}/approve   | `{"isApproved":true}` or `{"isApproved":false}`                                             | 200 OK Code and message                                                                         |
+| Get pending artists count      | admin         | GET    | /artists/pending/count  | Nothing                                                                                     | Integer                                                                                         |
 
 *name and location are required
 
