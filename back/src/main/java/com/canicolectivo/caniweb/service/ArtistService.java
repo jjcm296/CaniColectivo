@@ -39,7 +39,7 @@ public class ArtistService {
 
     public List<ArtistDTO> findAllApprovedRandom() {
         return artistRepository.findApprovedArtistsRandomOrder(). stream()
-                . map(ArtistDTO::formEntity). toList();
+                . map(ArtistDTO::formEntity).toList();
     }
 
     public List<ArtistDTO> findAllApprovedRandom(int limit) {
@@ -47,15 +47,22 @@ public class ArtistService {
             return List.of();
         }
         return artistRepository.findRandomApprovedArtists(limit). stream()
-                . map(ArtistDTO::formEntity). toList();
+                . map(ArtistDTO::formEntity).toList();
     }
 
+    public List<ArtistDTO> findPendingArtists() {
+        return artistRepository.findPendingArtists().stream()
+                .map(ArtistDTO::formEntity)
+                .toList();
+    }
+
+    public Integer getPendingCount() {
+        return pendingArtistRepository.countByPending(true);
+    }
 
     public Optional<ArtistDTO> findById(Integer id) {
         return artistRepository.findById(id).map(ArtistDTO::formEntity);
     }
-
-
 
     @Transactional
     public ArtistDTO create(ArtistDTO dto, User currentUser) {
@@ -163,27 +170,21 @@ public class ArtistService {
     }
 
     @Transactional
-    public Optional<ArtistDTO> approveArtist(Integer id) {
+    public boolean processApproval(Integer id, boolean isApproved) {
         return artistRepository.findById(id)
                 .map(artist -> {
-                   artist.setApproved(true);
-                   Artist saved = artistRepository.save(artist);
-
-                   return ArtistDTO.formEntity(saved);
-
-                });
-    }
-
-    @Transactional
-    public Optional<ArtistDTO> rejectArtist(Integer id) {
-        return artistRepository.findById(id)
-                .map(artist -> {
+                    if (isApproved) {
+                        artist.setApproved(true);
+                        artistRepository.save(artist);
+                    }
 
                     pendingArtistRepository.deleteByArtistId(id);
 
-                    return ArtistDTO. formEntity(artist);
-                });
+                    return isApproved;
+                }).orElseThrow();
     }
+
+
 
     private String normalizeName(String name) {
         if (name == null || name.isBlank()) return name;

@@ -52,7 +52,7 @@ public class SecurityConfiguration {
                         // PROTEGIDOS
                         .requestMatchers("/users/me").authenticated()
                         .requestMatchers(HttpMethod.POST, "/artists").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/artists/*/verify").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/artists/*/approve").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()

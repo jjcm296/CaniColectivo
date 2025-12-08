@@ -1,4 +1,13 @@
 # CaniColectivo
+This repo is for CANI Colectivo Web page, a non-profit organization dedicated to the dissemination, collaboration and strengthening of artistic talent in southern Veracruz.
+
+## Team members
+* [Antonio Gálvez Oliver Bryan](https://github.com/OliverAntonio)
+* [Avendaño Rodríguez Joseph Javier](https://github.com/josephaven)
+* [Cruz Mendoza Jordan Jair](https://github.com/jjcm296)
+* [Hernández Suárez Zuzzet](https://github.com/zuzzet514)
+* [Landa Solano Ricardo](https://github.com/RickLanda)
+
 
 ## API Routes
 BaseURL: `http://localhost:8080/api`
@@ -21,10 +30,13 @@ Routes that marked with auth, admin or artist in authorization use Bearer Token.
 | Get all users registered in the system | admin         | GET    | /users    | Nothing  | [ ]                                                                                                                                                            |
 
 ### Artist
-| Purpose                 | Authorization | Method | Route    | Consumes                                                                                   | Returns                                                                                         |
-|-------------------------|---------------|--------|----------|--------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| Create artist's profile | auth          | POST   | /artists | { name*, location, description, phone, photoUrl, socialMedia: { }, specialities: [ { } ] } | {id, name, location, description, approved, phone, photoUrl, socialMedia, userId, specialities} | 
-* name is required
+| Purpose                        | Authorization | Method | Route                 | Consumes                                                                                    | Returns                                                                                         |
+|--------------------------------|---------------|--------|-----------------------|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| Create artist's profile        | auth          | POST   | /artists              | { name*, location*, description, phone, photoUrl, socialMedia: { }, specialities: [ { } ] } | {id, name, location, description, approved, phone, photoUrl, socialMedia, userId, specialities} | 
+| Get all (approved) artists     | no auth       | GET    | /artists              | Nothing                                                                                     | Array of artist objects                                                                         |
+| Get pending unapproved artists | admin         | GET    | /artists/pending      | Nothing                                                                                     | Array of artist objects                                                                         |
+| Approve or reject an artist    | admin         | POST   | /artists/{id}/approve | `{"isApproved":true}` or `{"isApproved":false}`                                             | 200 OK Code and message                                                                         |
+*name and location are required
 
 ### Specialities
 | Purpose                 | Authorization | Method | Route               | Consumes | Returns       |
