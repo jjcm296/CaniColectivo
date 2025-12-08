@@ -23,17 +23,18 @@ public class CloudflareService {
     private final S3Client s3Client;
 
     public CloudflareService() {
-        Dotenv dotenv = Dotenv.load();
+        // 1) Cargar .env SOLO si existe, sin tronar
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMissing()    // en Render no habrá .env
+                .ignoreIfMalformed()  // por si acaso
+                .load();
 
-        // Endpoint interno para SUBIR archivos (API S3 de Cloudflare)
-        String s3Endpoint = dotenv.get("CLOUDFLARE_S3_ENDPOINT");
-
-        // URL pública base para mostrar las imágenes
-        this.publicUrl = dotenv.get("CLOUDFLARE_PUBLIC_URL");
-
-        this.bucketName = dotenv.get("CLOUDFLARE_BUCKET_NAME");
-        String access   = dotenv.get("CLOUDFLARE_ACCESS_KEY");
-        String secret   = dotenv.get("CLOUDFLARE_SECRET_KEY");
+        // Leer primero de variables de entorno (Render), si no, del .env (local)
+        String s3Endpoint = getConfig("CLOUDFLARE_S3_ENDPOINT", dotenv);
+        this.publicUrl   = getConfig("CLOUDFLARE_PUBLIC_URL", dotenv);
+        this.bucketName  = getConfig("CLOUDFLARE_BUCKET_NAME", dotenv);
+        String access    = getConfig("CLOUDFLARE_ACCESS_KEY", dotenv);
+        String secret    = getConfig("CLOUDFLARE_SECRET_KEY", dotenv);
 
         AwsBasicCredentials creds = AwsBasicCredentials.create(access, secret);
 
@@ -44,24 +45,37 @@ public class CloudflareService {
                 .build();
     }
 
+    /**
+     * Intenta leer primero de System.getenv() (Render),
+     * si no existe, lo toma del archivo .env (local).
+     * Si no está en ninguno, lanza error claro.
+     */
+    private String getConfig(String key, Dotenv dotenv) {
+        String fromEnv = System.getenv(key);
+        if (fromEnv != null && !fromEnv.isBlank()) {
+            return fromEnv;
+        }
+
+        String fromDotenv = dotenv.get(key);
+        if (fromDotenv != null && !fromDotenv.isBlank()) {
+            return fromDotenv;
+        }
+
+        throw new IllegalStateException("Missing required config: " + key);
+    }
+
     // ============================================================
     // SUBIR IMAGEN A CLOUDFLARE R2
     // ============================================================
     public String uploadImage(MultipartFile file) throws IOException {
 
-        // ==========================
-        // GENERAR KEY ÚNICO
-        // ==========================
-        // Antes: banners/ + nombreOriginal  (sobrescribía si se repetía el nombre)
-        // Ahora: banners/ + UUID + extensión (siempre es único)
         String originalName = file.getOriginalFilename();
         String extension = "";
 
         if (originalName != null && originalName.contains(".")) {
-            extension = originalName.substring(originalName.lastIndexOf(".")); // incluye el punto, ej: ".jpeg"
+            extension = originalName.substring(originalName.lastIndexOf(".")); // ".jpeg", ".png", etc.
         }
 
-        // Ejemplo final: banners/550e8400-e29b-41d4-a716-446655440000.jpeg
         String key = "banners/" + UUID.randomUUID() + extension;
 
         try {
@@ -86,16 +100,14 @@ public class CloudflareService {
     // ============================================================
     public void deleteByUrl(String url) throws IOException {
         if (url == null || url.isBlank()) {
-            return; // nada que borrar
+            return;
         }
 
         if (!url.startsWith(publicUrl)) {
             throw new IOException("La URL no pertenece a la URL pública configurada de Cloudflare");
         }
 
-        // Extrae el key quitando la parte de la URL base
         String key = url.substring(publicUrl.length() + 1); // +1 por la barra "/"
-
         deleteByKey(key);
     }
 
