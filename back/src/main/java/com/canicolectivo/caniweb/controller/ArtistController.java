@@ -1,9 +1,10 @@
 package com.canicolectivo.caniweb.controller;
 
-import com.canicolectivo.caniweb.dto.ArtistDTO;
+import com.canicolectivo.caniweb.dto.artist.ArtistDTO;
 import com.canicolectivo.caniweb.model.User;
 import com.canicolectivo.caniweb.service.ArtistService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,11 @@ public class ArtistController {
     }
 
     @GetMapping
+    public List<ArtistDTO> getAllApproved() {
+        return artistService.findAllApprovedRandom();
+    }
+
+    @GetMapping("/all")
     public List<ArtistDTO> getAll() {
         return artistService.findAll();
     }
@@ -51,5 +57,15 @@ public class ArtistController {
         boolean deleted = artistService.delete(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
+    /*
+
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ArtistDTO> getPending() {
+
+    }
+
+     */
 
 }

@@ -1,7 +1,7 @@
 package com.canicolectivo.caniweb.controller;
 
 import com.canicolectivo.caniweb.Enum.TypeSpeciality;
-import com.canicolectivo.caniweb.dto.SpecialityDTO;
+import com.canicolectivo.caniweb.dto.artist.SpecialityDTO;
 import com.canicolectivo.caniweb.service.SpecialityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

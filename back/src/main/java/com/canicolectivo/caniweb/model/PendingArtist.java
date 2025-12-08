@@ -27,7 +27,7 @@ public class PendingArtist {
 
     public PendingArtist() {}
 
-    public PendingArtist(Integer artistId, LocalDateTime createdAt) {
+    public PendingArtist(Integer artistId) {
         this.artistId = artistId;
         this.createdAt = LocalDateTime.now();
     }

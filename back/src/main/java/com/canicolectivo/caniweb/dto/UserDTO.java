@@ -1,5 +1,6 @@
 package com.canicolectivo.caniweb.dto;
 
+import com.canicolectivo.caniweb.dto.artist.ArtistDTO;
 import com.canicolectivo.caniweb.model.User;
 
 import java.util.Set;
