@@ -6,9 +6,19 @@ import styles from "./RegisterForm.module.css";
 import AuthSidePanel from "../../auth-side-panel/AuthSidePanel";
 import BackButton from "@/features/ui/back-button/BackButton";
 import { registerUser } from "@/features/auth/api/authApi";
+import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
+
+const REGISTER_MESSAGES = {
+    loading: "Creando tu cuenta en CANI...",
+    success: "Te enviamos un código de verificación a tu correo.",
+    redirectLogin:
+        "Ya existe una cuenta con este correo. Inicia sesión para continuar.",
+    defaultError: "No pudimos completar tu registro. Intenta de nuevo.",
+};
 
 export default function RegisterForm() {
     const router = useRouter();
+    const { showLoading, showSuccess, showError, hide } = useFeedback();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -28,7 +38,8 @@ export default function RegisterForm() {
         else if (password.length < 8) e.password = "Mínimo 8 caracteres.";
 
         if (!passwordConfirm) e.passwordConfirm = "Confirma tu contraseña.";
-        else if (password !== passwordConfirm) e.passwordConfirm = "No coinciden.";
+        else if (password !== passwordConfirm)
+            e.passwordConfirm = "No coinciden.";
 
         setErrors(e);
         return Object.keys(e).length === 0;
@@ -42,26 +53,39 @@ export default function RegisterForm() {
 
         try {
             setSubmitting(true);
+            showLoading(REGISTER_MESSAGES.loading);
 
             await registerUser({
                 email,
                 password,
             });
 
-            // Guardar credenciales temporales para el login automático
+            hide();
+            showSuccess(REGISTER_MESSAGES.success);
+
+            // Guardar credenciales temporales para el login automático en validar código
             localStorage.setItem("pendingEmail", email);
             localStorage.setItem("pendingPassword", password);
 
-            router.push(`/auth/validar-codigo?email=${encodeURIComponent(email)}`);
+            router.push(
+                `/auth/validar-codigo?email=${encodeURIComponent(email)}`
+            );
         } catch (err) {
+            hide();
             const msg = err?.message || "";
 
+            // Caso usuario ya registrado → redirigir a login solo con email
             if (msg === "REGISTER_FORBIDDEN") {
-                router.push(`/auth/login?email=${encodeURIComponent(email)}`);
+                showError(REGISTER_MESSAGES.redirectLogin);
+                router.push(
+                    `/auth/login?email=${encodeURIComponent(email)}`
+                );
                 return;
             }
 
-            setFormError(msg || "Error al registrar usuario.");
+            const finalMsg = REGISTER_MESSAGES.defaultError;
+            setFormError(finalMsg);
+            showError(finalMsg);
         } finally {
             setSubmitting(false);
         }
@@ -78,8 +102,8 @@ export default function RegisterForm() {
                     <p className={styles.kicker}>Crear cuenta</p>
                     <h1 className={styles.title}>Únete a la comunidad CANI</h1>
                     <p className={styles.subtitle}>
-                        Regístrate con tu correo para guardar favoritos, seguir artistas y recibir
-                        novedades.
+                        Regístrate con tu correo para guardar favoritos, seguir
+                        artistas y recibir novedades.
                     </p>
                 </header>
 
@@ -96,7 +120,9 @@ export default function RegisterForm() {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="tucorreo@ejemplo.com"
                         />
-                        {errors.email && <p className={styles.error}>{errors.email}</p>}
+                        {errors.email && (
+                            <p className={styles.error}>{errors.email}</p>
+                        )}
                     </div>
 
                     <div className={styles.field}>
@@ -111,29 +137,45 @@ export default function RegisterForm() {
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Mínimo 8 caracteres"
                         />
-                        {errors.password && <p className={styles.error}>{errors.password}</p>}
+                        {errors.password && (
+                            <p className={styles.error}>{errors.password}</p>
+                        )}
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label}>Confirmar contraseña</label>
+                        <label className={styles.label}>
+                            Confirmar contraseña
+                        </label>
                         <input
                             type="password"
                             autoComplete="new-password"
                             className={`${styles.input} ${
-                                errors.passwordConfirm ? styles.inputError : ""
+                                errors.passwordConfirm
+                                    ? styles.inputError
+                                    : ""
                             }`}
                             value={passwordConfirm}
-                            onChange={(e) => setPasswordConfirm(e.target.value)}
+                            onChange={(e) =>
+                                setPasswordConfirm(e.target.value)
+                            }
                             placeholder="Repite tu contraseña"
                         />
                         {errors.passwordConfirm && (
-                            <p className={styles.error}>{errors.passwordConfirm}</p>
+                            <p className={styles.error}>
+                                {errors.passwordConfirm}
+                            </p>
                         )}
                     </div>
 
-                    {formError && <p className={styles.error}>{formError}</p>}
+                    {formError && (
+                        <p className={styles.error}>{formError}</p>
+                    )}
 
-                    <button type="submit" className={styles.submit} disabled={submitting}>
+                    <button
+                        type="submit"
+                        className={styles.submit}
+                        disabled={submitting}
+                    >
                         {submitting ? "Creando cuenta..." : "Crear cuenta"}
                     </button>
 
