@@ -1,79 +1,78 @@
+/* TARJETA GENERAL */
 .card {
     background: #ffffff;
-    padding: 20px;
-    border-radius: 18px;
+    padding: 24px 24px 22px;
+    border-radius: 22px;
     box-shadow: var(--shadow);
+    height: 100%;
 }
 
+/* TÍTULO */
 .cardTitle {
-    margin: 0 0 12px;
-    font-size: 1.1rem;
+    margin: 0 0 14px;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--nv);
 }
 
+/* CONTENEDOR INTERNO */
 .infoGroup {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 18px;
 }
 
+/* FILA DE INFORMACIÓN */
 .row {
     display: flex;
-    gap: 12px;
-    align-items: center;
+    gap: 14px;
+    align-items: flex-start;
 }
 
-/* Burbuja del ícono */
+/* BURBUJA DE ÍCONO */
 .iconWrapper {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 999px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(37, 160, 226, 0.08); /* azul suave */
+    background: rgba(37, 160, 226, 0.08);
 }
 
-/* Ícono SVG de lucide */
 .icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     color: var(--bl);
 }
 
+/* LABEL */
 .label {
     margin: 0;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     color: var(--gr);
     text-transform: uppercase;
 }
 
+/* VALOR (EMAIL, WHATSAPP, ETC.) */
 .value {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--nv);
 }
 
+/* SEPARADOR */
 .divider {
     height: 1px;
     background: #e5e5e5;
+    margin: 6px 0 10px;
 }
 
+/* REDES SOCIALES */
 .socialRow {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
-}
-
-.contactRow {
-    display: grid;
-}
-
-.contact {
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
 }
