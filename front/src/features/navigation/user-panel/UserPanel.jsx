@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import  {useRouter} from 'next/navigation';
-import PanelAvatar from '@/features/navigation/panel-avatar/PanelAvatar';
-import styles from './UserPanel.module.css';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import PanelAvatar from "@/features/navigation/panel-avatar/PanelAvatar";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import styles from "./UserPanel.module.css";
 
 export default function UserPanel({ open, onClose, user }) {
     const router = useRouter();
+    const { logout } = useAuth();
 
     const handleBackdropClick = (event) => {
         if (event.target === event.currentTarget && onClose) {
@@ -14,24 +16,30 @@ export default function UserPanel({ open, onClose, user }) {
         }
     };
 
-    const name = user?.name || 'Invitado';
-    const firstName = name.split(' ')[0] || 'Invitado';
+    const handleLogout = () => {
+        logout();
+        onClose?.();
+        router.push("/");
+    };
+
+    const name = user?.name || "Invitado";
+    const firstName = name.split(" ")[0] || "Invitado";
 
     const accountLinks = [
-        { href: '/profile',   label: 'Ver perfil',        description: 'Edita tus datos y tu bio' },
-        { href: '/events',    label: 'Mis eventos',       description: 'Revisa tus eventos y participaciones' },
-        { href: '/settings',  label: 'Configuración',     description: 'Preferencias de cuenta y privacidad' },
+        { href: "/profile", label: "Ver perfil", description: "Edita tus datos y tu bio" },
+        { href: "/events", label: "Mis eventos", description: "Revisa tus eventos y participaciones" },
+        { href: "/settings", label: "Configuración", description: "Preferencias de cuenta y privacidad" },
     ];
 
     const exploreLinks = [
-        { href: '/artists',   label: 'Explorar artistas', description: 'Descubre nuevos proyectos y colectivos' },
-        { href: '/events',    label: 'Explorar eventos',  description: 'Encuentra eventos y exposiciones' },
-        { href: '/#footer',   label: 'Contacto',          description: 'Escríbenos para soporte o colaboraciones' },
+        { href: "/artists", label: "Explorar artistas", description: "Descubre nuevos proyectos y colectivos" },
+        { href: "/events", label: "Explorar eventos", description: "Encuentra eventos y exposiciones" },
+        { href: "/#footer", label: "Contacto", description: "Escríbenos para soporte o colaboraciones" },
     ];
 
     return (
         <div
-            className={`${styles.backdrop} ${open ? styles.backdropOpen : ''}`}
+            className={`${styles.backdrop} ${open ? styles.backdropOpen : ""}`}
             aria-hidden={!open}
             onClick={handleBackdropClick}
         >
@@ -40,7 +48,6 @@ export default function UserPanel({ open, onClose, user }) {
                 aria-label="Menú de usuario"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Barra superior con nombre y botón cerrar */}
                 <header className={styles.topBar}>
                     <span className={styles.topTitle}>{name}</span>
                     <button
@@ -63,7 +70,7 @@ export default function UserPanel({ open, onClose, user }) {
                         />
                     </div>
                     <div>
-                        <p className={styles.helloText}>¡Hola, {firstName}!</p>
+                        <p className={styles.helloText}>Hola, {firstName}</p>
                         <p className={styles.subHelloText}>
                             Administra tu experiencia en Cani Colectivo
                         </p>
@@ -72,7 +79,7 @@ export default function UserPanel({ open, onClose, user }) {
                         type="button"
                         className={styles.primaryButton}
                         onClick={() => {
-                            router.push('/profile');
+                            router.push("/profile");
                             onClose?.();
                         }}
                     >
@@ -89,18 +96,13 @@ export default function UserPanel({ open, onClose, user }) {
                         <button
                             type="button"
                             className={styles.secondaryButton}
-                            onClick={() => {
-                                // lógica de logout después
-                                console.log('Logout...');
-                                onClose?.();
-                            }}
+                            onClick={handleLogout}
                         >
-                            Salir
+                            Cerrar sesión
                         </button>
                     </div>
                 </section>
 
-                {/* Secciones de opciones */}
                 <nav className={styles.nav}>
                     <div className={styles.navBlock}>
                         <h3 className={styles.blockTitle}>Tu cuenta</h3>

@@ -1,83 +1,89 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import styles from './NavBar.module.css';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import styles from "./NavBar.module.css";
 
-import UserAvatar from './user-avatar/UserAvatar';
-import UserPanel from '@/features/navigation/user-panel/UserPanel';
+import UserAvatar from "./user-avatar/UserAvatar";
+import UserPanel from "@/features/navigation/user-panel/UserPanel";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function NavBar() {
     const pathname = usePathname();
 
+    // Ocultar navbar en páginas de auth
     const hideNavbar =
-        pathname?.startsWith('/auth') ||
-        pathname === '/auth' ||
+        pathname?.startsWith("/auth") ||
+        pathname === "/auth" ||
         pathname === null;
 
     if (hideNavbar) return null;
 
+    // Datos mock del usuario (puedes reemplazar luego con uno real)
     const user = {
-        name: 'JordaIn',
+        name: "JordaIn",
         imageUrl: null,
     };
 
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [userPanelOpen, setUserPanelOpen] = useState(false);
-    
 
-    const isAuthenticated = false;
+    // ✅ Aquí obtenemos el estado real de autenticación
+    const { isAuth: isAuthenticated } = useAuth();
 
     const left = [
-        { href: '/', label: 'Inicio' },
-        { href: '/artists', label: 'Artistas' },
-        { href: '/events', label: 'Eventos' },
-        { href: '/about', label: 'Nosotros' },
-        { href: '/gallery', label: 'Galería' },
-        { href: '/#footer', label: 'Contacto' },
+        { href: "/", label: "Inicio" },
+        { href: "/artists", label: "Artistas" },
+        { href: "/events", label: "Eventos" },
+        { href: "/about", label: "Nosotros" },
+        { href: "/gallery", label: "Galería" },
+        { href: "/#footer", label: "Contacto" },
     ];
 
     const right = [
-        { href: '/auth/login', label: 'Iniciar sesión' },
-        { href: '/auth/register', label: 'Registrarse' },
+        { href: "/auth/login", label: "Iniciar sesión" },
+        { href: "/auth/register", label: "Registrarse" },
     ];
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 10);
-        window.addEventListener('scroll', onScroll);
-        return () => window.removeEventListener('scroll', onScroll);
+        window.addEventListener("scroll", onScroll);
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
     useEffect(() => {
         if (userPanelOpen) {
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = "hidden";
         } else {
-            document.body.style.overflow = '';
+            document.body.style.overflow = "";
         }
         return () => {
-            document.body.style.overflow = '';
+            document.body.style.overflow = "";
         };
     }, [userPanelOpen]);
 
     const isActive = (href) =>
-        href === '/' ? pathname === '/' : pathname?.startsWith(href);
+        href === "/" ? pathname === "/" : pathname?.startsWith(href);
 
     const closeMenu = () => setOpen(false);
 
     const scrollToFooter = () => {
-        const el = document.getElementById('footer');
+        const el = document.getElementById("footer");
         if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
+            el.scrollIntoView({ behavior: "smooth" });
         }
     };
 
     return (
         <>
-            <header className={`${styles.nbWrapper} ${scrolled ? styles.nbScrolled : ''}`}>
+            <header
+                className={`${styles.nbWrapper} ${scrolled ? styles.nbScrolled : ""}`}
+            >
                 <div className={styles.nbInner}>
+                    {/* LOGO */}
                     <div className={styles.nbBrand}>
                         <Link href="/" className={styles.nbBrandLink} onClick={closeMenu}>
                             <Image
@@ -91,16 +97,17 @@ export default function NavBar() {
                         </Link>
                     </div>
 
+                    {/* MENÚ DESKTOP */}
                     <nav className={styles.nbNav} aria-label="Principal">
                         {left.map((l) => {
-                            if (l.href === '/#footer') {
+                            if (l.href === "/#footer") {
                                 return (
                                     <Link
                                         key={l.href}
                                         href={l.href}
                                         className={styles.nbLink}
                                         onClick={(e) => {
-                                            if (pathname === '/') {
+                                            if (pathname === "/") {
                                                 e.preventDefault();
                                                 scrollToFooter();
                                                 closeMenu();
@@ -117,7 +124,7 @@ export default function NavBar() {
                                     key={l.href}
                                     href={l.href}
                                     className={`${styles.nbLink} ${
-                                        isActive(l.href) ? styles.nbActive : ''
+                                        isActive(l.href) ? styles.nbActive : ""
                                     }`}
                                 >
                                     {l.label}
@@ -126,6 +133,7 @@ export default function NavBar() {
                         })}
                     </nav>
 
+                    {/* ACCIONES DERECHA */}
                     <div className={styles.nbActions}>
                         {isAuthenticated ? (
                             <UserAvatar
@@ -153,6 +161,7 @@ export default function NavBar() {
                         )}
                     </div>
 
+                    {/* BOTÓN MENÚ MÓVIL */}
                     <button
                         className={styles.nbToggle}
                         aria-label="Abrir menú"
@@ -166,9 +175,12 @@ export default function NavBar() {
                     </button>
                 </div>
 
+                {/* PANEL MÓVIL */}
                 <div
                     id="menu-movil"
-                    className={`${styles.nbPanel} ${open ? styles.nbPanelOpen : ''}`}
+                    className={`${styles.nbPanel} ${
+                        open ? styles.nbPanelOpen : ""
+                    }`}
                 >
                     <div className={styles.nbPanelSection}>
                         {left.map((l) => (
@@ -177,7 +189,7 @@ export default function NavBar() {
                                 href={l.href}
                                 onClick={closeMenu}
                                 className={`${styles.nbPanelLink} ${
-                                    isActive(l.href) ? styles.nbActive : ''
+                                    isActive(l.href) ? styles.nbActive : ""
                                 }`}
                             >
                                 {l.label}
@@ -193,7 +205,7 @@ export default function NavBar() {
                                     href={l.href}
                                     onClick={closeMenu}
                                     className={`${styles.nbPanelAction} ${
-                                        isActive(l.href) ? styles.nbActive : ''
+                                        isActive(l.href) ? styles.nbActive : ""
                                     }`}
                                 >
                                     {l.label}
