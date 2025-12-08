@@ -1,7 +1,9 @@
+// src/features/artists/api/artistApi.js
 import { BASE_API } from "@/config/apiConfig";
 
 const ARTISTS_URL = `${BASE_API}/artists`;
 const SPECIALITIES_URL = `${BASE_API}/specialities/types`;
+const ME_URL = `${BASE_API}/users/me`;
 
 // =============================
 // Crear perfil de artista
@@ -108,6 +110,62 @@ export async function getApprovedArtists() {
         return {
             ok: false,
             error: "Error de red al obtener los artistas.",
+        };
+    }
+}
+
+// =============================
+// Obtener perfil del artista autenticado (GET /users/me)
+// =============================
+export async function getMyArtistProfile(token) {
+    try {
+        const res = await fetch(ME_URL, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            credentials: "include",
+            cache: "no-store",
+        });
+
+        let payload = null;
+        try {
+            payload = await res.json();
+        } catch (_) {}
+
+        if (!res.ok) {
+            const message =
+                payload?.message ||
+                payload?.error ||
+                "No se pudo obtener tu perfil.";
+            return { ok: false, error: message };
+        }
+
+        const user = payload || {};
+        const rawArtist = user.artist || null;
+
+        if (!rawArtist) {
+            return { ok: true, data: null };
+        }
+
+        const mappedArtist = {
+            ...rawArtist,
+            email: user.email,
+            city: rawArtist.location,
+            social: rawArtist.socialMedia || {},
+            // ArtistProfileDetails usa tags:
+            tags: Array.isArray(rawArtist.specialities)
+                ? rawArtist.specialities.map((s) => s.name || "").filter(Boolean)
+                : [],
+        };
+
+        return { ok: true, data: mappedArtist };
+    } catch (error) {
+        console.error("Error obteniendo tu perfil:", error);
+        return {
+            ok: false,
+            error: "Error de red al obtener tu perfil.",
         };
     }
 }

@@ -1,74 +1,82 @@
+/* TARJETA GENERAL */
 .card {
     background: #ffffff;
-    padding: 20px;
-    border-radius: 18px;
+    padding: 24px 24px 22px;
+    border-radius: 22px;
     box-shadow: var(--shadow);
+    height: 100%;
 }
 
+/* TÍTULO */
 .cardTitle {
-    margin: 0 0 12px;
-    font-size: 1.1rem;
+    margin: 0 0 14px;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--nv);
 }
 
+/* CONTENEDOR INTERNO */
 .infoGroup {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 18px;
 }
 
+/* FILA DE DETALLES */
 .row {
     display: flex;
-    gap: 12px;
-    align-items: center;
+    gap: 14px;
+    align-items: flex-start;
 }
 
-/* Burbuja de ícono para detalles */
+/* BURBUJA DEL ÍCONO PRINCIPAL */
 .iconWrapper {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 999px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(251, 182, 49, 0.15); /* amarillo suave */
+    background: rgba(251, 182, 49, 0.18);
 }
 
 .icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     color: var(--yl);
 }
 
+/* LABEL */
 .label {
     margin: 0;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     color: var(--gr);
     text-transform: uppercase;
 }
 
+/* VALOR MOSTRADO */
 .value {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--nv);
 }
 
-/* Tags */
-
+/* CONTENEDOR DE TAGS */
 .tags {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    margin-top: 4px;
 }
 
+/* TAG INDIVIDUAL */
 .tag {
     background: rgba(251, 182, 49, 0.15);
     border: 1px solid rgba(251, 182, 49, 0.4);
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: #9a6200;
 }
