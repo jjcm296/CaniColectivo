@@ -6,14 +6,18 @@ import styles from "./LoginForm.module.css";
 import AuthSidePanel from "../auth-side-panel/AuthSidePanel";
 import BackButton from "@/features/ui/back-button/BackButton";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
+
+const GENERIC_ERROR =
+    "No pudimos iniciar tu sesión. Revisa tu correo y contraseña.";
 
 export default function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const emailFromQuery = searchParams?.get("email") || "";
-
     const { login, isLoading } = useAuth();
+    const { showLoading, showSuccess, showError, hide } = useFeedback();
 
     const [email, setEmail] = useState(emailFromQuery);
     const [password, setPassword] = useState("");
@@ -29,7 +33,6 @@ export default function LoginForm() {
         }
 
         if (!password) e.password = "Ingresa tu contraseña.";
-        else if (password.length < 8) e.password = "Mínimo 8 caracteres.";
 
         setErrors(e);
         return Object.keys(e).length === 0;
@@ -41,29 +44,22 @@ export default function LoginForm() {
 
         if (!validate()) return;
 
+        showLoading("Conectando con tu universo creativo...");
+
         const result = await login({ email, password });
 
+        hide();
+
         if (!result.ok) {
-            const msg = result.error || "";
-
-            if (msg === "INVALID_CREDENTIALS") {
-                setFormError("Correo o contraseña incorrectos.");
-            } else if (msg === "USER_NOT_VERIFIED") {
-                router.push(`/auth/validar-codigo?email=${encodeURIComponent(email)}`);
-            } else if (msg === "LOGIN_INVALID_RESPONSE") {
-                setFormError("Respuesta inesperada del servidor de autenticación.");
-            } else if (msg === "TOKEN_NOT_PROVIDED") {
-                setFormError("El servidor no envió el token de sesión.");
-            } else if (msg === "EXPIRATION_NOT_PROVIDED") {
-                setFormError("El servidor no envió el tiempo de expiración.");
-            } else {
-                setFormError(msg || "Error al iniciar sesión.");
-            }
-
+            setPassword("");
+            setFormError(GENERIC_ERROR);
+            showError(GENERIC_ERROR);
             return;
         }
 
-        // Login OK → redirige
+        showSuccess(
+            "Bienvenido a CANI: explora artistas, eventos y procesos creativos."
+        );
         router.push("/");
     };
 
@@ -78,8 +74,7 @@ export default function LoginForm() {
                     <p className={styles.kicker}>Iniciar sesión</p>
                     <h1 className={styles.title}>Vuelve a tu espacio creativo</h1>
                     <p className={styles.subtitle}>
-                        Inicia sesión para acceder a tu perfil, descubrir eventos, seguir artistas
-                        y guardar los procesos que te inspiran.
+                        Accede a tus artistas, procesos y eventos guardados.
                     </p>
                 </header>
 
@@ -96,7 +91,9 @@ export default function LoginForm() {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="tucorreo@ejemplo.com"
                         />
-                        {errors.email && <p className={styles.error}>{errors.email}</p>}
+                        {errors.email && (
+                            <p className={styles.error}>{errors.email}</p>
+                        )}
                     </div>
 
                     <div className={styles.field}>
@@ -134,8 +131,8 @@ export default function LoginForm() {
             <AuthSidePanel
                 imageAlt="Login CANI"
                 title="Tu espacio creativo te espera."
-                text="Vuelve a tus artistas, procesos y proyectos guardados, y descubre nuevos eventos."
-                highlight="Inicia sesión para disfrutar una experiencia personalizada en la comunidad CANI."
+                text="Vuelve a tus artistas, procesos y proyectos guardados."
+                highlight="Inicia sesión para vivir una experiencia personalizada en la comunidad CANI."
             />
         </div>
     );
