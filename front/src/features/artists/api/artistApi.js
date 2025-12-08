@@ -163,7 +163,7 @@ export async function getMyArtistProfile(token) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                ...(token ? {Authorization: `Bearer ${token}`} : {}),
             },
             credentials: "include",
             cache: "no-store",
@@ -172,21 +172,22 @@ export async function getMyArtistProfile(token) {
         let payload = null;
         try {
             payload = await res.json();
-        } catch (_) {}
+        } catch (_) {
+        }
 
         if (!res.ok) {
             const message =
                 payload?.message ||
                 payload?.error ||
                 "No se pudo obtener tu perfil.";
-            return { ok: false, error: message };
+            return {ok: false, error: message};
         }
 
         const user = payload || {};
         const rawArtist = user.artist || null;
 
         if (!rawArtist) {
-            return { ok: true, data: null };
+            return {ok: true, data: null};
         }
 
         const mappedArtist = {
@@ -200,12 +201,42 @@ export async function getMyArtistProfile(token) {
                 : [],
         };
 
-        return { ok: true, data: mappedArtist };
+        return {ok: true, data: mappedArtist};
     } catch (error) {
         console.error("Error obteniendo tu perfil:", error);
         return {
             ok: false,
             error: "Error de red al obtener tu perfil.",
         };
+    }
+}
+
+export async function getArtistById(id) {
+    try {
+        const res = await fetch(`${ARTISTS_URL}/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cache: "no-store",
+        });
+
+        let payload = null;
+        try {
+            payload = await res.json();
+        } catch (_) {}
+
+        if (!res.ok) {
+            const message =
+                payload?.message ||
+                payload?.error ||
+                "No se pudo obtener el artista.";
+            return { ok: false, error: message };
+        }
+
+        return { ok: true, data: payload };
+    } catch (error) {
+        console.error("Error de red al obtener artista por id:", error);
+        return { ok: false, error: "Error de red al obtener el artista." };
     }
 }
