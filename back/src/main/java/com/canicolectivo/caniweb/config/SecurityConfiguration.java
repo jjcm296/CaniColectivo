@@ -38,20 +38,21 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // PÚBLICOS
+                        // PUBLIC
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/specialities/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/artists/**").permitAll()
 
-                        // MULTIMEDIA: las imágenes y videos de banner públicos:
+                        // MULTIMEDIA: public images and videos
                         .requestMatchers(HttpMethod.GET, "/multimedia/banner/image/active").permitAll()
                         .requestMatchers(HttpMethod.GET, "/multimedia/banner/image/featured").permitAll()
                         .requestMatchers(HttpMethod.GET, "/multimedia/banner/video").permitAll()
                         .requestMatchers("/multimedia/**").hasRole("ADMIN")
 
-                        // PROTEGIDOS
+                        // PROTECTED
                         .requestMatchers("/users/me").authenticated()
                         .requestMatchers(HttpMethod.POST, "/artists").authenticated()
+                        . requestMatchers(HttpMethod.POST, "/artists/*/photo").authenticated()
                         .requestMatchers(HttpMethod.POST, "/artists/*/approve").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
 
