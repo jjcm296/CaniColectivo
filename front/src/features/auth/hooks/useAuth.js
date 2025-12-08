@@ -63,13 +63,22 @@ export function useAuth() {
             setAuthError(null);
             try {
                 const res = await loginUser(credentials);
+                // res: { token, expiresIn }
 
-                const expiresInMs = res.expiresIn ? res.expiresIn * 1000 : 0;
+                if (!res || !res.token) {
+                    throw new Error("TOKEN_NOT_PROVIDED");
+                }
+                if (typeof res.expiresIn !== "number") {
+                    throw new Error("EXPIRATION_NOT_PROVIDED");
+                }
+
+                const expiresInMs = res.expiresIn * 1000;
                 const expirationTime = Date.now() + expiresInMs;
 
                 handleAuthSuccess(res.token, expirationTime);
                 return { ok: true, data: res };
             } catch (err) {
+                console.log("LOGIN ERROR:", err);
                 setAuthError(err?.message || "Error al iniciar sesión");
                 return { ok: false, error: err?.message || "Error al iniciar sesión" };
             } finally {

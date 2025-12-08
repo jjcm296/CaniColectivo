@@ -1,3 +1,4 @@
+'use client'
 import "./globals.css";
 import { FeedbackProvider } from "@/features/ui/feedback-context/FeedbackContext";
 import NavBar from "@/features/navigation/NavBar";
