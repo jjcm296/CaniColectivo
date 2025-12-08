@@ -13,22 +13,43 @@ public class EnvConfig {
     @Bean
     public Map<String, String> loadEnvVariables() {
 
+        // Cargar .env solo si existe (no falla en producción)
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMissing()
+                .ignoreIfMalformed()
+                .load();
+
         Map<String, String> envVars = new HashMap<>();
-        // Cargar las variables desde el archivo .env
-        Dotenv dotenv = Dotenv.load();
 
-        // Establecer las variables como propiedades del sistema
-        envVars.put("CLOUDFLARE_ACCESS_KEY", dotenv.get("CLOUDFLARE_ACCESS_KEY"));
-        envVars.put("CLOUDFLARE_SECRET_KEY", dotenv.get("CLOUDFLARE_SECRET_KEY"));
-        envVars.put("CLOUDFLARE_BUCKET_NAME", dotenv.get("CLOUDFLARE_BUCKET_NAME"));
-        envVars.put("CLOUDFLARE_S3_ENDPOINT", dotenv.get("CLOUDFLARE_S3_ENDPOINT"));
-        envVars.put("CLOUDFLARE_PUBLIC_URL", dotenv.get("CLOUDFLARE_PUBLIC_URL"));
+        // Claves que usas
+        String[] keys = {
+                "CLOUDFLARE_ACCESS_KEY",
+                "CLOUDFLARE_SECRET_KEY",
+                "CLOUDFLARE_BUCKET_NAME",
+                "CLOUDFLARE_S3_ENDPOINT",
+                "CLOUDFLARE_PUBLIC_URL"
+        };
 
-        System.setProperty("CLOUDFLARE_ACCESS_KEY", dotenv.get("CLOUDFLARE_ACCESS_KEY"));
-        System.setProperty("CLOUDFLARE_SECRET_KEY", dotenv.get("CLOUDFLARE_SECRET_KEY"));
-        System.setProperty("CLOUDFLARE_BUCKET_NAME", dotenv.get("CLOUDFLARE_BUCKET_NAME"));
-        System.setProperty("CLOUDFLARE_S3_ENDPOINT", dotenv.get("CLOUDFLARE_S3_ENDPOINT"));
-        System.setProperty("CLOUDFLARE_PUBLIC_URL", dotenv.get("CLOUDFLARE_PUBLIC_URL"));
+        for (String key : keys) {
+            // 1) Intentar obtener desde variables de entorno del sistema (Render)
+            String value = System.getenv(key);
+
+            // 2) Si no existe, obtener del archivo .env (solo local)
+            if (value == null || value.isBlank()) {
+                value = dotenv.get(key);
+            }
+
+            // 3) Si sigue sin existir → error claro
+            if (value == null || value.isBlank()) {
+                throw new IllegalStateException("Missing required environment variable: " + key);
+            }
+
+            // Guardarlo en el Map (tu retorno del Bean)
+            envVars.put(key, value);
+
+            // Y si necesitas System property:
+            System.setProperty(key, value);
+        }
 
         return envVars;
     }
