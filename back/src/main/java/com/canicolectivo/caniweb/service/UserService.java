@@ -28,7 +28,11 @@ public class UserService {
 
     @Transactional
     public UserDTO getCurrentUser(User user) {
-        return UserDTO.fromEntity(user);
+
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        return UserDTO.fromEntity(managedUser);
     }
 
     
