@@ -36,6 +36,7 @@ Routes that marked with auth, admin or artist in authorization use Bearer Token.
 | Get all (approved) artists     | no auth       | GET    | /artists              | Nothing                                                                                     | Array of artist objects                                                                         |
 | Get pending unapproved artists | admin         | GET    | /artists/pending      | Nothing                                                                                     | Array of artist objects                                                                         |
 | Approve or reject an artist    | admin         | POST   | /artists/{id}/approve | `{"isApproved":true}` or `{"isApproved":false}`                                             | 200 OK Code and message                                                                         |
+
 *name and location are required
 
 ### Specialities
