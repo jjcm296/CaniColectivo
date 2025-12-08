@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import ArtistProfile from "@/features/artists/artist-profile/ArtistProfile";
+import ArtistProfile from "@/features/artists/componensts/artist-profile/ArtistProfile";
 import { getMyArtistProfile } from "@/features/artists/services/artistsService";
 
 export default async function Page() {

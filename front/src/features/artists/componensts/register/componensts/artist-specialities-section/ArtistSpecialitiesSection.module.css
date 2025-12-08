@@ -1,0 +1,46 @@
+.wrapper {
+    margin-top: 4px;
+}
+
+.label {
+    display: block;
+    font-size: 0.86rem;
+    margin-bottom: 4px;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.input {
+    width: 100%;
+    padding: 9px 11px;
+    border-radius: 11px;
+    border: 1px solid rgba(148, 163, 184, 0.75);
+    background: #f9fafb;
+    color: #111827;
+    font-size: 0.9rem;
+    outline: none;
+    transition:
+            border-color 0.16s ease,
+            box-shadow 0.16s ease,
+            background-color 0.16s ease,
+            transform 0.06s ease;
+}
+
+.input:focus {
+    border-color: var(--bl);
+    box-shadow: 0 0 0 1px rgba(37, 160, 226, 0.35);
+    background: #ffffff;
+    transform: translateY(-0.5px);
+}
+
+.helperText {
+    margin: 4px 0 0;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.error {
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    color: #991b1b;
+}

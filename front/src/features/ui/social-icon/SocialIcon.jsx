@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import styles from './SocialIcon.module.css';
+import Link from "next/link";
+import styles from "./SocialIcon.module.css";
 import Image from "next/image";
-
 
 const icons = {
     whatsapp: (
@@ -40,14 +39,18 @@ const icons = {
     ),
 
     instagram: (
-        <svg viewBox="0 0 100 100"  className={`${styles.svg} ${styles.instagramSvg}`} aria-hidden="true">
+        <svg
+            viewBox="0 0 100 100"
+            className={`${styles.svg} ${styles.instagramSvg}`}
+            aria-hidden="true"
+        >
             <defs>
                 <linearGradient id="igRealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#4f5bd5"/>
-                    <stop offset="25%" stopColor="#962fbf"/>
-                    <stop offset="50%" stopColor="#d62976"/>
-                    <stop offset="75%" stopColor="#fa7e1e"/>
-                    <stop offset="100%" stopColor="#feda75"/>
+                    <stop offset="0%" stopColor="#4f5bd5" />
+                    <stop offset="25%" stopColor="#962fbf" />
+                    <stop offset="50%" stopColor="#d62976" />
+                    <stop offset="75%" stopColor="#fa7e1e" />
+                    <stop offset="100%" stopColor="#feda75" />
                 </linearGradient>
             </defs>
 
@@ -101,23 +104,16 @@ const icons = {
     ),
 
     x: (
-        <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            className={styles.svg}
-        >
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.svg}>
             <path
                 fill="currentColor"
                 d="M18.244 2.25h3.308l-7.227 8.26 8.505 11.24H16.57l-5.24-6.862-6.004 6.862H2.02l7.73-8.83L1.5 2.25h7.636l4.713 6.267 4.395-6.267zm-1.16 17.52h1.833L7.25 4.13H5.29l11.794 15.64z"
             />
         </svg>
     ),
+
     email: (
-        <svg
-            viewBox="0 0 48 48"
-            aria-hidden="true"
-            className={styles.svg}
-        >
+        <svg viewBox="0 0 48 48" aria-hidden="true" className={styles.svg}>
             <rect
                 x="7"
                 y="11"
@@ -137,27 +133,48 @@ const icons = {
                 strokeLinejoin="round"
             />
         </svg>
-        ),
+    ),
 };
 
-export default function SocialIcon({ type, href, invert = true, ariaLabel }) {
-    if (!href) return null;
-
-    const isGps = type === 'gps';
+export default function SocialIcon({
+                                       type,
+                                       href,
+                                       invert = true,
+                                       ariaLabel,
+                                       onClick,
+                                       className = "",
+                                   }) {
     const icon = icons[type];
+    if (!icon) return null;
+
+    const finalHref = href || "#";
+
+    const handleClick = (e) => {
+        if (onClick) {
+            e.preventDefault();
+            onClick(e);
+        }
+    };
+
+    const isExternal = href && href !== "#" && !onClick;
+    const target = isExternal ? "_blank" : undefined;
+    const rel = isExternal ? "noopener noreferrer" : undefined;
 
     return (
         <Link
-            href={href}
-            className={`${styles.icon} ${styles[type]} ${invert ? styles.invert : ''}`}
+            href={finalHref}
+            onClick={handleClick}
+            className={`${styles.icon} ${styles[type]} ${
+                invert ? styles.invert : ""
+            } ${className}`}
             aria-label={ariaLabel || type}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={target}
+            rel={rel}
         >
-            {isGps ? (
+            {type === "gps" ? (
                 <Image
                     src="/icons/Google_Maps-icon-Logo.svg"
-                    alt={ariaLabel || 'Ubicación'}
+                    alt={ariaLabel || "Ubicación"}
                     width={35}
                     height={35}
                     className={styles.gpsLogo}
