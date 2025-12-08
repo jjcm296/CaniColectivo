@@ -3,11 +3,11 @@ FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copiamos descriptor y descargamos dependencias primero (para cache)
-COPY pom.xml .
+COPY back/pom.xml .
 RUN mvn -B dependency:go-offline
 
 # Ahora copiamos el código fuente
-COPY src ./src
+COPY back/src ./src
 
 # Empaquetamos (saldrá un .jar dentro de /target)
 RUN mvn -B package -DskipTests
