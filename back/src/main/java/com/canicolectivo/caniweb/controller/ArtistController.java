@@ -68,6 +68,12 @@ public class ArtistController {
 
     }
 
+    @GetMapping("/pending/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Integer countPending() {
+        return artistService.getPendingCount();
+    }
+
     @PostMapping("/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> approve(@PathVariable Integer id, @Valid @RequestBody ApproveArtistDTO approveArtistDTO) {
