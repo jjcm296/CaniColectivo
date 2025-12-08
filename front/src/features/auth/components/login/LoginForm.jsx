@@ -8,32 +8,14 @@ import BackButton from "@/features/ui/back-button/BackButton";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 
-const LOGIN_MESSAGES = {
-    loading: "Conectando con tu universo creativo...",
-    success: "Bienvenido a CANI: explora artistas, eventos y procesos creativos.",
-    errors: {
-        INVALID_CREDENTIALS:
-            "No pudimos iniciar tu sesión. Revisa tu correo y contraseña.",
-        USER_NOT_FOUND:
-            "No pudimos iniciar tu sesión. Revisa tu correo y contraseña.",
-        EMAIL_NOT_FOUND:
-            "No pudimos iniciar tu sesión. Revisa tu correo y contraseña.",
-        USER_NOT_VERIFIED:
-            "Aún no has verificado tu cuenta. Te llevamos a validar tu acceso.",
-        LOGIN_INVALID_RESPONSE:
-            "Tuvimos una respuesta inesperada del servidor. Intenta de nuevo.",
-        TOKEN_NOT_PROVIDED: "El servidor no envió el token de sesión.",
-        EXPIRATION_NOT_PROVIDED: "El servidor no envió el tiempo de expiración.",
-        DEFAULT: "Tuvimos un problema al iniciar tu sesión.",
-    },
-};
+const GENERIC_ERROR =
+    "No pudimos iniciar tu sesión. Revisa tu correo y contraseña.";
 
 export default function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const emailFromQuery = searchParams?.get("email") || "";
-
     const { login, isLoading } = useAuth();
     const { showLoading, showSuccess, showError, hide } = useFeedback();
 
@@ -51,7 +33,6 @@ export default function LoginForm() {
         }
 
         if (!password) e.password = "Ingresa tu contraseña.";
-        else if (password.length < 8) e.password = "Mínimo 8 caracteres.";
 
         setErrors(e);
         return Object.keys(e).length === 0;
@@ -63,43 +44,22 @@ export default function LoginForm() {
 
         if (!validate()) return;
 
-        showLoading(LOGIN_MESSAGES.loading);
+        showLoading("Conectando con tu universo creativo...");
 
         const result = await login({ email, password });
 
         hide();
 
         if (!result.ok) {
-            const code = result.error || "";
-            const map = LOGIN_MESSAGES.errors;
-            const message = map[code] || map.DEFAULT;
-
-            if (
-                code === "INVALID_CREDENTIALS" ||
-                code === "USER_NOT_FOUND" ||
-                code === "EMAIL_NOT_FOUND"
-            ) {
-                setPassword("");
-                setFormError(message);
-                showError(message);
-                return;
-            }
-
-            if (code === "USER_NOT_VERIFIED") {
-                setFormError("");
-                showError(message);
-                router.push(
-                    `/auth/validar-codigo?email=${encodeURIComponent(email)}`
-                );
-                return;
-            }
-
-            setFormError(message);
-            showError(message);
+            setPassword("");
+            setFormError(GENERIC_ERROR);
+            showError(GENERIC_ERROR);
             return;
         }
 
-        showSuccess(LOGIN_MESSAGES.success);
+        showSuccess(
+            "Bienvenido a CANI: explora artistas, eventos y procesos creativos."
+        );
         router.push("/");
     };
 
@@ -114,8 +74,7 @@ export default function LoginForm() {
                     <p className={styles.kicker}>Iniciar sesión</p>
                     <h1 className={styles.title}>Vuelve a tu espacio creativo</h1>
                     <p className={styles.subtitle}>
-                        Accede a tus artistas, procesos, eventos guardados y sigue
-                        construyendo junto a la comunidad CANI.
+                        Accede a tus artistas, procesos y eventos guardados.
                     </p>
                 </header>
 
@@ -172,7 +131,7 @@ export default function LoginForm() {
             <AuthSidePanel
                 imageAlt="Login CANI"
                 title="Tu espacio creativo te espera."
-                text="Vuelve a tus artistas, procesos y proyectos guardados, y descubre nuevas voces y eventos."
+                text="Vuelve a tus artistas, procesos y proyectos guardados."
                 highlight="Inicia sesión para vivir una experiencia personalizada en la comunidad CANI."
             />
         </div>
