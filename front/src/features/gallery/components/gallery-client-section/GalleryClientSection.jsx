@@ -7,8 +7,9 @@ import GalleryAddImageModal from "../gallery-upload-image-modal/GalleryUploadIma
 
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 import ConfirmModal from "@/features/ui/confirm-modal/ConfirmModal";
+import {useAuth} from "@/features/auth/hooks/useAuth";
 
-export function GalleryClientSection({ isAdmin }) {
+export function GalleryClientSection() {
     const {
         items,
         removeItem,
@@ -20,6 +21,9 @@ export function GalleryClientSection({ isAdmin }) {
         showInactive,
         loading, // estado de carga desde el hook
     } = useGalleryMedia();
+
+    const user = useAuth();
+    const isAdmin = user?.role === "admin" || user?.role === "SUPERADMIN";
 
     const { showLoading, showSuccess, showError, hide } = useFeedback();
 

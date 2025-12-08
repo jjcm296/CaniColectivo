@@ -8,6 +8,7 @@ import TiktokVideoCard from './TiktokVideoCard';
 import { useBannerVideos } from '../../hooks/useBannerVideos';
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 import ConfirmModal from "@/features/ui/confirm-modal/ConfirmModal";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const DEFAULT_VIDEOS = [
     {
@@ -27,7 +28,10 @@ const DEFAULT_VIDEOS = [
     },
 ];
 
-export default function VideoSpotlight({ isAdmin = true }) {
+export default function VideoSpotlight() {
+    const { user } = useAuth();
+
+    const isAdmin = user?.role === "admin" || user?.role === "SUPERADMIN";
     const { items, loading, error, createVideo, removeVideo } = useBannerVideos();
     const { showLoading, showSuccess, showError, hide } = useFeedback();
 
