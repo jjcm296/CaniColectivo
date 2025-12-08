@@ -53,7 +53,6 @@ public class ArtistService {
         artist.setName(dto.getName());
         artist.setDescription(dto.getDescription());
         artist.setLocation(dto.getLocation());
-        artist.setApproved(false);
         artist.setPhone(dto.getPhone());
         artist.setPhotoUrl(dto.getPhotoUrl());
         artist.setSocialMedia(dto.getSocialMedia());
@@ -101,7 +100,6 @@ public class ArtistService {
             artist.setName(dto.getName());
             artist.setLocation(dto.getLocation());
             artist.setDescription(dto.getDescription());
-            artist.setApproved(dto.isApproved());
             artist.setPhone(dto.getPhone());
             artist.setPhotoUrl(dto.getPhotoUrl());
             artist.setSocialMedia(dto.getSocialMedia());
@@ -146,6 +144,8 @@ public class ArtistService {
         }
         return false;
     }
+
+
 
 
 

@@ -99,10 +99,6 @@ public class ArtistDTO {
         return approved;
     }
 
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
     public String getPhotoUrl() {
         return photoUrl;
     }

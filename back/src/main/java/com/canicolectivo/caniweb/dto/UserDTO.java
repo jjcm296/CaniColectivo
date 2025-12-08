@@ -10,17 +10,17 @@ public class UserDTO {
     private String username;
     private String email;
     private Set<RoleDTO> roles;
-    private Integer artistId;
+    private ArtistDTO artist;
     private boolean enabled;
 
     public UserDTO() {}
 
-    public UserDTO(Integer id, String username, String email, Set<RoleDTO> roles, Integer artistId, boolean enabled) {
+    public UserDTO(Integer id, String username, String email, Set<RoleDTO> roles, ArtistDTO artist, boolean enabled) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles = roles;
-        this.artistId = artistId;
+        this.artist = artist;
         this.enabled = enabled;
     }
 
@@ -29,14 +29,15 @@ public class UserDTO {
                 .map(role -> new RoleDTO(role.getId(), role.getName()))
                 .collect(Collectors.toSet());
 
-        Integer artistId = user.getArtist() != null ? user.getArtist().getId() : null;
+        // Convert the full artist entity to ArtistDTO if present
+        ArtistDTO artistDTO = user.getArtist() != null ? ArtistDTO.formEntity(user.getArtist()) : null;
 
         return new UserDTO(
                 user.getId(),
                 user.getUsernameNotOverriden(),
-                user.getEmail(),
+                user. getEmail(),
                 roleDTOs,
-                artistId,
+                artistDTO,
                 user.isEnabled()
         );
     }
@@ -73,19 +74,19 @@ public class UserDTO {
         this.roles = roles;
     }
 
-    public Integer getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(Integer artistId) {
-        this.artistId = artistId;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public ArtistDTO getArtist() {
+        return artist;
+    }
+
+    public void setArtist(ArtistDTO artist) {
+        this.artist = artist;
     }
 }
