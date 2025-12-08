@@ -3,12 +3,14 @@ package com.canicolectivo.caniweb.controller;
 import com.canicolectivo.caniweb.dto.artist.ApproveArtistDTO;
 import com.canicolectivo.caniweb.dto.artist.ArtistDTO;
 import com.canicolectivo.caniweb.model.User;
+import com.canicolectivo.caniweb.responses.ArtistPhotoResponse;
 import com.canicolectivo.caniweb.service.ArtistService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -46,6 +48,17 @@ public class ArtistController {
         ArtistDTO created = artistService.create(dto, currentUser);
 
         return ResponseEntity.status(201).body(created);
+    }
+
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<ArtistPhotoResponse> uploadPhoto(@PathVariable Integer id,
+                                                           @RequestParam("photo")MultipartFile file,
+                                                           Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+
+        ArtistPhotoResponse response = artistService.uploadArtistPhoto(id, file, currentUser);
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")

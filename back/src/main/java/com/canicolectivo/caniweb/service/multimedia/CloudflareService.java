@@ -95,6 +95,13 @@ public class CloudflareService {
         }
     }
 
+    public String uploadArtisProfileImage(MultipartFile file) throws IOException {
+        return uploadImageToFolder(file, "artists");
+    }
+
+
+
+
     // ============================================================
     // ELIMINAR IMAGEN POR URL PÚBLICA
     // ============================================================
@@ -129,6 +136,30 @@ public class CloudflareService {
 
         } catch (Exception e) {
             throw new IOException("Error al eliminar archivo de Cloudflare R2: " + e.getMessage(), e);
+        }
+    }
+
+    private String uploadImageToFolder(MultipartFile file, String folder) throws IOException {
+        String originalName = file.getOriginalFilename();
+        String extension = "";
+
+        if (originalName != null && originalName.contains(".")) {
+            extension = originalName.substring(originalName.lastIndexOf("."));
+        }
+
+        String key = folder + "/" + UUID.randomUUID() + extension;
+
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .contentType(file.getContentType())
+                    .build();
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+            return publicUrl + "/" + key;
+
+        } catch (Exception e) {
+            throw new IOException("An error occurred while uploading a file in Cloudflare: " + e.getMessage(), e);
         }
     }
 }
