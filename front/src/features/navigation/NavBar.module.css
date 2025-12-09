@@ -338,7 +338,12 @@
     align-items: center;
     justify-content: center;
 }
-
+.nbBackdrop {
+    position: fixed;
+    inset: 0;
+    background: transparent; /* o rgba(15, 23, 42, 0.35) si quieres oscurecer */
+    z-index: 900;
+}
 /* ================= RESPONSIVE ================= */
 
 /* Hasta 1000px: ocultamos nav de links y usamos hamburguesa + panel */

@@ -27,8 +27,6 @@ export default function NavBar() {
     const [scrolled, setScrolled] = useState(false);
     const [userPanelOpen, setUserPanelOpen] = useState(false);
     const [pendingCount, setPendingCount] = useState(0);
-
-    // ahora móvil es <= 1000px (para que coincida con el CSS)
     const [isMobile, setIsMobile] = useState(false);
 
     const { isAuth: isAuthenticated } = useAuth();
@@ -37,9 +35,9 @@ export default function NavBar() {
     const left = [
         { href: "/", label: "Inicio" },
         { href: "/artists", label: "Artistas" },
-        { href: "/events", label: "Eventos" },
-        { href: "/gallery", label: "Galería" },
         { href: "/about", label: "Nosotros" },
+        { href: "/gallery", label: "Galería" },
+        { href: "/events", label: "Eventos" },
         { href: "/#footer", label: "Contacto" },
     ];
 
@@ -242,50 +240,64 @@ export default function NavBar() {
                     </button>
                 </div>
 
-                <div
-                    id="menu-movil"
-                    className={`${styles.nbPanel} ${open ? styles.nbPanelOpen : ""}`}
-                >
-                    {/* LINKS PRINCIPALES */}
-                    <div className={styles.nbPanelSection}>
-                        {left.map((l) => (
-                            <Link
-                                key={l.href}
-                                href={l.href}
-                                onClick={(e) => {
-                                    if (l.href === "/#footer" && pathname === "/") {
-                                        e.preventDefault();
-                                        scrollToFooter();
-                                    }
-                                    closeMenu();
-                                }}
-                                className={`${styles.nbPanelLink} ${
-                                    isActive(l.href) ? styles.nbActive : ""
-                                }`}
-                            >
-                                {l.label}
-                            </Link>
-                        ))}
-                    </div>
+                {/* BACKDROP + PANEL MÓVIL */}
+                {open && (
+                    <div
+                        className={styles.nbBackdrop}
+                        onClick={closeMenu}
+                    >
+                        <div
+                            id="menu-movil"
+                            className={`${styles.nbPanel} ${styles.nbPanelOpen}`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* LINKS PRINCIPALES */}
+                            <div className={styles.nbPanelSection}>
+                                {left.map((l) => (
+                                    <Link
+                                        key={l.href}
+                                        href={l.href}
+                                        onClick={(e) => {
+                                            if (
+                                                l.href === "/#footer" &&
+                                                pathname === "/"
+                                            ) {
+                                                e.preventDefault();
+                                                scrollToFooter();
+                                            }
+                                            closeMenu();
+                                        }}
+                                        className={`${styles.nbPanelLink} ${
+                                            isActive(l.href) ? styles.nbActive : ""
+                                        }`}
+                                    >
+                                        {l.label}
+                                    </Link>
+                                ))}
+                            </div>
 
-                    {/* SOLO si NO está logueado → mostrar login y registro */}
-                    {!isAuthenticated && (
-                        <div className={styles.nbPanelSection}>
-                            {right.map((l) => (
-                                <Link
-                                    key={l.href}
-                                    href={l.href}
-                                    onClick={closeMenu}
-                                    className={`${styles.nbPanelAction} ${
-                                        isActive(l.href) ? styles.nbActive : ""
-                                    }`}
-                                >
-                                    {l.label}
-                                </Link>
-                            ))}
+                            {/* SOLO si NO está logueado → mostrar login y registro */}
+                            {!isAuthenticated && (
+                                <div className={styles.nbPanelSection}>
+                                    {right.map((l) => (
+                                        <Link
+                                            key={l.href}
+                                            href={l.href}
+                                            onClick={closeMenu}
+                                            className={`${styles.nbPanelAction} ${
+                                                isActive(l.href)
+                                                    ? styles.nbActive
+                                                    : ""
+                                            }`}
+                                        >
+                                            {l.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </header>
 
             <UserPanel
