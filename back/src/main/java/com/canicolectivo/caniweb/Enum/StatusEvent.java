@@ -4,5 +4,6 @@ public enum StatusEvent {
     BORRADOR,
     PROXIMAMENTE,
     FINALIZADO,
-    CANCELADO
+    CANCELADO,
+    EN_CURSO
 }

@@ -1,74 +1,58 @@
-package com.canicolectivo.caniweb.model;
+package com.canicolectivo.caniweb.dto.event;
 
-import com.canicolectivo.caniweb.Enum.Location;
-import com.canicolectivo.caniweb.Enum.StatusEvent;
-import jakarta.persistence.*;
+import com. canicolectivo.caniweb. Enum.Location;
+import com.fasterxml.jackson. annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints. NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
-@Table(name = "events")
-public class Event {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @NotBlank
-    @Column(nullable = false, length = 150)
+public class EventCreateDTO {
+    @NotBlank(message = "Event name is required")
+    @Size(max = 150, message = "Event name cannot exceed 150 characters")
     private String name;
 
-    @Column(columnDefinition = "text")
+    @Size(max = 1000, message = "Description cannot exceed 1000 characters")
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 15)
+    @NotNull(message = "Location is required")
     private Location location;
 
-    @Column(length = 200)
+    @Size(max = 200, message = "Address cannot exceed 200 characters")
     private String address;
 
-    @Column(length = 150)
+    @Size(max = 150, message = "Venue cannot exceed 150 characters")
     private String venue;
 
+    @NotNull(message = "Event date is required")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
+    @NotNull(message = "Start hour is required")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startHour;
 
-    // ADD VALIDATION: ENDHOUR MUST BE AFTER START HOUR
+    @NotNull(message = "End hour is required")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime endHour;
 
-    private String photoUrl;
+    public EventCreateDTO() {}
 
-    // ADD VALIDATION: CHANGE STATUS AUTOMATICALLY WHEN THE DATE OF THE EVENT HAS PASSED
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 15, nullable = false)
-    private StatusEvent status;
-
-    public Event() {}
-
-    public Event(String name, String description,
-                 Location location, String address,
-                 String venue, LocalDate date,
-                 LocalTime startHour, LocalTime endHour,
-                 String photoUrl,
-                 StatusEvent status) {
+    public EventCreateDTO(String name, String description, Location location, String address,
+                          String venue, LocalDate date, LocalTime startHour, LocalTime endHour) {
         this.name = name;
         this.description = description;
-        this.location = location;
+        this. location = location;
         this.address = address;
         this.venue = venue;
         this.date = date;
         this.startHour = startHour;
         this.endHour = endHour;
-        this.status = status;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
+    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -82,7 +66,7 @@ public class Event {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this. description = description;
     }
 
     public Location getLocation() {
@@ -131,25 +115,5 @@ public class Event {
 
     public void setEndHour(LocalTime endHour) {
         this.endHour = endHour;
-    }
-
-    public StatusEvent getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusEvent status) {
-        this.status = status;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
     }
 }

@@ -154,7 +154,6 @@ public class ArtistService {
         artist.setLocation(dto.getLocation());
         artist.setDescription(dto.getDescription());
         artist.setPhone(dto.getPhone());
-        artist.setPhotoUrl(dto.getPhotoUrl());
         artist.setSocialMedia(dto.getSocialMedia());
 
         // ---- HANDLE SPECIALITIES ----
@@ -267,7 +266,7 @@ public class ArtistService {
             // delete old photo if exists
             if (artist.getPhotoUrl() != null && !artist.getPhotoUrl().isBlank()) {
                 try {
-                    cloudflareService.deleteByUrl(artist. getPhotoUrl());
+                    cloudflareService.deleteByUrl(artist.getPhotoUrl());
                 } catch (IOException e) {
                     // Log warning but don't fail the upload
                     System.out.println("Warning: Could not delete old photo: " + e.getMessage());

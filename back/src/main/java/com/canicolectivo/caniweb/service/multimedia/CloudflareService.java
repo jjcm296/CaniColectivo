@@ -99,6 +99,10 @@ public class CloudflareService {
         return uploadImageToFolder(file, "artists");
     }
 
+    public String uploadEventImage(MultipartFile file) throws IOException {
+        return uploadImageToFolder(file, "events");
+    }
+
 
 
 
