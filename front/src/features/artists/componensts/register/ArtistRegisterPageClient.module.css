@@ -26,8 +26,6 @@
     animation: fadeInUp 0.25s ease-out;
 }
 
-/* (quitamos la línea de acento con degradado: se elimina .card::before) */
-
 /* Top bar (volver) */
 .topBar {
     display: flex;
@@ -119,6 +117,32 @@
     transform: translateY(-0.5px);
 }
 
+/* Selects con estilo similar a input */
+.select {
+    width: 100%;
+    padding: 9px 11px;
+    border-radius: 11px;
+    border: 1px solid rgba(148, 163, 184, 0.75);
+    background: #f9fafb;
+    color: #111827;
+    font-size: 0.9rem;
+    outline: none;
+    transition:
+            border-color 0.16s ease,
+            box-shadow 0.16s ease,
+            background-color 0.16s ease,
+            transform 0.06s ease;
+    appearance: none;
+    cursor: pointer;
+}
+
+.select:focus {
+    border-color: var(--bl);
+    box-shadow: 0 0 0 1px rgba(37, 160, 226, 0.35);
+    background: #ffffff;
+    transform: translateY(-0.5px);
+}
+
 .input select {
     appearance: none;
 }
@@ -126,7 +150,6 @@
 select.input {
     cursor: pointer;
 }
-
 
 /* Layout en columnas */
 .row {
@@ -198,7 +221,7 @@ select.input {
     box-shadow: 0 0 0 2px rgba(191, 219, 254, 0.9);
 }
 
-/* Estado activo del icono (solo halo, sin degradados) */
+/* Estado activo del icono */
 .socialIconActive {
     border-color: rgba(37, 160, 226, 0.85);
     box-shadow: 0 0 0 4px rgba(191, 219, 254, 0.9);
@@ -253,17 +276,16 @@ select.input {
     border: 1px solid #bbf7d0;
 }
 
-/* Botón principal: sin borde circular ni degradado, azul oscuro sólido */
+/* Botón principal */
 .submitButton {
     margin-top: 10px;
     padding: 11px 16px;
     border: none;
-    /* sin border-radius aquí para que tome el global */
     color: #f9fafb;
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
-    background: var(--nv); /* azul oscuro de tu paleta */
+    background: var(--nv);
     box-shadow: 0 14px 34px rgba(15, 23, 42, 0.26);
     transition:
             box-shadow 0.18s ease-out,
@@ -302,6 +324,7 @@ select.input {
         transform: translateY(0);
     }
 }
+
 .photoRow {
     display: flex;
     align-items: center;
@@ -366,6 +389,7 @@ select.input {
     transform: translateY(-1px);
 }
 
+/* WhatsApp: layout */
 .whatsappRow {
     display: flex;
     gap: 10px;
@@ -378,21 +402,12 @@ select.input {
     min-width: 110px;
 }
 
-/* el input comparte la clase .input que ya tienes,
-   solo añadimos reglas cuando está dentro de whatsappRow */
+/* el input (número) ocupa el resto */
 .whatsappRow .input {
     flex: 1 1 auto;
 }
 
-
-@media (max-width: 480px) {
-    .photoRow {
-        align-items: flex-start;
-    }
-}
-
-
-/* Responsivo */
+/* Responsivo tablets */
 @media (max-width: 768px) {
     .wrapper {
         padding: 20px 12px 28px;
@@ -412,7 +427,29 @@ select.input {
     }
 }
 
+/* Responsivo móviles */
 @media (max-width: 480px) {
+    .wrapper {
+        padding: 16px 8px 24px;
+    }
+
+    .card {
+        padding: 20px 14px 16px;
+        border-radius: 18px;
+    }
+
+    .photoRow {
+        align-items: flex-start;
+    }
+
+    .socialIconsRow {
+        gap: 8px;
+    }
+
+    .submitButton {
+        width: 100%;
+    }
+
     .whatsappRow {
         flex-direction: column;
         gap: 8px;
@@ -424,4 +461,3 @@ select.input {
         flex: 1 1 auto;
     }
 }
-
