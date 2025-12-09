@@ -42,6 +42,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/specialities/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/artists/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/test-smtp").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/health").permitAll()
 
                         // MULTIMEDIA: public images and videos
                         .requestMatchers(HttpMethod.GET, "/multimedia/banner/image/active").permitAll()
