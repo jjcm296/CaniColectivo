@@ -34,7 +34,6 @@ const SOCIAL_LINKS = [
 ];
 
 export default function Footer() {
-
     const year = new Date().getFullYear();
 
     return (
@@ -76,7 +75,7 @@ export default function Footer() {
                     </p>
 
                     {/* Redes sociales desde arreglo */}
-                    <div className={styles.social} aria-label="Redes sociales">
+                    <nav className={styles.social} aria-label="Redes sociales">
                         {SOCIAL_LINKS.map((s) => (
                             <SocialIcon
                                 key={s.type}
@@ -86,7 +85,7 @@ export default function Footer() {
                                 invert={s.invert}
                             />
                         ))}
-                    </div>
+                    </nav>
                 </section>
 
                 {/* Enlaces */}

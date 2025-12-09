@@ -16,7 +16,6 @@ import { getPendingArtists } from "@/features/artists/api/artistAdminApi";
 export default function NavBar() {
     const pathname = usePathname();
 
-    // 👇 TODOS los hooks van aquí, sin returns antes
     const [userPanelOpen, setUserPanelOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -124,7 +123,6 @@ export default function NavBar() {
         };
     }, [token, isAuthenticated, isAdmin]);
 
-    // ❗ IMPORTANTE: el return condicional va DESPUÉS de todos los hooks
     const hideNavbar =
         pathname?.startsWith("/auth") ||
         pathname === "/auth" ||
@@ -244,7 +242,7 @@ export default function NavBar() {
 
                     <button
                         className={styles.nbToggle}
-                        aria-label="Abrir menú"
+                        aria-label={open ? "Cerrar menú" : "Abrir menú"}
                         aria-expanded={open}
                         aria-controls="menu-movil"
                         onClick={() => setOpen((v) => !v)}
@@ -255,33 +253,58 @@ export default function NavBar() {
                     </button>
                 </div>
 
-                {open && (
+                {/* Menú móvil siempre en el DOM para que aria-controls sea válido */}
+                <div
+                    className={styles.nbBackdrop}
+                    onClick={open ? closeMenu : undefined}
+                    style={{ display: open ? "block" : "none" }}
+                >
                     <div
-                        className={styles.nbBackdrop}
-                        onClick={closeMenu}
+                        id="menu-movil"
+                        className={`${styles.nbPanel} ${
+                            open ? styles.nbPanelOpen : ""
+                        }`}
+                        onClick={(e) => e.stopPropagation()}
+                        aria-hidden={!open}
                     >
-                        <div
-                            id="menu-movil"
-                            className={`${styles.nbPanel} ${styles.nbPanelOpen}`}
-                            onClick={(e) => e.stopPropagation()}
-                        >
+                        <div className={styles.nbPanelSection}>
+                            {left.map((l) => (
+                                <Link
+                                    key={l.href}
+                                    href={l.href}
+                                    onClick={(e) => {
+                                        if (
+                                            l.href === "/#footer" &&
+                                            pathname === "/"
+                                        ) {
+                                            e.preventDefault();
+                                            scrollToFooter();
+                                        }
+                                        closeMenu();
+                                        setUserPanelOpen(false);
+                                    }}
+                                    className={`${styles.nbPanelLink} ${
+                                        isActive(l.href)
+                                            ? styles.nbActive
+                                            : ""
+                                    }`}
+                                >
+                                    {l.label}
+                                </Link>
+                            ))}
+                        </div>
+
+                        {!isAuthenticated && (
                             <div className={styles.nbPanelSection}>
-                                {left.map((l) => (
+                                {right.map((l) => (
                                     <Link
                                         key={l.href}
                                         href={l.href}
-                                        onClick={(e) => {
-                                            if (
-                                                l.href === "/#footer" &&
-                                                pathname === "/"
-                                            ) {
-                                                e.preventDefault();
-                                                scrollToFooter();
-                                            }
+                                        onClick={() => {
                                             closeMenu();
                                             setUserPanelOpen(false);
                                         }}
-                                        className={`${styles.nbPanelLink} ${
+                                        className={`${styles.nbPanelAction} ${
                                             isActive(l.href)
                                                 ? styles.nbActive
                                                 : ""
@@ -291,31 +314,9 @@ export default function NavBar() {
                                     </Link>
                                 ))}
                             </div>
-
-                            {!isAuthenticated && (
-                                <div className={styles.nbPanelSection}>
-                                    {right.map((l) => (
-                                        <Link
-                                            key={l.href}
-                                            href={l.href}
-                                            onClick={() => {
-                                                closeMenu();
-                                                setUserPanelOpen(false);
-                                            }}
-                                            className={`${styles.nbPanelAction} ${
-                                                isActive(l.href)
-                                                    ? styles.nbActive
-                                                    : ""
-                                            }`}
-                                        >
-                                            {l.label}
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        )}
                     </div>
-                )}
+                </div>
             </header>
 
             <UserPanel
