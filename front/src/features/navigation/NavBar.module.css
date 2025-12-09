@@ -308,7 +308,9 @@
     font-weight: 800;
     border: none;
     padding: 12px 18px;
-    text-align: center;
+    text-align: left;
+    display: block;
+    width: 100%;
     transition: filter 0.15s ease, transform 0.15s ease;
 }
 
