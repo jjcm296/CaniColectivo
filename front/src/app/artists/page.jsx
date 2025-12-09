@@ -11,7 +11,9 @@ export default function ArtistsPage() {
                 <ContentHeader scope="artists" />
             </Suspense>
 
-            <ArtistsGrid />
+            <Suspense fallback={<p>Cargando Artistas...</p>}>
+                <ArtistsGrid />
+            </Suspense>
         </main>
     );
 }

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styles from './ArtistCard.module.css';
 import SocialIcon from '@/features/ui/social-icon/SocialIcon';
-import {slugify} from "@/features/utils/slugify";
+import { slugify } from "@/features/utils/slugify";
 
 export default function ArtistCard({
                                        id,
@@ -19,10 +19,13 @@ export default function ArtistCard({
     const { whatsapp, instagram, tiktok, facebook, x } = social || {};
     const initial = name?.charAt(0).toUpperCase() || '?';
 
+    // slug bonito + id → ej: "jordain-16"
+    const nameSlug = slugify(name || "");
+    const slug = `${nameSlug}-${id}`;
+
     const waLink = whatsapp
         ? `https://wa.me/${whatsapp.replace(/\D/g, '')}`
         : null;
-    const slug = slugify(name);
 
     const handleCardClick = (event) => {
         if (event.target.closest('a')) return;
@@ -31,7 +34,13 @@ export default function ArtistCard({
             onSelect({ id, name, city, tags, imageUrl, social });
         }
 
-        router.push(`/profile/${slug}`);
+        // 💾 Guardar el id del artista para la página de detalle
+        if (typeof window !== "undefined") {
+            sessionStorage.setItem("selectedArtistId", String(id));
+        }
+
+        // Ir a /artist/slug (el slug es solo cosmético)
+        router.push(`/artist/${slug}`);
     };
 
     const handleKeyDown = (event) => {
@@ -66,15 +75,13 @@ export default function ArtistCard({
             <div className={styles.body}>
                 <div className={styles.top}>
                     <p className={styles.name}>{name}</p>
-
                     {city && <p className={styles.city}>{city}</p>}
-
                     {tags.length > 0 && (
                         <div className={styles.tags}>
                             {tags.map((tag) => (
                                 <span key={tag} className={styles.tag}>
-                  {tag}
-                </span>
+                                    {tag}
+                                </span>
                             ))}
                         </div>
                     )}
@@ -82,39 +89,19 @@ export default function ArtistCard({
 
                 <div className={styles.socialRow}>
                     {waLink && (
-                        <SocialIcon
-                            type="whatsapp"
-                            href={waLink}
-                            ariaLabel={`Contactar a ${name} por WhatsApp`}
-                        />
+                        <SocialIcon type="whatsapp" href={waLink} ariaLabel={`Contactar a ${name}`} />
                     )}
                     {facebook && (
-                        <SocialIcon
-                            type="facebook"
-                            href={facebook}
-                            ariaLabel={`Facebook de ${name}`}
-                        />
+                        <SocialIcon type="facebook" href={facebook} ariaLabel={`Facebook de ${name}`} />
                     )}
                     {instagram && (
-                        <SocialIcon
-                            type="instagram"
-                            href={instagram}
-                            ariaLabel={`Instagram de ${name}`}
-                        />
+                        <SocialIcon type="instagram" href={instagram} ariaLabel={`Instagram de ${name}`} />
                     )}
                     {tiktok && (
-                        <SocialIcon
-                            type="tiktok"
-                            href={tiktok}
-                            ariaLabel={`TikTok de ${name}`}
-                        />
+                        <SocialIcon type="tiktok" href={tiktok} ariaLabel={`TikTok de ${name}`} />
                     )}
                     {x && (
-                        <SocialIcon
-                            type="x"
-                            href={x}
-                            ariaLabel={`Perfil de ${name} en X`}
-                        />
+                        <SocialIcon type="x" href={x} ariaLabel={`Perfil de ${name} en X`} />
                     )}
                 </div>
             </div>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import styles from "./ArtistProfileHeader.module.css";
 
 export default function ArtistProfileHeader({ artist }) {
-    const { name, city, imageUrl, headline } = artist || {};
+    const { name, city, photoUrl, headline } = artist || {};
 
     const displayHeadline =
         headline || "Artista local y colaborador de la comunidad";
@@ -12,9 +12,9 @@ export default function ArtistProfileHeader({ artist }) {
     return (
         <header className={styles.header}>
             <div className={styles.avatar}>
-                {imageUrl ? (
+                {photoUrl ? (
                     <Image
-                        src={imageUrl}
+                        src={photoUrl}
                         alt={name}
                         fill
                         sizes="180px"

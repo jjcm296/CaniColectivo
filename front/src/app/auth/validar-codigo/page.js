@@ -1,4 +1,3 @@
-// app/auth/validar-codigo/page.js
 import { Suspense } from "react";
 import ValidarCodigoPageClient from "./ValidarCodigoPageClient";
 
