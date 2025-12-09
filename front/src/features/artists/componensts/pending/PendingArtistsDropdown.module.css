@@ -202,21 +202,39 @@
 }
 
 .approve {
-    background: #22c55e;   /* 🟢 verde sólido */
+    background: #22c55e;
     color: #ffffff;
     border: none;
 }
 
 .approve:hover:not(:disabled) {
-    background: #16a34a;   /* 🟢 verde sólido más oscuro */
+    background: #16a34a;
 }
 
 .reject {
-    background: #ef4444;   /* 🔴 rojo sólido */
+    background: #ef4444;
     color: #ffffff;
     border: none;
 }
 
 .reject:hover:not(:disabled) {
-    background: #dc2626;   /* 🔴 rojo sólido más oscuro */
+    background: #dc2626;
+}
+
+@media (max-width: 640px) {
+    .dropdown {
+        position: fixed;
+        top: 64px;
+        left: 8px;
+        right: 8px;
+        margin-top: 0;
+        width: auto;
+        max-height: calc(100vh - 80px);
+        border-radius: 18px;
+        padding: 12px 10px 10px;
+    }
+
+    .list {
+        max-height: calc(100vh - 160px);
+    }
 }

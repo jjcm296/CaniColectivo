@@ -1,4 +1,3 @@
-// src/features/artists/componensts/pending/PendingArtistsDropdown.jsx
 import Image from "next/image";
 import styles from "./PendingArtistsDropdown.module.css";
 
