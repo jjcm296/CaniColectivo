@@ -15,6 +15,8 @@ import { getPendingArtists } from "@/features/artists/api/artistAdminApi";
 
 export default function NavBar() {
     const pathname = usePathname();
+    
+    const [userPanelOpen, setUserPanelOpen] = useState(false);
 
     const hideNavbar =
         pathname?.startsWith("/auth") ||
@@ -25,7 +27,6 @@ export default function NavBar() {
 
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [userPanelOpen, setUserPanelOpen] = useState(false);
     const [pendingCount, setPendingCount] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -101,7 +102,6 @@ export default function NavBar() {
     const isAdmin =
         roleNames.includes("admin") || roleNames.includes("ROLE_ADMIN");
 
-    // cargar pendientes solo para admin autenticado
     useEffect(() => {
         if (!token || !isAuthenticated || !isAdmin) {
             setPendingCount(0);
@@ -129,6 +129,10 @@ export default function NavBar() {
         };
     }, [token, isAuthenticated, isAdmin]);
 
+    useEffect(() => {
+        setUserPanelOpen(false);
+    }, [pathname]);
+
     return (
         <>
             <header
@@ -141,7 +145,10 @@ export default function NavBar() {
                         <Link
                             href="/"
                             className={styles.nbBrandLink}
-                            onClick={closeMenu}
+                            onClick={() => {
+                                closeMenu();
+                                setUserPanelOpen(false);
+                            }}
                         >
                             <Image
                                 src="/home/Logo_cani.svg"
@@ -166,8 +173,9 @@ export default function NavBar() {
                                             if (pathname === "/") {
                                                 e.preventDefault();
                                                 scrollToFooter();
-                                                closeMenu();
                                             }
+                                            closeMenu();
+                                            setUserPanelOpen(false);
                                         }}
                                     >
                                         {l.label}
@@ -182,6 +190,10 @@ export default function NavBar() {
                                     className={`${styles.nbLink} ${
                                         isActive(l.href) ? styles.nbActive : ""
                                     }`}
+                                    onClick={() => {
+                                        closeMenu();
+                                        setUserPanelOpen(false);
+                                    }}
                                 >
                                     {l.label}
                                 </Link>
@@ -201,10 +213,14 @@ export default function NavBar() {
 
                         {isAuthenticated ? (
                             <UserAvatar
-                                name={isLoadingUser ? "Cargando..." : displayName}
+                                name={
+                                    isLoadingUser ? "Cargando..." : displayName
+                                }
                                 imageUrl={avatarImage}
                                 href="/profile"
-                                onClick={() => setUserPanelOpen((v) => !v)}
+                                onClick={() =>
+                                    setUserPanelOpen((v) => !v)
+                                }
                                 showLabel={true}
                             />
                         ) : (
@@ -240,7 +256,6 @@ export default function NavBar() {
                     </button>
                 </div>
 
-                {/* BACKDROP + PANEL MÓVIL */}
                 {open && (
                     <div
                         className={styles.nbBackdrop}
@@ -251,7 +266,6 @@ export default function NavBar() {
                             className={`${styles.nbPanel} ${styles.nbPanelOpen}`}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* LINKS PRINCIPALES */}
                             <div className={styles.nbPanelSection}>
                                 {left.map((l) => (
                                     <Link
@@ -266,9 +280,12 @@ export default function NavBar() {
                                                 scrollToFooter();
                                             }
                                             closeMenu();
+                                            setUserPanelOpen(false);
                                         }}
                                         className={`${styles.nbPanelLink} ${
-                                            isActive(l.href) ? styles.nbActive : ""
+                                            isActive(l.href)
+                                                ? styles.nbActive
+                                                : ""
                                         }`}
                                     >
                                         {l.label}
@@ -276,14 +293,16 @@ export default function NavBar() {
                                 ))}
                             </div>
 
-                            {/* SOLO si NO está logueado → mostrar login y registro */}
                             {!isAuthenticated && (
                                 <div className={styles.nbPanelSection}>
                                     {right.map((l) => (
                                         <Link
                                             key={l.href}
                                             href={l.href}
-                                            onClick={closeMenu}
+                                            onClick={() => {
+                                                closeMenu();
+                                                setUserPanelOpen(false);
+                                            }}
                                             className={`${styles.nbPanelAction} ${
                                                 isActive(l.href)
                                                     ? styles.nbActive

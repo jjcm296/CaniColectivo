@@ -92,11 +92,6 @@ export default function UserPanel({ open, onClose, user, isAdmin, token }) {
                 <header className={styles.topBar}>
                     <span className={styles.topTitle}>{displayName}</span>
 
-                    {/* Campanita dentro del panel lateral solo para admin */}
-                    {isAdmin && token && (
-                        <PendingArtistsBell token={token} />
-                    )}
-
                     <button
                         type="button"
                         className={styles.closeButton}
