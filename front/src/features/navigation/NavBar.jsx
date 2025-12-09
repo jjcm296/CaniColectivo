@@ -38,8 +38,8 @@ export default function NavBar() {
         { href: "/", label: "Inicio" },
         { href: "/artists", label: "Artistas" },
         { href: "/events", label: "Eventos" },
-        { href: "/about", label: "Nosotros" },
         { href: "/gallery", label: "Galería" },
+        { href: "/about", label: "Nosotros" },
         { href: "/#footer", label: "Contacto" },
     ];
 
