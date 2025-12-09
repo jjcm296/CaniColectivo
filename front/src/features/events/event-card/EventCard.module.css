@@ -52,18 +52,12 @@
 
 .poster {
     object-fit: cover;
-}
-
-.poster {
-    object-fit: cover;
     transition: transform 0.35s ease-out;
 }
 
 .posterFrame:hover .poster {
     transform: scale(1.06);
 }
-
-
 
 /* ===== Badge ===== */
 .badge {
@@ -151,6 +145,8 @@
     text-decoration: none;
     font-size: 0.8rem;
     box-sizing: border-box;
+    cursor: pointer;
+    border: none;
 }
 
 /* Principal */
@@ -177,7 +173,7 @@
     background: #fff;
     color: var(--nv);
     border: 2px solid var(--nv);
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
 }
 
 .btnGhost:hover {
@@ -240,4 +236,68 @@
     .btnGhost {
         transition: none;
     }
+}
+
+/* ===== Modal "global" ===== */
+.modalBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 16px;
+    backdrop-filter: blur(4px);
+}
+
+.modal {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 18px 20px 16px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.modalTitle {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--nv);
+}
+
+.modalMessage {
+    margin: 0 0 16px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modalButton {
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--nv);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.modalButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.32);
+}
+
+.modalButton:active {
+    transform: none;
+    opacity: 0.95;
 }
