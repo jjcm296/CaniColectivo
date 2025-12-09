@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
     getPendingArtists,
     approveOrRejectArtist,
@@ -23,23 +23,20 @@ export default function PendingArtistsBell({ token, initialCount = 0 }) {
     const hasPending = count > 0;
     const wrapperRef = useRef(null);
     const router = useRouter();
+    const pathname = usePathname();
 
     if (!token) return null;
 
-    // Sincronizar con el valor que viene de NavBar
     useEffect(() => {
         setCount(initialCount);
     }, [initialCount]);
 
-    // Cargar la lista sólo cuando se abre el dropdown
     useEffect(() => {
         if (open) {
             void loadList();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
-    // Cerrar al hacer click fuera
     useEffect(() => {
         if (!open) return;
 
@@ -57,6 +54,10 @@ export default function PendingArtistsBell({ token, initialCount = 0 }) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [open]);
+
+    useEffect(() => {
+        setOpen(false);
+    }, [pathname]);
 
     async function loadList() {
         setLoadingList(true);
@@ -92,12 +93,10 @@ export default function PendingArtistsBell({ token, initialCount = 0 }) {
     const handleApprove = (id) => handleDecision(id, true);
     const handleReject = (id) => handleDecision(id, false);
 
-    // 👉 Abrir el perfil completo del artista pendiente
     const handleOpenArtist = (artist) => {
         if (!artist?.id) return;
 
         if (typeof window !== "undefined") {
-            // guardamos el ID y marcamos que viene de pendientes
             sessionStorage.setItem("selectedArtistId", String(artist.id));
             sessionStorage.setItem("selectedArtistFromPending", "true");
         }
@@ -105,7 +104,7 @@ export default function PendingArtistsBell({ token, initialCount = 0 }) {
         const nameSlug = slugify(artist.name || "artista");
         const slug = `${nameSlug}-${artist.id}`;
 
-        // Usamos el mismo detalle que el flujo anterior: /artist/[slug]
+        setOpen(false); // 👈 cerramos el modal/dropdown antes de navegar
         router.push(`/artist/${slug}`);
     };
 

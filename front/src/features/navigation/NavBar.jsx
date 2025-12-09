@@ -15,7 +15,7 @@ import { getPendingArtists } from "@/features/artists/api/artistAdminApi";
 
 export default function NavBar() {
     const pathname = usePathname();
-    
+
     const [userPanelOpen, setUserPanelOpen] = useState(false);
 
     const hideNavbar =
