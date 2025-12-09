@@ -26,8 +26,12 @@ export default function ArtistProfile({
         (description && description.trim().length > 0 && description) ||
         "Próximamente agregaremos una descripción más detallada sobre este perfil artístico y sus proyectos.";
 
+
+    const isPending = artist.approved === false;
+
     const showModerationBar =
         showModeration &&
+        isPending &&
         (typeof onApprove === "function" || typeof onReject === "function");
 
     return (
