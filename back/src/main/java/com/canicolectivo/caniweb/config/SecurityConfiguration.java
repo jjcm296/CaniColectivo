@@ -49,6 +49,13 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/multimedia/banner/video").permitAll()
                         .requestMatchers("/multimedia/**").hasRole("ADMIN")
 
+                        . requestMatchers(HttpMethod.GET, "/events/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/events").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/events/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod. PATCH, "/events/*/status").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/events/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/events/update-past-status").hasRole("ADMIN")
+
                         // PROTECTED
                         .requestMatchers("/users/me").authenticated()
                         .requestMatchers(HttpMethod.POST, "/artists").authenticated()
