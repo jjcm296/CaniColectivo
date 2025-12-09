@@ -1,4 +1,3 @@
-// src/features/artists/componensts/pending/PendingArtistsBell.jsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";

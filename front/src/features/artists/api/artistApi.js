@@ -42,6 +42,43 @@ export async function createArtistProfile(body, token) {
 }
 
 // =============================
+// ACTUALIZAR perfil de artista (PUT /artists/{id})
+// =============================
+export async function updateArtistProfile(artistId, body, token) {
+    try {
+        const res = await fetch(`${ARTISTS_URL}/${artistId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            body: JSON.stringify(body),
+        });
+
+        let payload = null;
+        try {
+            payload = await res.json();
+        } catch (_) {}
+
+        if (!res.ok) {
+            const message =
+                payload?.message ||
+                payload?.error ||
+                "No se pudo actualizar el perfil de artista.";
+            return { ok: false, error: message };
+        }
+
+        return { ok: true, data: payload };
+    } catch (error) {
+        console.error("Error al actualizar perfil de artista:", error);
+        return {
+            ok: false,
+            error: "Error de red al actualizar el perfil de artista.",
+        };
+    }
+}
+
+// =============================
 // Subir foto de artista (POST /artists/{id}/photo)
 // =============================
 export async function uploadArtistPhoto(artistId, file, token) {
@@ -49,7 +86,6 @@ export async function uploadArtistPhoto(artistId, file, token) {
         const url = `${ARTISTS_URL}/${artistId}/photo`;
 
         const formData = new FormData();
-        // El backend espera el campo "photo"
         formData.append("photo", file);
 
         const res = await fetch(url, {
@@ -73,7 +109,6 @@ export async function uploadArtistPhoto(artistId, file, token) {
             return { ok: false, error: message };
         }
 
-        // Según tu tabla, debería regresar { photoUrl, artist }
         return { ok: true, data: payload };
     } catch (error) {
         console.error("Error al subir foto de artista:", error);
@@ -91,9 +126,7 @@ export async function getSpecialityTypes() {
     try {
         const res = await fetch(SPECIALITIES_URL, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
         });
 
         let payload = null;
@@ -126,9 +159,7 @@ export async function getApprovedArtists() {
     try {
         const res = await fetch(ARTISTS_URL, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             cache: "no-store",
         });
 
@@ -163,7 +194,7 @@ export async function getMyArtistProfile(token) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                ...(token ? {Authorization: `Bearer ${token}`} : {}),
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
             credentials: "include",
             cache: "no-store",
@@ -172,22 +203,21 @@ export async function getMyArtistProfile(token) {
         let payload = null;
         try {
             payload = await res.json();
-        } catch (_) {
-        }
+        } catch (_) {}
 
         if (!res.ok) {
             const message =
                 payload?.message ||
                 payload?.error ||
                 "No se pudo obtener tu perfil.";
-            return {ok: false, error: message};
+            return { ok: false, error: message };
         }
 
         const user = payload || {};
         const rawArtist = user.artist || null;
 
         if (!rawArtist) {
-            return {ok: true, data: null};
+            return { ok: true, data: null };
         }
 
         const mappedArtist = {
@@ -195,13 +225,14 @@ export async function getMyArtistProfile(token) {
             email: user.email,
             city: rawArtist.location,
             social: rawArtist.socialMedia || {},
-            // ArtistProfileDetails usa tags:
             tags: Array.isArray(rawArtist.specialities)
-                ? rawArtist.specialities.map((s) => s.name || "").filter(Boolean)
+                ? rawArtist.specialities
+                    .map((s) => s.name || "")
+                    .filter(Boolean)
                 : [],
         };
 
-        return {ok: true, data: mappedArtist};
+        return { ok: true, data: mappedArtist };
     } catch (error) {
         console.error("Error obteniendo tu perfil:", error);
         return {
@@ -215,9 +246,7 @@ export async function getArtistById(id) {
     try {
         const res = await fetch(`${ARTISTS_URL}/${id}`, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             cache: "no-store",
         });
 

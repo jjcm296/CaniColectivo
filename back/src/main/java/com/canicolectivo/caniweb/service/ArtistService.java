@@ -47,20 +47,23 @@ public class ArtistService {
 
     public List<ArtistDTO> findAll() {
         return artistRepository.findAll().stream()
-                .map(ArtistDTO::formEntity).toList();
+                .map(ArtistDTO::formEntity)
+                .toList();
     }
 
     public List<ArtistDTO> findAllApprovedRandom() {
-        return artistRepository.findApprovedArtistsRandomOrder(). stream()
-                . map(ArtistDTO::formEntity).toList();
+        return artistRepository.findApprovedArtistsRandomOrder().stream()
+                .map(ArtistDTO::formEntity)
+                .toList();
     }
 
     public List<ArtistDTO> findAllApprovedRandom(int limit) {
         if (limit <= 0) {
             return List.of();
         }
-        return artistRepository.findRandomApprovedArtists(limit). stream()
-                . map(ArtistDTO::formEntity).toList();
+        return artistRepository.findRandomApprovedArtists(limit).stream()
+                .map(ArtistDTO::formEntity)
+                .toList();
     }
 
     public List<ArtistDTO> findPendingArtists() {
@@ -91,13 +94,10 @@ public class ArtistService {
         artist.setSocialMedia(dto.getSocialMedia());
         artist.setUser(managedUser);
 
-        // ---- HANDLE SPECIALITIES ----
         if (dto.getSpecialities() != null && !dto.getSpecialities().isEmpty()) {
             Set<Speciality> specialities = new HashSet<>();
 
             for (SpecialityDTO sDto : dto.getSpecialities()) {
-
-                // ignore empty speciality rows
                 if ((sDto.getId() == null || sDto.getId() <= 0)
                         && (sDto.getName() == null || sDto.getName().isBlank())) {
                     continue;
@@ -105,18 +105,15 @@ public class ArtistService {
 
                 Speciality speciality = null;
 
-                // 1) Try by ID
                 if (sDto.getId() != null && sDto.getId() > 0) {
                     speciality = specialityRepository.findById(sDto.getId()).orElse(null);
                 }
 
-                // 2) Try by name
                 if (speciality == null && sDto.getName() != null && !sDto.getName().isBlank()) {
                     String normalized = normalizeName(sDto.getName());
                     speciality = specialityRepository.findByNameIgnoreCase(normalized).orElse(null);
                 }
 
-                // 3) Create new speciality (transient)
                 if (speciality == null) {
                     Speciality newS = sDto.toEntity();
                     newS.setName(normalizeName(newS.getName()));
@@ -137,7 +134,6 @@ public class ArtistService {
         return ArtistDTO.formEntity(saved);
     }
 
-
     @Transactional
     public Optional<ArtistDTO> update(Integer id, ArtistDTO dto, User currentUser) {
         Optional<Artist> opt = artistRepository.findById(id);
@@ -146,8 +142,10 @@ public class ArtistService {
         Artist artist = opt.get();
 
         if (artist.getUser() == null || !artist.getUser().getId().equals(currentUser.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "You can only update your own artist profile");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "You can only update your own artist profile"
+            );
         }
 
         artist.setName(dto.getName());
@@ -156,13 +154,10 @@ public class ArtistService {
         artist.setPhone(dto.getPhone());
         artist.setSocialMedia(dto.getSocialMedia());
 
-        // ---- HANDLE SPECIALITIES ----
         if (dto.getSpecialities() != null) {
             Set<Speciality> specialities = new HashSet<>();
 
             for (SpecialityDTO sDto : dto.getSpecialities()) {
-
-                // ignore empty speciality rows
                 if ((sDto.getId() == null || sDto.getId() <= 0)
                         && (sDto.getName() == null || sDto.getName().isBlank())) {
                     continue;
@@ -170,18 +165,15 @@ public class ArtistService {
 
                 Speciality speciality = null;
 
-                // 1) Try by ID
                 if (sDto.getId() != null && sDto.getId() > 0) {
                     speciality = specialityRepository.findById(sDto.getId()).orElse(null);
                 }
 
-                // 2) Try by name
                 if (speciality == null && sDto.getName() != null && !sDto.getName().isBlank()) {
                     String normalized = normalizeName(sDto.getName());
                     speciality = specialityRepository.findByNameIgnoreCase(normalized).orElse(null);
                 }
 
-                // 3) Create new speciality (transient)
                 if (speciality == null) {
                     Speciality newS = sDto.toEntity();
                     newS.setName(normalizeName(newS.getName()));
@@ -198,10 +190,8 @@ public class ArtistService {
         return Optional.of(ArtistDTO.formEntity(saved));
     }
 
-
-
     @Transactional
-    public boolean delete(Integer id, User currentUser){
+    public boolean delete(Integer id, User currentUser) {
         Optional<Artist> opt = artistRepository.findById(id);
 
         if (opt.isEmpty()) {
@@ -211,18 +201,16 @@ public class ArtistService {
         Artist artist = opt.get();
 
         if (artist.getUser() == null || !artist.getUser().getId().equals(currentUser.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "You can only delete your own artist profile");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "You can only delete your own artist profile"
+            );
         }
 
-        // Clear the specialities relationship before deleting
         artist.setSpecialities(new HashSet<>());
-        artistRepository.flush();  // Flush to clear the relationship
+        artistRepository.flush();
 
-        // Delete PendingArtist
         pendingArtistRepository.deleteByArtistId(id);
-
-        // Then delete the Artist
         artistRepository.delete(artist);
 
         return true;
@@ -240,35 +228,38 @@ public class ArtistService {
                     pendingArtistRepository.deleteByArtistId(id);
 
                     return isApproved;
-                }).orElseThrow();
+                })
+                .orElseThrow();
     }
 
     @Transactional
     public ArtistPhotoResponse uploadArtistPhoto(Integer artistId, MultipartFile file, User currentUser) {
-        // validate file
-        if (file == null || file.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Photo file is required");
+        if (file == null || file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Photo file is required");
+        }
 
-        // validate file type
         String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only image files are allowed");
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only image files are allowed");
+        }
 
-        // validate file size (max 5MB)
         long maxSize = 5 * 1024 * 1024;
-        if (file.getSize() > maxSize) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File size exceeds maximum limit of 5MB");
+        if (file.getSize() > maxSize) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File size exceeds maximum limit of 5MB");
+        }
 
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found"));
 
-        // user owns this artist profile
-        if (artist.getUser().getId() != currentUser.getId()) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only update your own artist profile");
+        if (!artist.getUser().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only update your own artist profile");
+        }
 
         try {
-            // delete old photo if exists
             if (artist.getPhotoUrl() != null && !artist.getPhotoUrl().isBlank()) {
                 try {
                     cloudflareService.deleteByUrl(artist.getPhotoUrl());
                 } catch (IOException e) {
-                    // Log warning but don't fail the upload
                     System.out.println("Warning: Could not delete old photo: " + e.getMessage());
                 }
             }
@@ -283,10 +274,12 @@ public class ArtistService {
             return new ArtistPhotoResponse(newPhotoUrl, updatedArtistDTO);
 
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus. INTERNAL_SERVER_ERROR,
-                    "Error uploading photo: " + e. getMessage(), e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error uploading photo: " + e.getMessage(),
+                    e
+            );
         }
-
     }
 
     private String normalizeName(String name) {
@@ -294,6 +287,4 @@ public class ArtistService {
         name = name.trim();
         return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
-
-
 }

@@ -11,10 +11,7 @@ import UserPanel from "@/features/navigation/user-panel/UserPanel";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useCurrentUser } from "@/features/artists/hooks/useCurrentUser";
 import PendingArtistsBell from "@/features/artists/componensts/pending/PendingArtistsBell";
-import {
-    getPendingArtists,
-    getPendingArtistsCount,
-} from "@/features/artists/api/artistAdminApi";
+import { getPendingArtists } from "@/features/artists/api/artistAdminApi";
 
 export default function NavBar() {
     const pathname = usePathname();
@@ -30,8 +27,6 @@ export default function NavBar() {
     const [scrolled, setScrolled] = useState(false);
     const [userPanelOpen, setUserPanelOpen] = useState(false);
     const [pendingCount, setPendingCount] = useState(0);
-
-    // para saber si estamos en móvil (<= 720px)
     const [isMobile, setIsMobile] = useState(false);
 
     const { isAuth: isAuthenticated } = useAuth();
@@ -40,9 +35,9 @@ export default function NavBar() {
     const left = [
         { href: "/", label: "Inicio" },
         { href: "/artists", label: "Artistas" },
-        { href: "/events", label: "Eventos" },
         { href: "/about", label: "Nosotros" },
         { href: "/gallery", label: "Galería" },
+        { href: "/events", label: "Eventos" },
         { href: "/#footer", label: "Contacto" },
     ];
 
@@ -60,7 +55,7 @@ export default function NavBar() {
     useEffect(() => {
         const updateIsMobile = () => {
             if (typeof window === "undefined") return;
-            setIsMobile(window.innerWidth <= 720);
+            setIsMobile(window.innerWidth <= 1000);
         };
 
         updateIsMobile();
@@ -86,9 +81,7 @@ export default function NavBar() {
 
     const scrollToFooter = () => {
         const el = document.getElementById("footer");
-        if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
-        }
+        if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
     const displayName =
@@ -211,14 +204,10 @@ export default function NavBar() {
                                 name={isLoadingUser ? "Cargando..." : displayName}
                                 imageUrl={avatarImage}
                                 href="/profile"
-                                onClick={() =>
-                                    setUserPanelOpen((v) => !v)
-                                }
+                                onClick={() => setUserPanelOpen((v) => !v)}
                                 showLabel={true}
                             />
                         ) : (
-                            // En mobile NO mostramos estos botones,
-                            // solo en pantallas grandes (van en la hamburguesa).
                             !isMobile && (
                                 <>
                                     <Link
@@ -251,54 +240,64 @@ export default function NavBar() {
                     </button>
                 </div>
 
-                <div
-                    id="menu-movil"
-                    className={`${styles.nbPanel} ${
-                        open ? styles.nbPanelOpen : ""
-                    }`}
-                >
-                    <div className={styles.nbPanelSection}>
-                        {left.map((l) => (
-                            <Link
-                                key={l.href}
-                                href={l.href}
-                                onClick={(e) => {
-                                    if (l.href === "/#footer") {
-                                        if (pathname === "/") {
-                                            e.preventDefault();
-                                            scrollToFooter();
-                                        }
-                                    }
-                                    closeMenu();
-                                }}
-                                className={`${styles.nbPanelLink} ${
-                                    isActive(l.href) ? styles.nbActive : ""
-                                }`}
-                            >
-                                {l.label}
-                            </Link>
-                        ))}
-                    </div>
+                {/* BACKDROP + PANEL MÓVIL */}
+                {open && (
+                    <div
+                        className={styles.nbBackdrop}
+                        onClick={closeMenu}
+                    >
+                        <div
+                            id="menu-movil"
+                            className={`${styles.nbPanel} ${styles.nbPanelOpen}`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* LINKS PRINCIPALES */}
+                            <div className={styles.nbPanelSection}>
+                                {left.map((l) => (
+                                    <Link
+                                        key={l.href}
+                                        href={l.href}
+                                        onClick={(e) => {
+                                            if (
+                                                l.href === "/#footer" &&
+                                                pathname === "/"
+                                            ) {
+                                                e.preventDefault();
+                                                scrollToFooter();
+                                            }
+                                            closeMenu();
+                                        }}
+                                        className={`${styles.nbPanelLink} ${
+                                            isActive(l.href) ? styles.nbActive : ""
+                                        }`}
+                                    >
+                                        {l.label}
+                                    </Link>
+                                ))}
+                            </div>
 
-                    {!isAuthenticated && (
-                        <div className={styles.nbPanelSection}>
-                            {right.map((l) => (
-                                <Link
-                                    key={l.href}
-                                    href={l.href}
-                                    onClick={closeMenu}
-                                    className={`${styles.nbPanelAction} ${
-                                        isActive(l.href)
-                                            ? styles.nbActive
-                                            : ""
-                                    }`}
-                                >
-                                    {l.label}
-                                </Link>
-                            ))}
+                            {/* SOLO si NO está logueado → mostrar login y registro */}
+                            {!isAuthenticated && (
+                                <div className={styles.nbPanelSection}>
+                                    {right.map((l) => (
+                                        <Link
+                                            key={l.href}
+                                            href={l.href}
+                                            onClick={closeMenu}
+                                            className={`${styles.nbPanelAction} ${
+                                                isActive(l.href)
+                                                    ? styles.nbActive
+                                                    : ""
+                                            }`}
+                                        >
+                                            {l.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </header>
 
             <UserPanel

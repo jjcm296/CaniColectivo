@@ -15,6 +15,7 @@ import ArtistSpecialitiesSection
     from "@/features/artists/componensts/register/componensts/artist-specialities-section/ArtistSpecialitiesSection";
 
 import { useArtistProfile } from "@/features/artists/hooks/useArtistProfile";
+import { useMyArtistProfile } from "@/features/artists/hooks/useMyArtistProfile";
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 
 const SOCIAL_TYPES = [
@@ -40,24 +41,25 @@ const LOCATIONS = [
 ];
 
 const ARTIST_MESSAGES = {
-    loading: "Guardando tu perfil de artista...",
-    success: "Perfil concluido. ¡Bienvenidx a CANI!",
+    loadingCreate: "Guardando tu perfil de artista...",
+    loadingUpdate: "Guardando cambios en tu perfil...",
+    successCreate: "Perfil concluido. ¡Bienvenidx a CANI!",
+    successUpdate: "Perfil actualizado correctamente.",
     defaultError: "No pudimos guardar tu perfil. Intenta de nuevo.",
 };
 
-export default function ArtistRegisterPageClient({ emailParam }) {
+export default function ArtistRegisterPageClient({ emailParam, mode = "create" }) {
     const router = useRouter();
     const { showLoading, showSuccess, showError, hide } = useFeedback();
+    const isEdit = mode === "edit";
 
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
 
-    // foto de perfil
     const [photoFile, setPhotoFile] = useState(null);
     const [photoPreview, setPhotoPreview] = useState("");
 
-    // redes
     const [socialValues, setSocialValues] = useState({
         instagram: "",
         facebook: "",
@@ -68,16 +70,15 @@ export default function ArtistRegisterPageClient({ emailParam }) {
     });
     const [activeSocial, setActiveSocial] = useState("instagram");
 
-    // especialidades: tipo + nombre concreto
     const [selectedSpecialityType, setSelectedSpecialityType] = useState("");
     const [specialityName, setSpecialityName] = useState("");
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    // hook de perfil (API)
     const {
         createProfile,
+        updateProfile,
         uploadProfilePhoto,
         isSaving,
         specialityTypes,
@@ -86,9 +87,41 @@ export default function ArtistRegisterPageClient({ emailParam }) {
         loadSpecialityTypes,
     } = useArtistProfile();
 
+    const { artist: myArtist, isLoading: isLoadingMyArtist } = useMyArtistProfile();
+
     useEffect(() => {
         loadSpecialityTypes();
     }, [loadSpecialityTypes]);
+
+    useEffect(() => {
+        if (!isEdit || !myArtist) return;
+
+        setName(myArtist.name || "");
+        setLocation(myArtist.location || myArtist.city || "");
+        setDescription(myArtist.description || myArtist.bio || "");
+
+        const social = myArtist.social || myArtist.socialMedia || {};
+
+        setSocialValues((prev) => ({
+            ...prev,
+            instagram: social.instagram || "",
+            facebook: social.facebook || "",
+            tiktok: social.tiktok || "",
+            x: social.x || "",
+            email: social.email || "",
+            whatsapp: social.whatsapp || "",
+        }));
+
+        if (myArtist.photoUrl) {
+            setPhotoPreview(myArtist.photoUrl);
+        }
+
+        if (Array.isArray(myArtist.specialities) && myArtist.specialities.length > 0) {
+            const first = myArtist.specialities[0];
+            setSelectedSpecialityType(first.type || "");
+            setSpecialityName(first.name || "");
+        }
+    }, [isEdit, myArtist]);
 
     const handleSocialChange = (id, value) => {
         setSocialValues((prev) => ({
@@ -101,7 +134,7 @@ export default function ArtistRegisterPageClient({ emailParam }) {
         const file = event.target.files && event.target.files[0];
         if (!file) return;
 
-        if (photoPreview) {
+        if (photoPreview && !photoPreview.startsWith("http")) {
             URL.revokeObjectURL(photoPreview);
         }
 
@@ -112,7 +145,7 @@ export default function ArtistRegisterPageClient({ emailParam }) {
 
     useEffect(() => {
         return () => {
-            if (photoPreview) {
+            if (photoPreview && !photoPreview.startsWith("http")) {
                 URL.revokeObjectURL(photoPreview);
             }
         };
@@ -123,7 +156,6 @@ export default function ArtistRegisterPageClient({ emailParam }) {
         setError("");
         setSuccess("");
 
-        // obligatorios
         if (!name.trim()) {
             setError("El nombre del artista es obligatorio.");
             return;
@@ -134,7 +166,6 @@ export default function ArtistRegisterPageClient({ emailParam }) {
             return;
         }
 
-        // especialidad opcional
         const specialities =
             selectedSpecialityType && specialityName.trim()
                 ? [
@@ -145,16 +176,27 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                 ]
                 : [];
 
-        const phone = socialValues.whatsapp
-            ? `${socialValues.whatsapp.code}${socialValues.whatsapp.number}`.trim()
-            : null;
+        let phone = null;
+
+        if (socialValues.whatsapp) {
+            if (
+                typeof socialValues.whatsapp === "object" &&
+                (socialValues.whatsapp.code || socialValues.whatsapp.number)
+            ) {
+                phone = `${socialValues.whatsapp.code || ""}${
+                    socialValues.whatsapp.number || ""
+                }`.trim();
+            } else if (typeof socialValues.whatsapp === "string") {
+                phone = socialValues.whatsapp.trim();
+            }
+        }
 
         const socialMedia = {
-            instagram: socialValues.instagram.trim() || null,
-            facebook: socialValues.facebook.trim() || null,
-            tiktok: socialValues.tiktok.trim() || null,
-            x: socialValues.x.trim() || null,
-            email: socialValues.email.trim() || null,
+            instagram: socialValues.instagram?.trim() || null,
+            facebook: socialValues.facebook?.trim() || null,
+            tiktok: socialValues.tiktok?.trim() || null,
+            x: socialValues.x?.trim() || null,
+            email: socialValues.email?.trim() || null,
             whatsapp: phone,
         };
 
@@ -168,10 +210,23 @@ export default function ArtistRegisterPageClient({ emailParam }) {
         };
 
         try {
-            showLoading(ARTIST_MESSAGES.loading);
+            const loadingMsg = isEdit
+                ? ARTIST_MESSAGES.loadingUpdate
+                : ARTIST_MESSAGES.loadingCreate;
+            const successMsg = isEdit
+                ? ARTIST_MESSAGES.successUpdate
+                : ARTIST_MESSAGES.successCreate;
 
-            // 1) Crear perfil de artista
-            const result = await createProfile(payload);
+            showLoading(loadingMsg);
+
+            let result;
+            let artistId;
+
+            if (isEdit && myArtist?.id) {
+                result = await updateProfile(myArtist.id, payload);
+            } else {
+                result = await createProfile(payload);
+            }
 
             if (!result?.ok) {
                 hide();
@@ -181,37 +236,45 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                 return;
             }
 
-            const createdArtist = result.data || {};
-            const artistId = createdArtist.id;
+            const savedArtist = result.data || {};
+            artistId = savedArtist.id || myArtist?.id;
 
-            // 2) Si hay foto, subirla con multipart/form-data
             if (artistId && photoFile) {
                 const photoResult = await uploadProfilePhoto(artistId, photoFile);
-
                 if (!photoResult?.ok) {
-                    // No rompemos el flujo, pero logueamos el error
                     console.error("No se pudo subir la foto del artista:", photoResult?.error);
-                    // Si quisieras avisar en UI:
-                    // showError("Tu perfil se guardó, pero no pudimos subir la foto. Intenta más tarde.");
                 }
             }
 
             hide();
-            setSuccess(ARTIST_MESSAGES.success);
-            showSuccess(ARTIST_MESSAGES.success);
+            setSuccess(successMsg);
+            showSuccess(successMsg);
 
-            // pequeño delay para que se vea el modal global
             setTimeout(() => {
-                router.push("/");
+                if (isEdit) {
+                    router.push("/profile");
+                } else {
+                    router.push("/");
+                }
             }, 800);
         } catch (err) {
             hide();
-            console.error("Error al crear perfil de artista:", err);
+            console.error("Error al guardar perfil de artista:", err);
             const msg = ARTIST_MESSAGES.defaultError;
             setError(msg);
             showError(msg);
         }
     };
+
+    const title = isEdit ? "Edita tu perfil público" : "Crea tu perfil público";
+    const kicker = isEdit ? "Editar · Perfil de artista" : "Paso 2 · Perfil de artista";
+    const submitLabel = isEdit
+        ? isSaving
+            ? "Guardando cambios..."
+            : "Guardar cambios"
+        : isSaving
+            ? "Guardando perfil..."
+            : "Guardar perfil de artista";
 
     return (
         <main className={styles.wrapper}>
@@ -221,24 +284,26 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                 </div>
 
                 <header className={styles.header}>
-                    <p className={styles.kicker}>Paso 2 · Perfil de artista</p>
-                    <h1 className={styles.title}>Crea tu perfil público</h1>
-                    {emailParam && (
+                    <p className={styles.kicker}>{kicker}</p>
+                    <h1 className={styles.title}>{title}</h1>
+                    {!isEdit && emailParam && (
                         <p className={styles.subtitle}>
                             Estás registrando el perfil para: <span>{emailParam}</span>
                         </p>
                     )}
                 </header>
 
+                {isEdit && isLoadingMyArtist && (
+                    <p className={styles.loadingHint}>Cargando tu perfil...</p>
+                )}
+
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    {/* 1. Foto de perfil */}
                     <ArtistPhotoSection
                         name={name}
                         photoPreview={photoPreview}
                         onPhotoChange={handlePhotoChange}
                     />
 
-                    {/* 2. Datos básicos */}
                     <ArtistBasicInfoSection
                         name={name}
                         onNameChange={setName}
@@ -249,7 +314,6 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                         onDescriptionChange={setDescription}
                     />
 
-                    {/* 3. Redes sociales */}
                     <ArtistSocialSection
                         socialTypes={SOCIAL_TYPES}
                         socialValues={socialValues}
@@ -258,7 +322,6 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                         onChangeSocialValue={handleSocialChange}
                     />
 
-                    {/* 4. Especialidades */}
                     <ArtistSpecialitiesSection
                         typeValue={selectedSpecialityType}
                         onChangeType={setSelectedSpecialityType}
@@ -269,7 +332,6 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                         error={specialitiesError}
                     />
 
-                    {/* Mensajes inline */}
                     {error && <p className={styles.error}>{error}</p>}
                     {success && <p className={styles.success}>{success}</p>}
 
@@ -278,7 +340,7 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                         className={styles.submitButton}
                         disabled={isSaving}
                     >
-                        {isSaving ? "Guardando perfil..." : "Guardar perfil de artista"}
+                        {submitLabel}
                     </button>
                 </form>
             </section>
