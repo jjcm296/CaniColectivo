@@ -11,7 +11,6 @@ export default function ArtistsGrid({ onSelectArtist }) {
     const params = useSearchParams();
     const [hasMounted, setHasMounted] = useState(false);
 
-    // 🔍 búsqueda
     const q = params.get("q")?.trim().toLowerCase() ?? "";
 
     // 🎛 filtro del dropdown

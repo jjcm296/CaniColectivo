@@ -1,16 +1,16 @@
 import { Suspense } from "react";
-import MyProfilePageClient from "@/app/profile/MyProfilePageClient";
+import ArtistPublicPageClient from "@/app/artist/ArtistPublicPageClient";
 
-export default function ProfilePage() {
+export default function ArtistPublicPage() {
     return (
         <Suspense
             fallback={
                 <main className="page-container">
-                    <p>Cargando tu perfil...</p>
+                    <p>Cargando artista...</p>
                 </main>
             }
         >
-            <MyProfilePageClient />
+            <ArtistPublicPageClient />
         </Suspense>
     );
 }

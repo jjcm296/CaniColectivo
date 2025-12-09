@@ -1,33 +1,45 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { FiTrash2, FiAlertTriangle } from 'react-icons/fi';
-import styles from './VideoSpotlight.module.css';
-import TiktokVideoCard from './TiktokVideoCard';
-import { useBannerVideos } from '../../hooks/useBannerVideos';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { FiTrash2 } from "react-icons/fi";
+import styles from "./VideoSpotlight.module.css";
+import TiktokVideoCard from "./TiktokVideoCard";
+import { useBannerVideos } from "../../hooks/useBannerVideos";
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 import ConfirmModal from "@/features/ui/confirm-modal/ConfirmModal";
+import { useCurrentUser } from "@/features/artists/hooks/useCurrentUser";
 
 const DEFAULT_VIDEOS = [
     {
-        id: 'v1',
-        url: 'https://www.tiktok.com/@cani.colectivo/video/7555272248484007175?_r=1&_t=ZS-91LoQueQKQx',
-        title: 'Cani',
+        id: "v1",
+        url: "https://www.tiktok.com/@cani.colectivo/video/7555272248484007175?_r=1&_t=ZS-91LoQueQKQx",
+        title: "Cani",
     },
     {
-        id: 'v2',
-        url: 'https://www.tiktok.com/@cani.colectivo/video/7559994915350973704',
-        title: 'Mi amiga',
+        id: "v2",
+        url: "https://www.tiktok.com/@cani.colectivo/video/7559994915350973704",
+        title: "Mi amiga",
     },
     {
-        id: 'v3',
-        url: 'https://www.tiktok.com/@cani.colectivo/photo/7568908647720291602?embed_source=121374463%2C121468991%2C121439635%2C121749182%2C121433650%2C121404359%2C121497414%2C121477481%2C121351166%2C121947600%2C121811500%2C121896267%2C121860360%2C121487028%2C121331973%2C120811592%2C120810756%2C121885509%3Bnull%3Bembed_masking',
-        title: 'Momentos con la comunidad',
+        id: "v3",
+        url: "https://www.tiktok.com/@cani.colectivo/photo/7568908647720291602?embed_source=121374463%2C121468991%2C121439635%2C121749182%2C121433650%2C121404359%2C121497414%2C121477481%2C121351166%2C121947600%2C121811500%2C121896267%2C121860360%2C121487028%2C121331973%2C120811592%2C120810756%2C121885509%3Bnull%3Bembed_masking",
+        title: "Momentos con la comunidad",
     },
 ];
 
-export default function VideoSpotlight({ isAdmin = true }) {
+export default function VideoSpotlight() {
+    const { user: currentUser } = useCurrentUser();
+
+    const roleNames = Array.isArray(currentUser?.roles)
+        ? currentUser.roles.map((r) => r.name)
+        : currentUser?.roles?.name
+            ? [currentUser.roles.name]
+            : [];
+
+    const isAdmin =
+        roleNames.includes("admin") || roleNames.includes("ROLE_ADMIN");
+
     const { items, loading, error, createVideo, removeVideo } = useBannerVideos();
     const { showLoading, showSuccess, showError, hide } = useFeedback();
 
@@ -35,7 +47,7 @@ export default function VideoSpotlight({ isAdmin = true }) {
 
     // Modal para agregar video
     const [showModal, setShowModal] = useState(false);
-    const [videoUrl, setVideoUrl] = useState('');
+    const [videoUrl, setVideoUrl] = useState("");
     const [creating, setCreating] = useState(false);
     const [createError, setCreateError] = useState(null);
 
@@ -45,11 +57,11 @@ export default function VideoSpotlight({ isAdmin = true }) {
 
     // Adaptar videos del backend
     const apiVideos = (items || [])
-        .filter((item) => item.type === 'video' && item.isActive !== false)
+        .filter((item) => item.type === "video" && item.isActive !== false)
         .map((item) => ({
             id: item.id,
             url: item.url,
-            title: item.title || 'Video de Cani',
+            title: item.title || "Video de Cani",
         }));
 
     const list = apiVideos.length > 0 ? apiVideos : DEFAULT_VIDEOS;
@@ -79,7 +91,7 @@ export default function VideoSpotlight({ isAdmin = true }) {
 
     // Abrir modal de alta
     const handleOpenModal = () => {
-        setVideoUrl('');
+        setVideoUrl("");
         setCreateError(null);
         setShowModal(true);
     };
@@ -88,7 +100,7 @@ export default function VideoSpotlight({ isAdmin = true }) {
     const handleCloseModal = () => {
         if (!creating) {
             setShowModal(false);
-            setVideoUrl('');
+            setVideoUrl("");
             setCreateError(null);
         }
     };
@@ -99,7 +111,7 @@ export default function VideoSpotlight({ isAdmin = true }) {
 
         const trimmed = videoUrl.trim();
         if (!trimmed) {
-            setCreateError('Ingresa la URL del video de TikTok.');
+            setCreateError("Ingresa la URL del video de TikTok.");
             return;
         }
 
@@ -107,24 +119,23 @@ export default function VideoSpotlight({ isAdmin = true }) {
             setCreating(true);
             setCreateError(null);
 
-            showLoading('Guardando video...');
+            showLoading("Guardando video...");
             await createVideo(trimmed);
 
             hide();
-            showSuccess('Video agregado correctamente.');
+            showSuccess("Video agregado correctamente.");
 
             handleCloseModal();
         } catch (err) {
             console.error(err);
             hide();
-            showError('No se pudo registrar el video. Intenta de nuevo.');
-            setCreateError('No se pudo registrar el video. Intenta de nuevo.');
+            showError("No se pudo registrar el video. Intenta de nuevo.");
+            setCreateError("No se pudo registrar el video. Intenta de nuevo.");
         } finally {
             setCreating(false);
         }
     };
 
-    // Click en botón "Eliminar" => solo abre modal de confirmación
     const handleOpenConfirmDelete = () => {
         if (!canDeleteCurrent || deleting) return;
         setShowConfirmDelete(true);
@@ -135,25 +146,24 @@ export default function VideoSpotlight({ isAdmin = true }) {
         setShowConfirmDelete(false);
     };
 
-    // Confirmar eliminación
     const handleConfirmDelete = async () => {
         if (!canDeleteCurrent || deleting) return;
 
         try {
             setDeleting(true);
-            showLoading('Eliminando video...');
+            showLoading("Eliminando video...");
 
             await removeVideo(current.id);
 
             hide();
-            showSuccess('Video eliminado correctamente.');
+            showSuccess("Video eliminado correctamente.");
             setShowConfirmDelete(false);
 
             setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
         } catch (err) {
             console.error(err);
             hide();
-            showError('No se pudo eliminar el video. Intenta de nuevo.');
+            showError("No se pudo eliminar el video. Intenta de nuevo.");
         } finally {
             setDeleting(false);
         }
@@ -161,7 +171,6 @@ export default function VideoSpotlight({ isAdmin = true }) {
 
     return (
         <section className={styles.section} aria-labelledby="vid-title">
-            {/* Encabezado */}
             <div className={styles.header}>
                 <div>
                     <h2 id="vid-title" className={styles.title}>
@@ -192,7 +201,6 @@ export default function VideoSpotlight({ isAdmin = true }) {
                 </div>
             </div>
 
-            {/* Carrusel */}
             <div className={styles.scroller} role="region">
                 <button
                     className={`${styles.navBtn} ${styles.navLeft}`}
@@ -220,7 +228,6 @@ export default function VideoSpotlight({ isAdmin = true }) {
                     ›
                 </button>
 
-                {/* Contador + botón eliminar */}
                 <div className={styles.counterRow}>
                     <p className={styles.counter}>
                         {currentIndex + 1} / {total}
@@ -236,14 +243,13 @@ export default function VideoSpotlight({ isAdmin = true }) {
                         >
                             <FiTrash2 className={styles.deleteIcon} />
                             <span className={styles.deleteText}>
-                                {deleting ? 'Eliminando...' : 'Eliminar'}
+                                {deleting ? "Eliminando..." : "Eliminar"}
                             </span>
                         </button>
                     )}
                 </div>
             </div>
 
-            {/* Modal agregar video */}
             {isAdmin && showModal && (
                 <div className={styles.modalBackdrop}>
                     <div className={styles.modal}>
@@ -281,7 +287,7 @@ export default function VideoSpotlight({ isAdmin = true }) {
                                     className={styles.modalSubmit}
                                     disabled={creating}
                                 >
-                                    {creating ? 'Guardando...' : 'Guardar video'}
+                                    {creating ? "Guardando..." : "Guardar video"}
                                 </button>
                             </div>
                         </form>

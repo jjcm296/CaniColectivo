@@ -78,6 +78,7 @@ export default function ArtistRegisterPageClient({ emailParam }) {
     // hook de perfil (API)
     const {
         createProfile,
+        uploadProfilePhoto,
         isSaving,
         specialityTypes,
         isLoadingSpecialities,
@@ -143,9 +144,11 @@ export default function ArtistRegisterPageClient({ emailParam }) {
                     },
                 ]
                 : [];
+
         const phone = socialValues.whatsapp
             ? `${socialValues.whatsapp.code}${socialValues.whatsapp.number}`.trim()
             : null;
+
         const socialMedia = {
             instagram: socialValues.instagram.trim() || null,
             facebook: socialValues.facebook.trim() || null,
@@ -167,16 +170,33 @@ export default function ArtistRegisterPageClient({ emailParam }) {
         try {
             showLoading(ARTIST_MESSAGES.loading);
 
+            // 1) Crear perfil de artista
             const result = await createProfile(payload);
-            hide();
 
             if (!result?.ok) {
+                hide();
                 const msg = result?.error || ARTIST_MESSAGES.defaultError;
                 setError(msg);
                 showError(msg);
                 return;
             }
 
+            const createdArtist = result.data || {};
+            const artistId = createdArtist.id;
+
+            // 2) Si hay foto, subirla con multipart/form-data
+            if (artistId && photoFile) {
+                const photoResult = await uploadProfilePhoto(artistId, photoFile);
+
+                if (!photoResult?.ok) {
+                    // No rompemos el flujo, pero logueamos el error
+                    console.error("No se pudo subir la foto del artista:", photoResult?.error);
+                    // Si quisieras avisar en UI:
+                    // showError("Tu perfil se guardó, pero no pudimos subir la foto. Intenta más tarde.");
+                }
+            }
+
+            hide();
             setSuccess(ARTIST_MESSAGES.success);
             showSuccess(ARTIST_MESSAGES.success);
 

@@ -26,6 +26,100 @@
 .grid > section {
     height: 100%;
 }
+/* ============================
+   Barra de moderación ancho completo
+   ============================ */
+
+.moderationBar {
+    margin-top: 32px;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.moderationHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.moderationTitle {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.moderationHint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+/* ============================
+   BOTONES ESTIRADOS COMO EL DISEÑO ANTERIOR
+   ============================ */
+.moderationButtons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 16px;
+}
+
+.moderationBtn {
+    padding: 16px 0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+    width: 100%;
+}
+
+/* 🔴 RECHAZAR – sólido */
+.moderationReject {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.moderationReject:hover:not(:disabled) {
+    background: #dc2626;
+}
+
+/* 🟢 ACEPTAR – sólido */
+.moderationApprove {
+    background: #22c55e;
+    color: #ffffff;
+}
+
+.moderationApprove:hover:not(:disabled) {
+    background: #16a34a;
+}
+
+/* Deshabilitado */
+.moderationBtn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.moderationError {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #b91c1c;
+}
+
+.moderationMessage {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #15803d;
+}
 
 @media (max-width: 1400px) {
     .profile {

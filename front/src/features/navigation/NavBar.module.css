@@ -25,14 +25,14 @@
     background: linear-gradient(
             to bottom,
             rgba(255, 255, 255, 0.4) 0%,
-            rgba(255, 255, 255, 0.0) 100%
+            rgba(255, 255, 255, 0) 100%
     );
 }
 
 .nbInner {
     max-width: 1300px;
     margin: 0 auto;
-    padding: 0 0;
+    padding: 8px 16px;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -41,6 +41,7 @@
 .nbBrand {
     display: flex;
     align-items: center;
+    flex-shrink: 0; /* no se encoja el logo */
 }
 
 .nbBrandLink {
@@ -54,11 +55,15 @@
     display: block;
 }
 
+/* ================= NAV LINKS ================= */
+
 .nbNav {
     margin-left: 12px;
     margin-right: auto;
     display: flex;
     gap: 24px;
+    flex: 1 1 auto; /* que use el espacio disponible */
+    min-width: 0;
 }
 
 .nbLink {
@@ -82,6 +87,18 @@
     transition: background 0.15s ease;
 }
 
+.nbLink:hover::after {
+    background: var(--bl);
+}
+
+.nbActive {
+    color: var(--nv);
+}
+.nbActive::after {
+    background: var(--bl);
+}
+
+/* Hovers por posición (Inicio, Artistas, Eventos, Nosotros, Galería) */
 .nbLink:nth-child(1):hover {
     color: var(--red);
 }
@@ -117,17 +134,53 @@
     background: var(--bl);
 }
 
-.nbActive {
+/* ===== ESPECIAL: ARTISTAS ===== */
+.nbNav a[href="/artists"] {
+    padding: 8px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--or) 0%, var(--yl) 100%);
+    color: #fff;
+    font-weight: 800;
+    border: none;
+    transform: translateY(0);
+    transition: transform 0.15s ease, filter 0.15s ease;
+    box-shadow: none;
+}
+
+.nbNav a[href="/artists"]::after {
+    background: transparent !important;
+}
+
+.nbNav a[href="/artists"]:hover,
+.nbNav a[href="/artists"].nbActive {
+    color: #fff;
+    filter: brightness(1.03);
+    transform: translateY(-1px);
+}
+
+/* ===== CONTACTO (hover minimalista) ===== */
+
+.nbNav a[href="/#footer"] {
+    padding: 8px 0;
     color: var(--nv);
 }
-.nbActive::after {
-    background: var(--bl);
+
+.nbNav a[href="/#footer"]:hover {
+    color: var(--or);
 }
+
+.nbNav a[href="/#footer"]:hover::after {
+    background: var(--or);
+}
+
+/* ================= ACCIONES (LOGIN / PERFIL) ================= */
 
 .nbActions {
     margin-left: auto;
     display: flex;
     gap: 12px;
+    align-items: center;
+    flex-shrink: 0; /* no se encoja la campana ni el avatar */
 }
 
 .nbAction {
@@ -137,8 +190,8 @@
     border: 1px solid var(--nv);
     color: var(--nv);
     background: #fff;
-    box-shadow: 0 10px 60px rgba(26, 43, 84, 0.06);
-    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: none;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 /* botón "Iniciar sesión" */
@@ -146,14 +199,12 @@
     background: var(--nv);
     color: #fff;
     border-color: var(--nv);
-    box-shadow: 0 8px 30px rgba(26, 43, 84, 0.25);
 }
 
 .nbActionLogin:hover {
     background: #fff;
     color: var(--nv);
     border-color: var(--nv);
-    box-shadow: 0 6px 20px rgba(26, 43, 84, 0.20);
 }
 
 /* botón "Registrarse" */
@@ -167,8 +218,9 @@
     background: var(--nv);
     color: #fff;
     border-color: var(--nv);
-    box-shadow: 0 8px 28px rgba(26, 43, 84, 0.25);
 }
+
+/* ================= HAMBURGUESA ================= */
 
 .nbToggle {
     margin-left: auto;
@@ -191,6 +243,8 @@
     background: var(--nv);
     border-radius: 2px;
 }
+
+/* ================= PANEL MÓVIL ================= */
 
 .nbPanel {
     display: block;
@@ -253,57 +307,19 @@
     outline-offset: 2px;
 }
 
-/* ===== Destacar el link "Artistas" ===== */
-/* Desktop nav */
-.nbNav a[href="/artists"] {
-    padding: 8px 14px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--or) 0%, var(--yl) 100%);
-    color: #fff;
-    font-weight: 800;
-    box-shadow: 0 10px 30px rgba(233, 90, 13, 0.35);
-    border: 1px solid rgba(26, 43, 84, 0.08);
-    transform: translateY(0);
-    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease, color .15s ease;
+.nbNotifSlot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.nbNav a[href="/artists"]::after {
-    background: transparent !important;
-}
+/* ================= RESPONSIVE ================= */
 
-.nbNav a[href="/artists"]:hover,
-.nbNav a[href="/artists"].nbActive,
-.nbNav a[href="/artists"]:focus-visible {
-    color: #fff;
-    filter: brightness(1.03);
-    transform: translateY(-1px);
-    box-shadow: 0 14px 40px rgba(233, 90, 13, 0.45);
-    outline: none;
-}
-
-.nbNav .nbLink[href="/artists"]:hover {
-    color: #fff !important;
-}
-
-/* Móvil (panel desplegable) */
-.nbPanelLink[href="/artists"] {
-    background: linear-gradient(135deg, var(--or) 0%, var(--yl) 100%);
-    color: #fff;
-    font-weight: 800;
-    border-color: transparent;
-    box-shadow: 0 8px 26px rgba(233, 90, 13, 0.35);
-}
-
-.nbPanelLink[href="/artists"]:hover,
-.nbPanelLink[href="/artists"].nbActive {
-    color: #fff;
-    filter: brightness(1.03);
-    box-shadow: 0 12px 34px rgba(233, 90, 13, 0.45);
-}
-
-@media (max-width: 720px) {
+/* Hasta 1000px: ocultamos nav de links y usamos hamburguesa + panel */
+@media (max-width: 1000px) {
     .nbInner {
         padding: 6px 12px;
+        gap: 10px;
     }
 
     .nbNav {
@@ -313,6 +329,7 @@
     .nbActions {
         display: flex;
         margin-left: auto;
+        gap: 8px;
     }
 
     .nbToggle {
@@ -321,11 +338,12 @@
     }
 
     .nbLogo {
-        width: 44px;
+        width: 56px;
     }
 }
 
-@media (min-width: 901px) {
+/* En pantallas grandes escondemos el panel móvil */
+@media (min-width: 1001px) {
     .nbPanel {
         display: none !important;
     }

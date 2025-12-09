@@ -1,4 +1,3 @@
-// src/features/artists/api/artistApi.js
 import { BASE_API } from "@/config/apiConfig";
 
 const ARTISTS_URL = `${BASE_API}/artists`;
@@ -6,7 +5,7 @@ const SPECIALITIES_URL = `${BASE_API}/specialities/types`;
 const ME_URL = `${BASE_API}/users/me`;
 
 // =============================
-// Crear perfil de artista
+// Crear perfil de artista (POST /artists)
 // =============================
 export async function createArtistProfile(body, token) {
     try {
@@ -38,6 +37,49 @@ export async function createArtistProfile(body, token) {
         return {
             ok: false,
             error: "Error de red al crear el perfil de artista.",
+        };
+    }
+}
+
+// =============================
+// Subir foto de artista (POST /artists/{id}/photo)
+// =============================
+export async function uploadArtistPhoto(artistId, file, token) {
+    try {
+        const url = `${ARTISTS_URL}/${artistId}/photo`;
+
+        const formData = new FormData();
+        // El backend espera el campo "photo"
+        formData.append("photo", file);
+
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            body: formData,
+        });
+
+        let payload = null;
+        try {
+            payload = await res.json();
+        } catch (_) {}
+
+        if (!res.ok) {
+            const message =
+                payload?.message ||
+                payload?.error ||
+                "No se pudo subir la foto del artista.";
+            return { ok: false, error: message };
+        }
+
+        // Según tu tabla, debería regresar { photoUrl, artist }
+        return { ok: true, data: payload };
+    } catch (error) {
+        console.error("Error al subir foto de artista:", error);
+        return {
+            ok: false,
+            error: "Error de red al subir la foto del artista.",
         };
     }
 }
@@ -102,8 +144,6 @@ export async function getApprovedArtists() {
                 "No se pudieron obtener los artistas.";
             return { ok: false, error: message };
         }
-
-        // se espera un array de artistas aprobados
         return { ok: true, data: payload || [] };
     } catch (error) {
         console.error("Error obteniendo artistas aprobados:", error);
@@ -123,7 +163,7 @@ export async function getMyArtistProfile(token) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                ...(token ? {Authorization: `Bearer ${token}`} : {}),
             },
             credentials: "include",
             cache: "no-store",
@@ -132,21 +172,22 @@ export async function getMyArtistProfile(token) {
         let payload = null;
         try {
             payload = await res.json();
-        } catch (_) {}
+        } catch (_) {
+        }
 
         if (!res.ok) {
             const message =
                 payload?.message ||
                 payload?.error ||
                 "No se pudo obtener tu perfil.";
-            return { ok: false, error: message };
+            return {ok: false, error: message};
         }
 
         const user = payload || {};
         const rawArtist = user.artist || null;
 
         if (!rawArtist) {
-            return { ok: true, data: null };
+            return {ok: true, data: null};
         }
 
         const mappedArtist = {
@@ -160,12 +201,42 @@ export async function getMyArtistProfile(token) {
                 : [],
         };
 
-        return { ok: true, data: mappedArtist };
+        return {ok: true, data: mappedArtist};
     } catch (error) {
         console.error("Error obteniendo tu perfil:", error);
         return {
             ok: false,
             error: "Error de red al obtener tu perfil.",
         };
+    }
+}
+
+export async function getArtistById(id) {
+    try {
+        const res = await fetch(`${ARTISTS_URL}/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cache: "no-store",
+        });
+
+        let payload = null;
+        try {
+            payload = await res.json();
+        } catch (_) {}
+
+        if (!res.ok) {
+            const message =
+                payload?.message ||
+                payload?.error ||
+                "No se pudo obtener el artista.";
+            return { ok: false, error: message };
+        }
+
+        return { ok: true, data: payload };
+    } catch (error) {
+        console.error("Error de red al obtener artista por id:", error);
+        return { ok: false, error: "Error de red al obtener el artista." };
     }
 }
