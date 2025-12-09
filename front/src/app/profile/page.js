@@ -1,6 +1,3 @@
-// app/profile/me/page.js
-"use client";
-
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ArtistProfile from "@/features/artists/componensts/artist-profile/ArtistProfile";

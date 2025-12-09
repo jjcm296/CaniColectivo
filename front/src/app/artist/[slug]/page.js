@@ -1,6 +1,3 @@
-// src/app/artist/[slug]/page.js
-"use client";
-
 import { useEffect, useState } from "react";
 import ArtistProfile from "@/features/artists/componensts/artist-profile/ArtistProfile";
 import { getArtistById } from "@/features/artists/api/artistApi";

@@ -1,4 +1,3 @@
-// src/app/events/page.js
 import ContentHeader from "@/features/ui/content-header/ContentHeader";
 import ArtistsGrid from "@/features/artists/componensts/artists-grid/ArtistsGrid";
 import {Suspense} from "react";
