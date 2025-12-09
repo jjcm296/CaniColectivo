@@ -28,9 +28,9 @@ export default function NavBar() {
     const left = [
         { href: "/", label: "Inicio" },
         { href: "/artists", label: "Artistas" },
-        { href: "/about", label: "Nosotros" },
-        { href: "/gallery", label: "Galería" },
         { href: "/events", label: "Eventos" },
+        { href: "/gallery", label: "Galería" },
+        { href: "/about", label: "Nosotros" },
         { href: "/#footer", label: "Contacto" },
     ];
 

@@ -54,8 +54,8 @@ export default function ContentHeader({ scope = "artists" }) {
                     />
                 </div>
 
-                {/* El filtro se adapta según scope */}
-                <ContentFilterDropdown scope={filterScope} />
+                {/*/!* El filtro se adapta según scope *!/*/}
+                {/*<ContentFilterDropdown scope={filterScope} />*/}
             </div>
         </header>
     );
