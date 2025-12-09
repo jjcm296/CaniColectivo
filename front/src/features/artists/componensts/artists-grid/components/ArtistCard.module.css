@@ -7,8 +7,9 @@
     box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
     overflow: hidden;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-    max-width: 360px;
     width: 100%;
+    max-width: none;
+    box-sizing: border-box;
     cursor: pointer;
 }
 
