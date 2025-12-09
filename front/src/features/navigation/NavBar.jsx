@@ -12,8 +12,8 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useCurrentUser } from "@/features/artists/hooks/useCurrentUser";
 import PendingArtistsBell from "@/features/artists/componensts/pending/PendingArtistsBell";
 import {
-    getPendingArtists, // usamos la lista para asegurar el número
-    getPendingArtistsCount, // lo puedes dejar para uso futuro
+    getPendingArtists,
+    getPendingArtistsCount,
 } from "@/features/artists/api/artistAdminApi";
 
 export default function NavBar() {
@@ -29,8 +29,10 @@ export default function NavBar() {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [userPanelOpen, setUserPanelOpen] = useState(false);
-
     const [pendingCount, setPendingCount] = useState(0);
+
+    // para saber si estamos en móvil (<= 720px)
+    const [isMobile, setIsMobile] = useState(false);
 
     const { isAuth: isAuthenticated } = useAuth();
     const { user: currentUser, isLoadingUser, token } = useCurrentUser();
@@ -53,6 +55,17 @@ export default function NavBar() {
         const onScroll = () => setScrolled(window.scrollY > 10);
         window.addEventListener("scroll", onScroll);
         return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
+    useEffect(() => {
+        const updateIsMobile = () => {
+            if (typeof window === "undefined") return;
+            setIsMobile(window.innerWidth <= 720);
+        };
+
+        updateIsMobile();
+        window.addEventListener("resize", updateIsMobile);
+        return () => window.removeEventListener("resize", updateIsMobile);
     }, []);
 
     useEffect(() => {
@@ -86,7 +99,6 @@ export default function NavBar() {
 
     const avatarImage = currentUser?.artist?.photoUrl || null;
 
-    // roles puede ser array o un objeto
     const roleNames = Array.isArray(currentUser?.roles)
         ? currentUser.roles.map((r) => r.name)
         : currentUser?.roles?.name
@@ -96,7 +108,7 @@ export default function NavBar() {
     const isAdmin =
         roleNames.includes("admin") || roleNames.includes("ROLE_ADMIN");
 
-    // 🔹 Cargamos la lista de pendientes al montar NavBar (solo admins autenticados)
+    // cargar pendientes solo para admin autenticado
     useEffect(() => {
         if (!token || !isAuthenticated || !isAdmin) {
             setPendingCount(0);
@@ -106,7 +118,6 @@ export default function NavBar() {
         let cancelled = false;
 
         async function loadPendingCount() {
-            // opción robusta: sacamos el número desde la lista
             const res = await getPendingArtists(token);
 
             if (cancelled) return;
@@ -200,24 +211,30 @@ export default function NavBar() {
                                 name={isLoadingUser ? "Cargando..." : displayName}
                                 imageUrl={avatarImage}
                                 href="/profile"
-                                onClick={() => setUserPanelOpen((v) => !v)}
+                                onClick={() =>
+                                    setUserPanelOpen((v) => !v)
+                                }
                                 showLabel={true}
                             />
                         ) : (
-                            <>
-                                <Link
-                                    href="/auth/login"
-                                    className={`${styles.nbAction} ${styles.nbActionLogin}`}
-                                >
-                                    Iniciar sesión
-                                </Link>
-                                <Link
-                                    href="/auth/register"
-                                    className={`${styles.nbAction} ${styles.nbActionRegister}`}
-                                >
-                                    Registrarse
-                                </Link>
-                            </>
+                            // En mobile NO mostramos estos botones,
+                            // solo en pantallas grandes (van en la hamburguesa).
+                            !isMobile && (
+                                <>
+                                    <Link
+                                        href="/auth/login"
+                                        className={`${styles.nbAction} ${styles.nbActionLogin}`}
+                                    >
+                                        Iniciar sesión
+                                    </Link>
+                                    <Link
+                                        href="/auth/register"
+                                        className={`${styles.nbAction} ${styles.nbActionRegister}`}
+                                    >
+                                        Registrarse
+                                    </Link>
+                                </>
+                            )
                         )}
                     </div>
 
@@ -245,7 +262,15 @@ export default function NavBar() {
                             <Link
                                 key={l.href}
                                 href={l.href}
-                                onClick={closeMenu}
+                                onClick={(e) => {
+                                    if (l.href === "/#footer") {
+                                        if (pathname === "/") {
+                                            e.preventDefault();
+                                            scrollToFooter();
+                                        }
+                                    }
+                                    closeMenu();
+                                }}
                                 className={`${styles.nbPanelLink} ${
                                     isActive(l.href) ? styles.nbActive : ""
                                 }`}
@@ -263,7 +288,9 @@ export default function NavBar() {
                                     href={l.href}
                                     onClick={closeMenu}
                                     className={`${styles.nbPanelAction} ${
-                                        isActive(l.href) ? styles.nbActive : ""
+                                        isActive(l.href)
+                                            ? styles.nbActive
+                                            : ""
                                     }`}
                                 >
                                     {l.label}
