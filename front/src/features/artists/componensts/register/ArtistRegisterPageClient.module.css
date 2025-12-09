@@ -369,14 +369,19 @@ select.input {
 .whatsappRow {
     display: flex;
     gap: 10px;
+    align-items: stretch;
 }
 
-.select {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: white;
-    font-size: 0.95rem;
+/* el select ocupa menos que el número, pero cómodo */
+.whatsappRow .select {
+    flex: 0 0 35%;
+    min-width: 110px;
+}
+
+/* el input comparte la clase .input que ya tienes,
+   solo añadimos reglas cuando está dentro de whatsappRow */
+.whatsappRow .input {
+    flex: 1 1 auto;
 }
 
 
@@ -408,20 +413,15 @@ select.input {
 }
 
 @media (max-width: 480px) {
-    .wrapper {
-        padding: 16px 8px 24px;
-    }
-
-    .card {
-        padding: 20px 14px 16px;
-        border-radius: 18px;
-    }
-
-    .socialIconsRow {
+    .whatsappRow {
+        flex-direction: column;
         gap: 8px;
     }
 
-    .submitButton {
+    .whatsappRow .select,
+    .whatsappRow .input {
         width: 100%;
+        flex: 1 1 auto;
     }
 }
+
