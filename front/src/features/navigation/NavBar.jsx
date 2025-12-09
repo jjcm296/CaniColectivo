@@ -16,15 +16,8 @@ import { getPendingArtists } from "@/features/artists/api/artistAdminApi";
 export default function NavBar() {
     const pathname = usePathname();
 
+    // 👇 TODOS los hooks van aquí, sin returns antes
     const [userPanelOpen, setUserPanelOpen] = useState(false);
-
-    const hideNavbar =
-        pathname?.startsWith("/auth") ||
-        pathname === "/auth" ||
-        pathname === null;
-
-    if (hideNavbar) return null;
-
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [pendingCount, setPendingCount] = useState(0);
@@ -64,6 +57,7 @@ export default function NavBar() {
         return () => window.removeEventListener("resize", updateIsMobile);
     }, []);
 
+    // Bloquear scroll cuando el panel de usuario está abierto
     useEffect(() => {
         if (userPanelOpen) {
             document.body.style.overflow = "hidden";
@@ -102,6 +96,7 @@ export default function NavBar() {
     const isAdmin =
         roleNames.includes("admin") || roleNames.includes("ROLE_ADMIN");
 
+    // cargar pendientes solo para admin autenticado
     useEffect(() => {
         if (!token || !isAuthenticated || !isAdmin) {
             setPendingCount(0);
@@ -129,9 +124,13 @@ export default function NavBar() {
         };
     }, [token, isAuthenticated, isAdmin]);
 
-    useEffect(() => {
-        setUserPanelOpen(false);
-    }, [pathname]);
+    // ❗ IMPORTANTE: el return condicional va DESPUÉS de todos los hooks
+    const hideNavbar =
+        pathname?.startsWith("/auth") ||
+        pathname === "/auth" ||
+        pathname === null;
+
+    if (hideNavbar) return null;
 
     return (
         <>
