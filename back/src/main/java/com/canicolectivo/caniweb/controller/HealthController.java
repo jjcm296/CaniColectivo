@@ -26,4 +26,15 @@ public class HealthController {
         }
     }
 
+    @GetMapping("/test-smtp-465")
+    public String testSmtp465() {
+        try {
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress("smtp.gmail.com", 465), 5000);
+            socket.close();
+            return "Conexión exitosa al SMTP (465)";
+        } catch (Exception e) {
+            return "Error conectando al SMTP (465): " + e.getMessage();
+        }
+    }
 }
