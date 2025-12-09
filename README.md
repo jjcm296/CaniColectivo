@@ -43,8 +43,17 @@ Routes that marked with auth, admin or artist in authorization use Bearer Token.
 
 *name and location are required
 
-### Specialities
+### Specialty
 | Purpose                 | Authorization | Method | Route               | Consumes | Returns       |
 |-------------------------|---------------|--------|---------------------|----------|---------------|
 | Get all specialities    | No auth       | GET    | /specialities       | Nothing  | Array of json |
 | Get specialities' types | No auth       | GET    | /specialities/types | Nothing  | Array         |
+
+### Event
+| Purpose        | Authorization | Method | Route               | Consumes                                                                                    | Returns                 |
+|----------------|---------------|--------|---------------------|---------------------------------------------------------------------------------------------|-------------------------|
+| Get all events | no auth       | GET    | /events             | Nothing                                                                                     | Array of events objects | 
+| Create event   | admin         | POST   | /events             | {name, description, location, venue, date: "YYYY-MM-DD", startsHour: 00:00, endHour: 00:00} | Event object            |
+| Upload image   | admin         | POST   | /events/{id}/photo  | `multipart/form-data` with photo `field`                                                    | photo url               |
+| Update event   | admin         | PUT    | /events/{id}        | {name, description, location, venue, date: "YYYY-MM-DD", startsHour: 00:00, endHour: 00:00} | Event object            |
+| Delete event   | admin         | DELETE | /events/{id}        | Nothing                                                                                     | 200 OK code             | 

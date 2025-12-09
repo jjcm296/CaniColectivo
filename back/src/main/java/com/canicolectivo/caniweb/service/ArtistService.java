@@ -152,7 +152,6 @@ public class ArtistService {
         artist.setLocation(dto.getLocation());
         artist.setDescription(dto.getDescription());
         artist.setPhone(dto.getPhone());
-        // OJO: ya no tocamos la foto aquí
         artist.setSocialMedia(dto.getSocialMedia());
 
         if (dto.getSpecialities() != null) {
