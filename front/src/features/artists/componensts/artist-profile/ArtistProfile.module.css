@@ -4,24 +4,60 @@
     padding: 20px 40px 70px;
 }
 
-/* Descripción / bio */
+.profileHeaderRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 26px;
+}
+
+.editButton {
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.35rem;
+    border-radius: 10px;
+    background: #3B82F6;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid #2F76E0;
+    box-shadow: none;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.editButton:hover {
+    background: #60A5FA;
+    transform: translateY(-1px);
+}
+
+.editButton:active {
+    transform: translateY(0);
+}
+
+.editIcon {
+    flex-shrink: 0;
+    stroke-width: 2.2;
+}
+
 .bio {
     margin-top: 16px;
     margin-bottom: 48px;
     line-height: 1.7;
     font-size: 1.18rem;
     max-width: 1300px;
-    /* ❌ quitamos el min-width que rompía mobile */
     width: 100%;
     color: #333;
     display: flex;
     align-items: flex-start;
 }
 
-/* GRID principal (contacto + detalles) */
 .grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+    grid-template-columns: minmax(600px, 1.8fr) minmax(300px, 1fr);
     gap: 30px;
     align-items: stretch;
 }
@@ -30,9 +66,6 @@
     height: 100%;
 }
 
-/* ============================
-   Barra de moderación ancho completo
-   ============================ */
 .moderationBar {
     margin-top: 32px;
     padding: 24px;
@@ -65,9 +98,6 @@
     color: #6b7280;
 }
 
-/* ============================
-   Botones estirados
-   ============================ */
 .moderationButtons {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -86,27 +116,24 @@
     width: 100%;
 }
 
-/* 🔴 RECHAZAR – sólido */
 .moderationReject {
     background: #ef4444;
-    color: #ffffff;
+    color: white;
 }
 
 .moderationReject:hover:not(:disabled) {
     background: #dc2626;
 }
 
-/* 🟢 ACEPTAR – sólido */
 .moderationApprove {
     background: #22c55e;
-    color: #ffffff;
+    color: white;
 }
 
 .moderationApprove:hover:not(:disabled) {
     background: #16a34a;
 }
 
-/* Deshabilitado */
 .moderationBtn:disabled {
     opacity: 0.6;
     cursor: default;
@@ -123,8 +150,6 @@
     font-size: 0.85rem;
     color: #15803d;
 }
-
-/* ========= BREAKPOINTS ========= */
 
 @media (max-width: 1400px) {
     .profile {
@@ -160,11 +185,19 @@
         padding: 20px 14px 32px;
     }
 
+    .profileHeaderRow {
+        margin-bottom: 18px;
+    }
+
+    .editButton {
+        padding: 0.45rem 1.1rem;
+        font-size: 0.85rem;
+    }
+
     .bio {
         font-size: 0.98rem;
         margin-bottom: 28px;
         max-width: 100%;
-        /* aseguramos que no haya rigidez en mobile */
         width: 100%;
     }
 
@@ -178,26 +211,8 @@
         gap: 16px;
     }
 
-    .moderationHeader {
-        gap: 6px;
-    }
-
-    .moderationTitle {
-        font-size: 0.95rem;
-    }
-
-    .moderationHint {
-        font-size: 0.8rem;
-    }
-
-    /* Botones en columna en mobile para que no se aplasten */
     .moderationButtons {
         grid-template-columns: 1fr;
         gap: 10px;
-    }
-
-    .moderationBtn {
-        padding: 12px 0;
-        font-size: 0.95rem;
     }
 }
