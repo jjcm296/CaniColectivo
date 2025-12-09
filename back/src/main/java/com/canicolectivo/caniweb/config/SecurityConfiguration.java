@@ -52,7 +52,9 @@ public class SecurityConfiguration {
                         // PROTECTED
                         .requestMatchers("/users/me").authenticated()
                         .requestMatchers(HttpMethod.POST, "/artists").authenticated()
-                        . requestMatchers(HttpMethod.POST, "/artists/*/photo").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/artists/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/artists/*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/artists/*/photo").authenticated()
                         .requestMatchers(HttpMethod.POST, "/artists/*/approve").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
 

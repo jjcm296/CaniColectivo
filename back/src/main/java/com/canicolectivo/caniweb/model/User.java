@@ -56,7 +56,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

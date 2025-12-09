@@ -62,15 +62,19 @@ public class ArtistController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ArtistDTO> update(@PathVariable Integer id, @RequestBody ArtistDTO dto) {
-        return artistService.update(id, dto)
+    public ResponseEntity<ArtistDTO> update(@PathVariable Integer id, @RequestBody ArtistDTO dto, Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+        return artistService.update(id, dto, currentUser)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        boolean deleted = artistService.delete(id);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> delete(@PathVariable Integer id, Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+
+        boolean deleted = artistService.delete(id, currentUser);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
