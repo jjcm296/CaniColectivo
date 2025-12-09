@@ -4,18 +4,21 @@
     padding: 20px 40px 70px;
 }
 
+/* Descripción / bio */
 .bio {
     margin-top: 16px;
     margin-bottom: 48px;
     line-height: 1.7;
     font-size: 1.18rem;
     max-width: 1300px;
-    min-width: 900px;
+    /* ❌ quitamos el min-width que rompía mobile */
+    width: 100%;
     color: #333;
     display: flex;
     align-items: flex-start;
 }
 
+/* GRID principal (contacto + detalles) */
 .grid {
     display: grid;
     grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
@@ -26,10 +29,10 @@
 .grid > section {
     height: 100%;
 }
+
 /* ============================
    Barra de moderación ancho completo
    ============================ */
-
 .moderationBar {
     margin-top: 32px;
     padding: 24px;
@@ -63,7 +66,7 @@
 }
 
 /* ============================
-   BOTONES ESTIRADOS COMO EL DISEÑO ANTERIOR
+   Botones estirados
    ============================ */
 .moderationButtons {
     display: grid;
@@ -121,6 +124,8 @@
     color: #15803d;
 }
 
+/* ========= BREAKPOINTS ========= */
+
 @media (max-width: 1400px) {
     .profile {
         padding: 40px 32px 60px;
@@ -143,6 +148,11 @@
         grid-template-columns: 1fr;
         gap: 28px;
     }
+
+    .bio {
+        max-width: 100%;
+        font-size: 1.05rem;
+    }
 }
 
 @media (max-width: 640px) {
@@ -151,7 +161,43 @@
     }
 
     .bio {
-        font-size: 1rem;
+        font-size: 0.98rem;
+        margin-bottom: 28px;
         max-width: 100%;
+        /* aseguramos que no haya rigidez en mobile */
+        width: 100%;
+    }
+
+    .grid {
+        gap: 20px;
+    }
+
+    .moderationBar {
+        padding: 16px 14px;
+        border-radius: 14px;
+        gap: 16px;
+    }
+
+    .moderationHeader {
+        gap: 6px;
+    }
+
+    .moderationTitle {
+        font-size: 0.95rem;
+    }
+
+    .moderationHint {
+        font-size: 0.8rem;
+    }
+
+    /* Botones en columna en mobile para que no se aplasten */
+    .moderationButtons {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .moderationBtn {
+        padding: 12px 0;
+        font-size: 0.95rem;
     }
 }
