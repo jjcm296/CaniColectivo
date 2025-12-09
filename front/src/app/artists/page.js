@@ -1,5 +1,3 @@
-"use client";
-
 import { Suspense } from "react";
 import ContentHeader from "@/features/ui/content-header/ContentHeader";
 import ArtistsGrid from "@/features/artists/componensts/artists-grid/ArtistsGrid";
