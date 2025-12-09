@@ -1,3 +1,4 @@
+// src/features/artists/componensts/pending/PendingArtistsDropdown.jsx
 import Image from "next/image";
 import styles from "./PendingArtistsDropdown.module.css";
 
@@ -10,6 +11,7 @@ export default function PendingArtistsDropdown({
                                                    error,
                                                    onApprove,
                                                    onReject,
+                                                   onOpenArtist,
                                                }) {
     if (!open) return null;
 
@@ -50,8 +52,18 @@ export default function PendingArtistsDropdown({
 
                         const isRowLoading = loadingActionId === artist.id;
 
+                        const handleRowClick = (event) => {
+                            // si el click fue en un botón, no navegamos
+                            if (event.target.closest("button")) return;
+                            if (onOpenArtist) onOpenArtist(artist);
+                        };
+
                         return (
-                            <li key={artist.id} className={styles.item}>
+                            <li
+                                key={artist.id}
+                                className={styles.item}
+                                onClick={handleRowClick}
+                            >
                                 <div className={styles.itemMain}>
                                     <div className={styles.avatarWrapper}>
                                         {hasPhoto ? (

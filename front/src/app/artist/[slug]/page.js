@@ -1,17 +1,19 @@
+// src/app/artist/[slug]/page.js
 "use client";
 
 import { useEffect, useState } from "react";
 import ArtistProfile from "@/features/artists/componensts/artist-profile/ArtistProfile";
 import { getArtistById } from "@/features/artists/api/artistApi";
+import { approveOrRejectArtist } from "@/features/artists/api/artistAdminApi";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 // Mapeo para que el artist tenga la misma forma
-// que en getMyArtistProfile / getArtistBySlug
+// que en otras partes del sistema
 function mapArtist(apiArtist) {
     if (!apiArtist) return null;
 
     return {
         ...apiArtist,
-        // lo que usan tus componentes:
         city: apiArtist.location,
         social: apiArtist.socialMedia || {},
         tags: Array.isArray(apiArtist.specialities)
@@ -21,16 +23,32 @@ function mapArtist(apiArtist) {
 }
 
 export default function ArtistPublicPage() {
+    const { token } = useAuth();
+
     const [artist, setArtist] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [fromPending, setFromPending] = useState(false);
+
+    const [actionLoading, setActionLoading] = useState(false);
+    const [actionMessage, setActionMessage] = useState("");
+    const [actionError, setActionError] = useState("");
 
     useEffect(() => {
         async function loadArtist() {
             try {
-                const storedId = typeof window !== "undefined"
-                    ? sessionStorage.getItem("selectedArtistId")
-                    : null;
+                const storedId =
+                    typeof window !== "undefined"
+                        ? sessionStorage.getItem("selectedArtistId")
+                        : null;
+
+                const fromPendingFlag =
+                    typeof window !== "undefined"
+                        ? sessionStorage.getItem("selectedArtistFromPending") ===
+                        "true"
+                        : false;
+
+                setFromPending(fromPendingFlag);
 
                 if (!storedId) {
                     setError("No se encontró un artista seleccionado.");
@@ -66,6 +84,40 @@ export default function ArtistPublicPage() {
         loadArtist();
     }, []);
 
+    async function handleDecision(approve) {
+        if (!fromPending) return; // solo tiene sentido desde pendientes
+        if (!artist?.id) return;
+
+        if (!token) {
+            setActionError("Necesitas iniciar sesión para moderar perfiles.");
+            return;
+        }
+
+        setActionLoading(true);
+        setActionMessage("");
+        setActionError("");
+
+        const res = await approveOrRejectArtist(artist.id, approve, token);
+
+        setActionLoading(false);
+
+        if (!res.ok) {
+            setActionError(
+                res.error || "No se pudo actualizar el estado del artista."
+            );
+            return;
+        }
+
+        setActionMessage(
+            approve
+                ? "Perfil aprobado correctamente."
+                : "Perfil rechazado correctamente."
+        );
+    }
+
+    const handleApprove = () => handleDecision(true);
+    const handleReject = () => handleDecision(false);
+
     if (loading) {
         return (
             <main className="page-container">
@@ -92,7 +144,16 @@ export default function ArtistPublicPage() {
 
     return (
         <main className="page-container">
-            <ArtistProfile artist={artist} />
+            <ArtistProfile
+                artist={artist}
+                isOwner={false}
+                showModeration={fromPending}
+                onApprove={fromPending ? handleApprove : undefined}
+                onReject={fromPending ? handleReject : undefined}
+                moderationLoading={actionLoading}
+                moderationMessage={actionMessage}
+                moderationError={actionError}
+            />
         </main>
     );
 }

@@ -2,10 +2,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     getPendingArtists,
     approveOrRejectArtist,
 } from "@/features/artists/api/artistAdminApi";
+import { slugify } from "@/features/utils/slugify";
 
 import BellButton from "./BellButton";
 import PendingArtistsDropdown from "./PendingArtistsDropdown";
@@ -21,6 +23,7 @@ export default function PendingArtistsBell({ token, initialCount = 0 }) {
 
     const hasPending = count > 0;
     const wrapperRef = useRef(null);
+    const router = useRouter();
 
     if (!token) return null;
 
@@ -90,6 +93,23 @@ export default function PendingArtistsBell({ token, initialCount = 0 }) {
     const handleApprove = (id) => handleDecision(id, true);
     const handleReject = (id) => handleDecision(id, false);
 
+    // 👉 Abrir el perfil completo del artista pendiente
+    const handleOpenArtist = (artist) => {
+        if (!artist?.id) return;
+
+        if (typeof window !== "undefined") {
+            // guardamos el ID y marcamos que viene de pendientes
+            sessionStorage.setItem("selectedArtistId", String(artist.id));
+            sessionStorage.setItem("selectedArtistFromPending", "true");
+        }
+
+        const nameSlug = slugify(artist.name || "artista");
+        const slug = `${nameSlug}-${artist.id}`;
+
+        // Usamos el mismo detalle que el flujo anterior: /artist/[slug]
+        router.push(`/artist/${slug}`);
+    };
+
     return (
         <div className={styles.wrapper} ref={wrapperRef}>
             <BellButton
@@ -107,6 +127,7 @@ export default function PendingArtistsBell({ token, initialCount = 0 }) {
                 error={error}
                 onApprove={handleApprove}
                 onReject={handleReject}
+                onOpenArtist={handleOpenArtist}
             />
         </div>
     );
