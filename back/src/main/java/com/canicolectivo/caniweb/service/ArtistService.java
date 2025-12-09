@@ -83,36 +83,44 @@ public class ArtistService {
                 .orElseThrow(() -> new IllegalStateException("Authenticated user not found"));
 
         Artist artist = new Artist();
-
         artist.setName(dto.getName());
         artist.setDescription(dto.getDescription());
         artist.setLocation(dto.getLocation());
         artist.setPhone(dto.getPhone());
         artist.setPhotoUrl(dto.getPhotoUrl());
         artist.setSocialMedia(dto.getSocialMedia());
-
-        // Always bind the artist to the authenticated user
         artist.setUser(managedUser);
 
+        // ---- HANDLE SPECIALITIES ----
         if (dto.getSpecialities() != null && !dto.getSpecialities().isEmpty()) {
             Set<Speciality> specialities = new HashSet<>();
 
             for (SpecialityDTO sDto : dto.getSpecialities()) {
+
+                // ignore empty speciality rows
+                if ((sDto.getId() == null || sDto.getId() <= 0)
+                        && (sDto.getName() == null || sDto.getName().isBlank())) {
+                    continue;
+                }
+
                 Speciality speciality = null;
 
+                // 1) Try by ID
                 if (sDto.getId() != null && sDto.getId() > 0) {
                     speciality = specialityRepository.findById(sDto.getId()).orElse(null);
                 }
 
+                // 2) Try by name
                 if (speciality == null && sDto.getName() != null && !sDto.getName().isBlank()) {
                     String normalized = normalizeName(sDto.getName());
                     speciality = specialityRepository.findByNameIgnoreCase(normalized).orElse(null);
                 }
 
+                // 3) Create new speciality (transient)
                 if (speciality == null) {
                     Speciality newS = sDto.toEntity();
                     newS.setName(normalizeName(newS.getName()));
-                    speciality = specialityRepository.save(newS);
+                    speciality = newS;
                 }
 
                 specialities.add(speciality);
@@ -129,57 +137,96 @@ public class ArtistService {
         return ArtistDTO.formEntity(saved);
     }
 
-    public Optional<ArtistDTO> update(Integer id, ArtistDTO dto) {
+
+    @Transactional
+    public Optional<ArtistDTO> update(Integer id, ArtistDTO dto, User currentUser) {
         Optional<Artist> opt = artistRepository.findById(id);
-        if (opt.isPresent()) {
-            Artist artist = opt.get();
-            artist.setName(dto.getName());
-            artist.setLocation(dto.getLocation());
-            artist.setDescription(dto.getDescription());
-            artist.setPhone(dto.getPhone());
-            artist.setPhotoUrl(dto.getPhotoUrl());
-            artist.setSocialMedia(dto.getSocialMedia());
+        if (opt.isEmpty()) return Optional.empty();
 
-            if (dto.getUserId() != null) {
-                userRepository.findById(dto.getUserId()).ifPresent(artist::setUser);
-            }
+        Artist artist = opt.get();
 
-            if (dto.getSpecialities() != null) {
-                Set<Speciality> specialities = new HashSet<>();
-                for (SpecialityDTO sDto : dto.getSpecialities()) {
-                    Speciality speciality = null;
-                    if (sDto.getId() > 0) {
-                        speciality = specialityRepository.findById(sDto.getId()).orElse(null);
-                    }
-                    if (speciality == null && sDto.getName() != null && !sDto.getName().isBlank()) {
-                        String normalized = normalizeName(sDto.getName());
-                        Optional<Speciality> byName = specialityRepository.findByNameIgnoreCase(normalized);
-                        if (byName.isPresent()) speciality = byName.get();
-                    }
-                    if (speciality == null) {
-                        Speciality newS = sDto.toEntity();
-                        newS.setName(normalizeName(newS.getName()));
-                        speciality = specialityRepository.save(newS);
-                    }
-                    specialities.add(speciality);
-                }
-                artist.setSpecialities(specialities);
-            }
-
-            Artist saved = artistRepository.save(artist);
-            return Optional.of(ArtistDTO.formEntity(saved));
+        if (artist.getUser() == null || !artist.getUser().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You can only update your own artist profile");
         }
-        return Optional.empty();
+
+        artist.setName(dto.getName());
+        artist.setLocation(dto.getLocation());
+        artist.setDescription(dto.getDescription());
+        artist.setPhone(dto.getPhone());
+        artist.setPhotoUrl(dto.getPhotoUrl());
+        artist.setSocialMedia(dto.getSocialMedia());
+
+        // ---- HANDLE SPECIALITIES ----
+        if (dto.getSpecialities() != null) {
+            Set<Speciality> specialities = new HashSet<>();
+
+            for (SpecialityDTO sDto : dto.getSpecialities()) {
+
+                // ignore empty speciality rows
+                if ((sDto.getId() == null || sDto.getId() <= 0)
+                        && (sDto.getName() == null || sDto.getName().isBlank())) {
+                    continue;
+                }
+
+                Speciality speciality = null;
+
+                // 1) Try by ID
+                if (sDto.getId() != null && sDto.getId() > 0) {
+                    speciality = specialityRepository.findById(sDto.getId()).orElse(null);
+                }
+
+                // 2) Try by name
+                if (speciality == null && sDto.getName() != null && !sDto.getName().isBlank()) {
+                    String normalized = normalizeName(sDto.getName());
+                    speciality = specialityRepository.findByNameIgnoreCase(normalized).orElse(null);
+                }
+
+                // 3) Create new speciality (transient)
+                if (speciality == null) {
+                    Speciality newS = sDto.toEntity();
+                    newS.setName(normalizeName(newS.getName()));
+                    speciality = newS;
+                }
+
+                specialities.add(speciality);
+            }
+
+            artist.setSpecialities(specialities);
+        }
+
+        Artist saved = artistRepository.save(artist);
+        return Optional.of(ArtistDTO.formEntity(saved));
     }
 
 
-    public boolean delete (Integer id){
-        if (artistRepository.existsById(id)) {
-            pendingArtistRepository.deleteByArtistId(id);
-            artistRepository.deleteById(id);
-            return true;
+
+    @Transactional
+    public boolean delete(Integer id, User currentUser){
+        Optional<Artist> opt = artistRepository.findById(id);
+
+        if (opt.isEmpty()) {
+            return false;
         }
-        return false;
+
+        Artist artist = opt.get();
+
+        if (artist.getUser() == null || !artist.getUser().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You can only delete your own artist profile");
+        }
+
+        // Clear the specialities relationship before deleting
+        artist.setSpecialities(new HashSet<>());
+        artistRepository.flush();  // Flush to clear the relationship
+
+        // Delete PendingArtist
+        pendingArtistRepository.deleteByArtistId(id);
+
+        // Then delete the Artist
+        artistRepository.delete(artist);
+
+        return true;
     }
 
     @Transactional

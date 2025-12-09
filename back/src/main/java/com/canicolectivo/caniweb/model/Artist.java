@@ -149,24 +149,18 @@ public class Artist {
 
     public void addSpeciality(Speciality speciality) {
         if (speciality == null) return;
-        if (specialities.add(speciality)) {
-            speciality.getArtistsInternal().add(this);
-        }
+        specialities.add(speciality); // ONLY this side
     }
 
     public void removeSpeciality(Speciality speciality) {
         if (speciality == null) return;
-        if (specialities.remove(speciality)) {
-            speciality.getArtistsInternal().remove(this);
-        }
+        specialities.remove(speciality); // ONLY this side
     }
 
     public void setSpecialities(Set<Speciality> newSpecialities) {
-        // remove old links
         for (Speciality s : new HashSet<>(this.specialities)) {
             removeSpeciality(s);
         }
-        // add new ones
         if (newSpecialities != null) {
             newSpecialities.forEach(this::addSpeciality);
         }
