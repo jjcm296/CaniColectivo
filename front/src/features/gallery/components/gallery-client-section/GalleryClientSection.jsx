@@ -7,7 +7,7 @@ import GalleryAddImageModal from "../gallery-upload-image-modal/GalleryUploadIma
 
 import { useFeedback } from "@/features/ui/feedback-context/FeedbackContext";
 import ConfirmModal from "@/features/ui/confirm-modal/ConfirmModal";
-import {useAuth} from "@/features/auth/hooks/useAuth";
+import { useCurrentUser } from "@/features/artists/hooks/useCurrentUser";
 
 export function GalleryClientSection() {
     const {
@@ -19,53 +19,47 @@ export function GalleryClientSection() {
         showActive,
         showFeatured,
         showInactive,
-        loading, // estado de carga desde el hook
+        loading,
     } = useGalleryMedia();
 
-    const user = useAuth();
-    const isAdmin = user?.role === "admin" || user?.role === "SUPERADMIN";
+    const { user: currentUser } = useCurrentUser();
+
+    const roleNames = Array.isArray(currentUser?.roles)
+        ? currentUser.roles.map((r) => r.name)
+        : currentUser?.roles?.name
+            ? [currentUser.roles.name]
+            : [];
+
+    const isAdmin =
+        roleNames.includes("admin") || roleNames.includes("ROLE_ADMIN");
 
     const { showLoading, showSuccess, showError, hide } = useFeedback();
 
     const [view, setView] = useState("active");
     const [showAddModal, setShowAddModal] = useState(false);
-
-    // IDs de imágenes recién ocultadas en la vista "active"
     const [recentlyHiddenIds, setRecentlyHiddenIds] = useState([]);
-
-    // Estado para eliminar
     const [deleteTargetId, setDeleteTargetId] = useState(null);
     const [deleting, setDeleting] = useState(false);
 
     function handleChangeView(newView) {
         setView(newView);
 
-        // si cambiamos de vista, limpiamos la lista de "recién ocultadas"
         if (newView !== "active") {
             setRecentlyHiddenIds([]);
         }
 
-        if (newView === "active") {
-            showActive();
-        } else if (newView === "featured") {
-            showFeatured();
-        } else if (newView === "hidden") {
-            showInactive();
-        }
+        if (newView === "active") showActive();
+        else if (newView === "featured") showFeatured();
+        else if (newView === "hidden") showInactive();
     }
 
-    // Ocultar / mostrar
     async function handleToggle(id) {
-        // vemos el estado previo antes de hacer la llamada
         const current = items.find((item) => item.id === id);
         const wasActive = current ? (current.isActive ?? true) : true;
 
         try {
             await toggleStatus(id);
 
-            // Si estaba activa, estamos en la vista principal y es admin,
-            // la agregamos a la lista de "recién ocultadas" para que
-            // siga apareciendo oscura hasta que recargues.
             if (wasActive && view === "active" && isAdmin) {
                 setRecentlyHiddenIds((prev) =>
                     prev.includes(id) ? prev : [...prev, id]
@@ -77,7 +71,6 @@ export function GalleryClientSection() {
         }
     }
 
-    // Destacado (igual que antes)
     async function handleToggleFeatured(id) {
         try {
             await toggleFeatured(id);
@@ -87,18 +80,15 @@ export function GalleryClientSection() {
         }
     }
 
-    // 🗑Paso 1: abrir modal de confirmación de eliminación
     function handleRemove(id) {
         setDeleteTargetId(id);
     }
 
-    // Cerrar modal de confirmación
     function handleCloseDeleteModal() {
         if (deleting) return;
         setDeleteTargetId(null);
     }
 
-    // Paso 2: confirmar eliminación
     async function handleConfirmDelete() {
         if (!deleteTargetId) return;
 
@@ -124,7 +114,6 @@ export function GalleryClientSection() {
         setShowAddModal(true);
     }
 
-    // Subir imagen con feedback global
     async function handleUpload(file) {
         try {
             showLoading("Subiendo imagen...");
@@ -145,12 +134,10 @@ export function GalleryClientSection() {
     }
 
     const filteredItems = useMemo(() => {
-        // Público: solo ve activas
         if (!isAdmin) {
             return items.filter((item) => item.isActive ?? true);
         }
 
-        // Admin
         switch (view) {
             case "featured":
                 return items.filter((item) => item.isFeatured);
@@ -172,7 +159,7 @@ export function GalleryClientSection() {
                 isAdmin={isAdmin}
                 items={filteredItems}
                 view={view}
-                isLoading={loading} // se pasa estado de carga a la sección
+                isLoading={loading}
                 onChangeView={handleChangeView}
                 onToggleActive={handleToggle}
                 onToggleFeatured={handleToggleFeatured}
@@ -189,7 +176,6 @@ export function GalleryClientSection() {
                 />
             )}
 
-            {/* Modal global de confirmación de eliminación */}
             <ConfirmModal
                 open={Boolean(deleteTargetId)}
                 variant="danger"
