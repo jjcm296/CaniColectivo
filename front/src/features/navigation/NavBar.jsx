@@ -11,10 +11,7 @@ import UserPanel from "@/features/navigation/user-panel/UserPanel";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useCurrentUser } from "@/features/artists/hooks/useCurrentUser";
 import PendingArtistsBell from "@/features/artists/componensts/pending/PendingArtistsBell";
-import {
-    getPendingArtists,
-    getPendingArtistsCount,
-} from "@/features/artists/api/artistAdminApi";
+import { getPendingArtists } from "@/features/artists/api/artistAdminApi";
 
 export default function NavBar() {
     const pathname = usePathname();
@@ -31,7 +28,7 @@ export default function NavBar() {
     const [userPanelOpen, setUserPanelOpen] = useState(false);
     const [pendingCount, setPendingCount] = useState(0);
 
-    // para saber si estamos en móvil (<= 720px)
+    // ahora móvil es <= 1000px (para que coincida con el CSS)
     const [isMobile, setIsMobile] = useState(false);
 
     const { isAuth: isAuthenticated } = useAuth();
@@ -60,7 +57,7 @@ export default function NavBar() {
     useEffect(() => {
         const updateIsMobile = () => {
             if (typeof window === "undefined") return;
-            setIsMobile(window.innerWidth <= 720);
+            setIsMobile(window.innerWidth <= 1000);
         };
 
         updateIsMobile();
@@ -86,9 +83,7 @@ export default function NavBar() {
 
     const scrollToFooter = () => {
         const el = document.getElementById("footer");
-        if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
-        }
+        if (el) el.scrollIntoView({ behavior: "smooth" });
     };
 
     const displayName =
@@ -211,14 +206,10 @@ export default function NavBar() {
                                 name={isLoadingUser ? "Cargando..." : displayName}
                                 imageUrl={avatarImage}
                                 href="/profile"
-                                onClick={() =>
-                                    setUserPanelOpen((v) => !v)
-                                }
+                                onClick={() => setUserPanelOpen((v) => !v)}
                                 showLabel={true}
                             />
                         ) : (
-                            // En mobile NO mostramos estos botones,
-                            // solo en pantallas grandes (van en la hamburguesa).
                             !isMobile && (
                                 <>
                                     <Link
@@ -253,21 +244,18 @@ export default function NavBar() {
 
                 <div
                     id="menu-movil"
-                    className={`${styles.nbPanel} ${
-                        open ? styles.nbPanelOpen : ""
-                    }`}
+                    className={`${styles.nbPanel} ${open ? styles.nbPanelOpen : ""}`}
                 >
+                    {/* LINKS PRINCIPALES */}
                     <div className={styles.nbPanelSection}>
                         {left.map((l) => (
                             <Link
                                 key={l.href}
                                 href={l.href}
                                 onClick={(e) => {
-                                    if (l.href === "/#footer") {
-                                        if (pathname === "/") {
-                                            e.preventDefault();
-                                            scrollToFooter();
-                                        }
+                                    if (l.href === "/#footer" && pathname === "/") {
+                                        e.preventDefault();
+                                        scrollToFooter();
                                     }
                                     closeMenu();
                                 }}
@@ -280,6 +268,7 @@ export default function NavBar() {
                         ))}
                     </div>
 
+                    {/* SOLO si NO está logueado → mostrar login y registro */}
                     {!isAuthenticated && (
                         <div className={styles.nbPanelSection}>
                             {right.map((l) => (
@@ -288,9 +277,7 @@ export default function NavBar() {
                                     href={l.href}
                                     onClick={closeMenu}
                                     className={`${styles.nbPanelAction} ${
-                                        isActive(l.href)
-                                            ? styles.nbActive
-                                            : ""
+                                        isActive(l.href) ? styles.nbActive : ""
                                     }`}
                                 >
                                     {l.label}

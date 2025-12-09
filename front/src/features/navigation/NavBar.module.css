@@ -255,8 +255,10 @@
     transition: max-height 0.25s ease;
 }
 
+/* 🔹 Más alto y con scroll para ver todo en móvil */
 .nbPanelOpen {
-    max-height: 420px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
 }
 
 .nbPanelSection {
@@ -296,6 +298,28 @@
 
 .nbPanelAction.nbActive {
     color: var(--nv);
+}
+
+/* 🔹 Especial: "Artistas" pintado igual dentro de la hamburguesa */
+.nbPanelLink[href="/artists"] {
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--or) 0%, var(--yl) 100%);
+    color: #fff !important;
+    font-weight: 800;
+    border: none;
+    padding: 12px 18px;
+    text-align: center;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.nbPanelLink[href="/artists"]:hover {
+    filter: brightness(1.05);
+}
+
+.nbPanelLink[href="/artists"].nbActive {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    color: #fff !important;
 }
 
 .nbLink:focus-visible,
